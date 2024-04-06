@@ -29,7 +29,7 @@ class RMSNormInputs(NamedTuple): # pylint: disable=missing-class-docstring
 
 
 class RMSNormConfig(NamedTuple): # pylint: disable=missing-class-docstring
-    eps: float
+    rms_norm_eps: float
 
 
 @partial(jax.jit, static_argnames='config')
@@ -50,6 +50,7 @@ def forward_fn(
         a normalized inputs.
     """
     x = inputs.inputs
-    x = x / jnp.sqrt((x * x).mean(axis=-1, keepdims=True) + config.eps)
+    x = x / jnp.sqrt(jnp.mean(
+        jax.lax.square(x), axis=-1, keepdims=True) + config.rms_norm_eps)
     x = x * params.weight
     return x
