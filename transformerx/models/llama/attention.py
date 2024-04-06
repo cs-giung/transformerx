@@ -118,7 +118,7 @@ def forward_fn(
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
-    if inputs.attention_mask:
+    if inputs.attention_mask is not None:
         qk_mask = inputs.attention_mask.reshape(B, 1, 1, 1, L)
     else:
         qk_mask = None
