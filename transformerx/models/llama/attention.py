@@ -31,7 +31,7 @@ class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
 
 
 class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
-    inputs: ArrayLike
+    hidden_states: ArrayLike
     attention_mask: Optional[ArrayLike]
     position_ids: ArrayLike
 
@@ -97,7 +97,7 @@ def forward_fn(
         a tuple of attention outputs and 
     """
     # pylint: disable=invalid-name,too-many-locals
-    x = inputs.inputs
+    x = inputs.hidden_states
 
     B, L, M = x.shape
     H = config.num_key_value_heads

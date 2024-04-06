@@ -46,7 +46,7 @@ if __name__ == '__main__':
     for device in [jax.devices('cpu')[0], jax.devices()[0]]:
         with jax.default_device(device):
             params = RMSNormParams(weight=weight_jx)
-            inputs = RMSNormInputs(inputs=inputs_jx)
+            inputs = RMSNormInputs(hidden_states=inputs_jx)
             config = RMSNormConfig(rms_norm_eps=RMS_NORM_EPS)
             output = forward_fn(params, inputs, config)
             abserr = np.abs(jx2np(output) - pt2np(output_pt))

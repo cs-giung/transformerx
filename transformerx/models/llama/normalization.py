@@ -25,7 +25,7 @@ class RMSNormParams(NamedTuple): # pylint: disable=missing-class-docstring
 
 
 class RMSNormInputs(NamedTuple): # pylint: disable=missing-class-docstring
-    inputs: ArrayLike
+    hidden_states: ArrayLike
 
 
 class RMSNormConfig(NamedTuple): # pylint: disable=missing-class-docstring
@@ -49,7 +49,7 @@ def forward_fn(
     Returns:
         a normalized inputs.
     """
-    x = inputs.inputs
+    x = inputs.hidden_states
     x = x / jnp.sqrt(jnp.mean(
         jax.lax.square(x), axis=-1, keepdims=True) + config.rms_norm_eps)
     x = x * params.weight

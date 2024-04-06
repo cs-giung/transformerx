@@ -97,7 +97,7 @@ if __name__ == '__main__':
                 v_proj=v_proj_jx,
                 o_proj=o_proj_jx)
             inputs = AttentionInputs(
-                inputs=inputs_jx,
+                hidden_states=inputs_jx,
                 attention_mask=attention_mask_jx,
                 position_ids=position_ids_jx)
             config  = AttentionConfig(
