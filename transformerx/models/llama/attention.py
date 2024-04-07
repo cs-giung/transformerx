@@ -118,10 +118,12 @@ def forward_fn(
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
+    qk_mask = None
     if inputs.attention_mask is not None:
-        qk_mask = inputs.attention_mask.reshape(B, 1, 1, 1, L)
-    else:
-        qk_mask = None
+        qk_mask = inputs.attention_mask.astype(bool)
+        qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', qk_mask, qk_mask))
+        qk_mask = qk_mask[:, None, None]
+
     qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)
     qk = jax.nn.softmax(qk, where=qk_mask, initial=0.)
 

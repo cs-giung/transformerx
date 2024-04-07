@@ -31,9 +31,11 @@ if __name__ == '__main__':
         jax.random.PRNGKey(42), (BATCH_SIZE, SEQ_LEN, HIDDEN_SIZE))
     position_ids_jx = jax.numpy.array([
         jax.numpy.arange(SEQ_LEN) for _ in range(BATCH_SIZE)]).astype(int)
-
-    # TODO: when attention_mask is not None
-    attention_mask_jx = None
+    attention_mask_jx = jax.numpy.array([
+        jax.numpy.concatenate([
+            jax.numpy.arange(i * 100),
+            jax.numpy.zeros(SEQ_LEN - i * 100)])
+        for i in range(BATCH_SIZE)]).astype(int)
 
     # params
     q_proj_jx = math.sqrt(1.0 / HIDDEN_SIZE) * jax.random.normal(
@@ -60,17 +62,19 @@ if __name__ == '__main__':
         inputs_pt = jx2pt(inputs_jx)
         position_ids_pt = jx2pt(position_ids_jx)
         module_pt = LlamaRotaryEmbedding(
-            dim=HIDDEN_SIZE, max_position_embeddings=MAX_POSITION_EMBEDDINGS)
+            dim=(HIDDEN_SIZE // NUM_ATTENTION_HEADS),
+            max_position_embeddings=MAX_POSITION_EMBEDDINGS)
         output_pt = module_pt(inputs_pt, position_ids_pt)
 
     for device in [jax.devices('cpu')[0], jax.devices()[0]]:
         with jax.default_device(device):
-            output = make_rotary_embedding(position_ids_jx, HIDDEN_SIZE)
+            output = make_rotary_embedding(
+                position_ids_jx, (HIDDEN_SIZE // NUM_ATTENTION_HEADS))
             print(f'torch - jax ({device})')
-            abserr = np.abs(jx2np(output[0]) - pt2np(output_pt[0]))
+            abserr = np.abs(jx2np(output[0][0]) - pt2np(output_pt[0]))
             print(f'- max: {abserr.max()}')
             print(f'- min: {abserr.min()}')
-            abserr = np.abs(jx2np(output[1]) - pt2np(output_pt[1]))
+            abserr = np.abs(jx2np(output[1][0]) - pt2np(output_pt[1]))
             print(f'- max: {abserr.max()}')
             print(f'- min: {abserr.min()}')
 
@@ -78,7 +82,13 @@ if __name__ == '__main__':
     with torch.no_grad():
         inputs_pt = jx2pt(inputs_jx)
         position_ids_pt = jx2pt(position_ids_jx)
-        attention_mask_pt = None
+        attention_mask_pt = jx2pt(attention_mask_jx)
+        attention_mask_pt = attention_mask_pt.bool()
+        attention_mask_pt = torch.tril(
+            torch.einsum('bi,bj->bij', attention_mask_pt, attention_mask_pt)
+            )[:, None]
+        attention_mask_pt = torch.where(
+            attention_mask_pt, 0, torch.finfo(torch.float32).min)
         module_pt = LlamaAttention(config=CONFIG, layer_idx=0)
         module_pt.q_proj.weight.data.copy_(jx2pt(q_proj_jx.T))
         module_pt.k_proj.weight.data.copy_(jx2pt(k_proj_jx.T))
