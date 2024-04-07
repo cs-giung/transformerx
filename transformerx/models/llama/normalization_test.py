@@ -7,6 +7,7 @@ import math
 import numpy as np
 import jax
 import torch
+jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
 
 from transformers import AutoConfig
 from transformers.models.llama.modeling_llama import LlamaRMSNorm

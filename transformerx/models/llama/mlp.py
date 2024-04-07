@@ -43,7 +43,7 @@ def forward_fn(
 
     g = einsum(x, params.g_proj, 'B S M, M H -> B S H')
     u = einsum(x, params.u_proj, 'B S M, M H -> B S H')
-    y = jnp.multiply(jax.nn.silu(g), u)
+    y = jnp.multiply(jax.nn.silu(g), u) # pylint: disable=not-callable
     y = einsum(y, params.d_proj, 'B S H, H M -> B S M')
 
     return y
