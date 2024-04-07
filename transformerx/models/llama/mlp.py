@@ -1,7 +1,5 @@
 """
-Multi-Layer Perceptron Module.
-
-This module contains functions and classes for the MLP block.
+This module contains functions and classes for the MLP module.
 
 Classes:
     MLPParams:
@@ -9,7 +7,7 @@ Classes:
     MLPConfig:
 
 Functions:
-    forward_fn: Forward function for the MLP block.
+    forward_fn: Forward function for the MLP module.
 """
 from functools import partial
 from typing import NamedTuple
@@ -40,17 +38,7 @@ def forward_fn(
         inputs: MLPInputs,
         config: MLPConfig, # pylint: disable=unused-argument
     ) -> Array:
-    """
-    Forward function for the MLP block.
-
-    Args:
-        params (MLPParams): parameters for the MLP block.
-        inputs (MLPInputs): inputs for the MLP block.
-        config (MLPConfig): configuration for the MLP block.
-
-    Returns:
-        outputs of the MLP block.
-    """
+    """Forward function for the MLP module."""
     x = inputs.hidden_states
 
     g = einsum(x, params.g_proj, 'B S M, M H -> B S H')

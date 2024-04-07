@@ -1,7 +1,5 @@
 """
-Attention Module.
-
-This module contains functions and classes for performing attention.
+This module contains functions and classes for the attention module.
 
 Classes:
     AttentionParams:
@@ -11,7 +9,7 @@ Classes:
 Functions:
     make_rotary_embedding: Make rotary embedding based on position indices.
     apply_rotary_embedding: Apply rotary embedding to an input array.
-    forward_fn: Forward function for attention.
+    forward_fn: Forward function for the attention module.
 """
 import math
 from functools import partial
@@ -36,17 +34,7 @@ class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
     position_ids: ArrayLike
 
 
-class AttentionConfig(NamedTuple):
-    """
-    Attributes:
-        hidden_size (int): a dimension of the hidden representations.
-        num_attention_heads (int): the number of attention heads for each 
-            attention layer in the Transformer decoder.
-        num_key_value_heads (int): the number of heads for keys and values in
-            grouped-query attention. When it equals to `num_attention_heads`,
-            multi-head attention is used. If it is set to one, multi-query
-            attention is applied.
-    """
+class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_size: int
     num_attention_heads: int
     num_key_value_heads: int
@@ -85,21 +73,11 @@ def forward_fn(
         inputs: AttentionInputs,
         config: AttentionConfig,
     ) -> Array:
-    """
-    Forward function for attention.
-
-    Args:
-        params (AttentionParams):
-        inputs (AttentionInputs):
-        config (AttentionConfig):
-    
-    Returns:
-        a tuple of attention outputs and 
-    """
+    """Forward function for the attention module."""
     # pylint: disable=invalid-name,too-many-locals
     x = inputs.hidden_states
 
-    B, L, M = x.shape
+    M = x.shape[-1]
     H = config.num_key_value_heads
     R = config.num_attention_heads // config.num_key_value_heads
     K = config.hidden_size // config.num_attention_heads

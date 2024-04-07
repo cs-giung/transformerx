@@ -1,6 +1,4 @@
 """
-RMS Normalization Module.
-
 This module contains functions and classes for performing RMS normalization.
 
 Classes:
@@ -38,17 +36,7 @@ def forward_fn(
         inputs: RMSNormInputs,
         config: RMSNormConfig,
     ) -> Array:
-    """
-    Forward function for RMS normalization.
-
-    Args:
-        params (RMSNormParams): parameters for RMS normalization.
-        inputs (RMSNormInputs): inputs to be normalized.
-        config (RMSNormConfig): configuration for RMS normalization.
-
-    Returns:
-        a normalized inputs.
-    """
+    """Forward function for performing RMS normalization."""
     x = inputs.hidden_states
     x = x / jnp.sqrt(jnp.mean(
         jax.lax.square(x), axis=-1, keepdims=True) + config.rms_norm_eps)
