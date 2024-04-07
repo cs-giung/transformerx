@@ -17,6 +17,14 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=32,
         rms_norm_eps=1e-05,
     ),
+    'meta-llama/Llama-2-13b-hf': LlamaConfig(
+        hidden_size=5120,
+        intermediate_size=13824,
+        num_attention_heads=40,
+        num_hidden_layers=40,
+        num_key_value_heads=40,
+        rms_norm_eps=1e-05,
+    ),
 }
 
 
