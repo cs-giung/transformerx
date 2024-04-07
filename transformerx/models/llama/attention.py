@@ -31,7 +31,7 @@ class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
 class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_states: ArrayLike
     attention_mask: Optional[ArrayLike]
-    position_ids: ArrayLike
+    position_ids: Optional[ArrayLike]
 
 
 class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
@@ -77,7 +77,7 @@ def forward_fn(
     # pylint: disable=invalid-name,too-many-locals
     x = inputs.hidden_states
 
-    M = x.shape[-1]
+    B, L, M = x.shape
     H = config.num_key_value_heads
     R = config.num_attention_heads // config.num_key_value_heads
     K = config.hidden_size // config.num_attention_heads
@@ -92,15 +92,21 @@ def forward_fn(
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
     v = einsum(x, v_proj, 'B D M, M   H V -> B   H D V')
 
-    cos, sin = make_rotary_embedding(inputs.position_ids, K)
+    if inputs.position_ids is not None:
+        position_ids = inputs.position_ids
+    else:
+        position_ids = repeat(jnp.arange(L), 'L -> B L', B=B)
+
+    cos, sin = make_rotary_embedding(position_ids, K)
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
-    qk_mask = None
     if inputs.attention_mask is not None:
         qk_mask = inputs.attention_mask.astype(bool)
         qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', qk_mask, qk_mask))
         qk_mask = qk_mask[:, None, None]
+    else:
+        qk_mask = None
 
     qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)
     qk = jax.nn.softmax(qk, where=qk_mask, initial=0.)
