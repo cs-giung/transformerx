@@ -10,7 +10,7 @@ Functions:
     forward_fn: Forward function for the Llama model.
 """
 from functools import partial
-from typing import NamedTuple, Optional, Tuple
+from typing import NamedTuple, Optional
 
 import jax
 from transformerx.models.llama.attention import \
@@ -22,7 +22,7 @@ from transformerx.models.llama.mlp import \
 from transformerx.models.llama.normalization import \
     RMSNormParams, RMSNormInputs, RMSNormConfig, \
     forward_fn as rms_norm_fn
-from transformerx.typing import Array, ArrayLike, PytreeLike
+from transformerx.typing import ArrayLike, PytreeLike
 
 
 class LlamaConfig(NamedTuple):

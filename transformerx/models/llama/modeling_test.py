@@ -43,9 +43,9 @@ if __name__ == '__main__':
     weight_pt = params_pt['lm_head.weight'].T
     with torch.no_grad():
         inputs_pt = tokenizer(prompt, return_tensors="pt")
-        output_pt = model_pt(
-            **inputs_pt, output_hidden_states=True).hidden_states[-1]
-        output_pt_logits = output_pt @ weight_pt
+        output_pt = model_pt(**inputs_pt, output_hidden_states=True)
+        output_pt_hidden, output_pt_logits \
+            = output_pt.hidden_states[-1], output_pt.logits
 
     # transformerx
     config_jx = PREDEFINED_CONFIGS[NAME]
@@ -60,9 +60,11 @@ if __name__ == '__main__':
             attention_mask=inputs_jx.attention_mask,
             position_ids=None)
         output_jx = forward_fn(params_jx, inputs_jx, config_jx)
-        abserr = np.abs(pt2np(output_pt) - jx2np(output_jx.last_hidden_states))
+        output_jx_hidden, output_jx_logits \
+            = output_jx.last_hidden_states, output_jx.logits
+        abserr = np.abs(pt2np(output_pt_hidden) - jx2np(output_jx_hidden))
         print(abserr.min(), abserr.max())
-        abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx.logits))
+        abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
         print(abserr.min(), abserr.max())
 
     # model parallel via einshard
@@ -77,7 +79,9 @@ if __name__ == '__main__':
         attention_mask=inputs_jx.attention_mask,
         position_ids=None)
     output_jx = forward_fn(params_jx, inputs_jx, config_jx)
-    abserr = np.abs(pt2np(output_pt) - jx2np(output_jx.last_hidden_states))
+    output_jx_hidden, output_jx_logits \
+        = output_jx.last_hidden_states, output_jx.logits
+    abserr = np.abs(pt2np(output_pt_hidden) - jx2np(output_jx_hidden))
     print(abserr.min(), abserr.max())
-    abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx.logits))
+    abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
     print(abserr.min(), abserr.max())
