@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Testing Attention Module."""
 import sys
 sys.path.append('./') # pylint: disable=wrong-import-position
