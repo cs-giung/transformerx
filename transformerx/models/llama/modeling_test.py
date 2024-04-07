@@ -7,11 +7,16 @@ import numpy as np
 import jax
 import jax.numpy as jnp
 import torch
+jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
+
+from jax_smi import initialise_tracking
+initialise_tracking()
 
 from transformers import AutoConfig, AutoTokenizer, LlamaForCausalLM
 from transformerx.models.llama.default import \
     PREDEFINED_CONFIGS, convert_hf_params_to_jx_params
 from transformerx.models.llama.modeling import LlamaInputs, forward_fn
+from transformerx.utils.einshard import einshard
 
 
 if __name__ == '__main__':
@@ -35,30 +40,50 @@ if __name__ == '__main__':
     # transformers
     model_pt = LlamaForCausalLM.from_pretrained(NAME)
     params_pt = model_pt.state_dict()
+    weight_pt = params_pt['lm_head.weight'].T
     with torch.no_grad():
         inputs_pt = tokenizer(prompt, return_tensors="pt")
         output_pt = model_pt(
             **inputs_pt, output_hidden_states=True).hidden_states[-1]
-        output_pt_logits = output_pt @ params_pt['lm_head.weight'].T
+        output_pt_logits = output_pt @ weight_pt
 
     # transformerx
-    params_jx = convert_hf_params_to_jx_params(params_pt)
     config_jx = PREDEFINED_CONFIGS[NAME]
 
-    # TODO: when device is not CPU
-    for device in [jax.devices('cpu')[0],]:
-        with jax.default_device(device):
-            inputs_jx = tokenizer(prompt, return_tensors="jax")
-            inputs_jx = LlamaInputs(
-                input_ids=inputs_jx.input_ids,
-                attention_mask=inputs_jx.attention_mask,
-                position_ids=jnp.arange(
-                    0, inputs_jx.input_ids.shape[1]).astype(int)[None, :])
-            output_jx = forward_fn(params_jx, inputs_jx, config_jx)
+    device = jax.devices('cpu')[0]
+    with jax.default_device(device):
+        params_jx = convert_hf_params_to_jx_params(params_pt)
+        weight_jx = pt2jx(weight_pt)
+        inputs_jx = tokenizer(prompt, return_tensors="jax")
+        inputs_jx = LlamaInputs(
+            input_ids=inputs_jx.input_ids,
+            attention_mask=inputs_jx.attention_mask,
+            position_ids=jnp.arange(
+                0, inputs_jx.input_ids.shape[1]).astype(int)[None, :])
+        output_jx = forward_fn(params_jx, inputs_jx, config_jx)
+        abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
+        print(abserr.min(), abserr.max())
 
-            abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
-            print(abserr.min(), abserr.max())
+        output_jx_logits = output_jx @ weight_jx
+        abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
+        print(abserr.min(), abserr.max())
 
-            output_jx_logits = output_jx @ pt2jx(params_pt['lm_head.weight']).T
-            print(output_pt_logits)
-            print(output_jx_logits)
+    # model parallel via einshard
+    params_jx = jax.tree_util.tree_map(
+        lambda e: einshard(e, '... O -> ... O1'), params_jx)
+    weight_jx = jax.tree_util.tree_map(
+        lambda e: einshard(e, '... O -> ... O1'), weight_jx)
+
+    inputs_jx = tokenizer(prompt, return_tensors="jax")
+    inputs_jx = LlamaInputs(
+        input_ids=inputs_jx.input_ids,
+        attention_mask=inputs_jx.attention_mask,
+        position_ids=jnp.arange(
+            0, inputs_jx.input_ids.shape[1]).astype(int)[None, :])
+    output_jx = forward_fn(params_jx, inputs_jx, config_jx)
+    abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
+    print(abserr.min(), abserr.max())
+
+    output_jx_logits = output_jx @ weight_jx
+    abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
+    print(abserr.min(), abserr.max())
