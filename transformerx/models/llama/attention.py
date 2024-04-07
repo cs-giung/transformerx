@@ -92,6 +92,7 @@ def forward_fn(
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
     v = einsum(x, v_proj, 'B D M, M   H V -> B   H D V')
 
+    # TODO: sanity check
     if inputs.position_ids is not None:
         position_ids = inputs.position_ids
     else:
@@ -101,12 +102,15 @@ def forward_fn(
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
+    # TODO: sanity check
     if inputs.attention_mask is not None:
-        qk_mask = inputs.attention_mask.astype(bool)
-        qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', qk_mask, qk_mask))
-        qk_mask = qk_mask[:, None, None]
+        attention_mask = inputs.attention_mask.astype(bool)
     else:
-        qk_mask = None
+        attention_mask = jnp.ones((B, L)).astype(bool)
+
+    qk_mask = attention_mask
+    qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', qk_mask, qk_mask))
+    qk_mask = qk_mask[:, None, None]
 
     qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)
     qk = jax.nn.softmax(qk, where=qk_mask, initial=0.)
