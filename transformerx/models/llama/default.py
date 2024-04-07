@@ -16,6 +16,7 @@ PREDEFINED_CONFIGS = {
         num_hidden_layers=32,
         num_key_value_heads=32,
         rms_norm_eps=1e-05,
+        vocab_size=32000,
     ),
     'meta-llama/Llama-2-13b-hf': LlamaConfig(
         hidden_size=5120,
@@ -24,6 +25,7 @@ PREDEFINED_CONFIGS = {
         num_hidden_layers=40,
         num_key_value_heads=40,
         rms_norm_eps=1e-05,
+        vocab_size=32000,
     ),
 }
 
@@ -71,6 +73,9 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> LlamaParams:
                     'd_proj': {'weight': pt2jx(hf_params[
                         f'model.layers.{i}.mlp.down_proj.weight']).T}}
             } for i in range(num_hidden_layers)}
+        lm_head = {
+            'weight': pt2jx(hf_params['lm_head.weight']).T}
 
         return LlamaParams(
-            embed_tokens=embed_tokens, layers=layers, norm=norm)
+            embed_tokens=embed_tokens, layers=layers,
+            norm=norm, lm_head=lm_head)

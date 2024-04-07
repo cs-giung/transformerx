@@ -58,14 +58,11 @@ if __name__ == '__main__':
         inputs_jx = LlamaInputs(
             input_ids=inputs_jx.input_ids,
             attention_mask=inputs_jx.attention_mask,
-            position_ids=jnp.arange(
-                0, inputs_jx.input_ids.shape[1]).astype(int)[None, :])
+            position_ids=None)
         output_jx = forward_fn(params_jx, inputs_jx, config_jx)
-        abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
+        abserr = np.abs(pt2np(output_pt) - jx2np(output_jx.last_hidden_states))
         print(abserr.min(), abserr.max())
-
-        output_jx_logits = output_jx @ weight_jx
-        abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
+        abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx.logits))
         print(abserr.min(), abserr.max())
 
     # model parallel via einshard
@@ -78,12 +75,9 @@ if __name__ == '__main__':
     inputs_jx = LlamaInputs(
         input_ids=inputs_jx.input_ids,
         attention_mask=inputs_jx.attention_mask,
-        position_ids=jnp.arange(
-            0, inputs_jx.input_ids.shape[1]).astype(int)[None, :])
+        position_ids=None)
     output_jx = forward_fn(params_jx, inputs_jx, config_jx)
-    abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
+    abserr = np.abs(pt2np(output_pt) - jx2np(output_jx.last_hidden_states))
     print(abserr.min(), abserr.max())
-
-    output_jx_logits = output_jx @ weight_jx
-    abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx_logits))
+    abserr = np.abs(pt2np(output_pt_logits) - jx2np(output_jx.logits))
     print(abserr.min(), abserr.max())

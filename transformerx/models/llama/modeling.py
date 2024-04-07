@@ -10,7 +10,7 @@ Functions:
     forward_fn: Forward function for the Llama model.
 """
 from functools import partial
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, Tuple
 
 import jax
 from transformerx.models.llama.attention import \
@@ -25,19 +25,7 @@ from transformerx.models.llama.normalization import \
 from transformerx.typing import Array, ArrayLike, PytreeLike
 
 
-class LlamaParams(NamedTuple): # pylint: disable=missing-class-docstring
-    embed_tokens: PytreeLike
-    layers: PytreeLike
-    norm: PytreeLike
-
-
-class LlamaInputs(NamedTuple): # pylint: disable=missing-class-docstring
-    input_ids: ArrayLike
-    attention_mask: Optional[ArrayLike]
-    position_ids: Optional[ArrayLike]
-
-
-class LlamaConfig(NamedTuple): # pylint: disable=missing-class-docstring
+class LlamaConfig(NamedTuple):
     """
     Attributes:
         hidden_size (int): a dimension of the hidden representations.
@@ -56,6 +44,25 @@ class LlamaConfig(NamedTuple): # pylint: disable=missing-class-docstring
     num_hidden_layers: int
     num_key_value_heads: int
     rms_norm_eps: float
+    vocab_size: int
+
+
+class LlamaInputs(NamedTuple): # pylint: disable=missing-class-docstring
+    input_ids: ArrayLike
+    attention_mask: Optional[ArrayLike]
+    position_ids: Optional[ArrayLike]
+
+
+class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
+    last_hidden_states: ArrayLike
+    logits: ArrayLike
+
+
+class LlamaParams(NamedTuple): # pylint: disable=missing-class-docstring
+    embed_tokens: PytreeLike
+    layers: PytreeLike
+    norm: PytreeLike
+    lm_head: PytreeLike
 
 
 @partial(jax.jit, static_argnames='config')
@@ -63,7 +70,7 @@ def forward_fn(
         params: LlamaParams,
         inputs: LlamaInputs,
         config: LlamaConfig,
-    ) -> Array:
+    ) -> LlamaOutput:
     """Forward function for the Llama model."""
     hidden_states = params.embed_tokens['weight'][inputs.input_ids]
 
@@ -112,4 +119,6 @@ def forward_fn(
         inputs=RMSNormInputs(hidden_states=hidden_states),
         config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
 
-    return hidden_states
+    logits = hidden_states @ params.lm_head['weight']
+
+    return LlamaOutput(last_hidden_states=hidden_states, logits=logits)
