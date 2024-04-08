@@ -12,6 +12,42 @@ from transformerx.models.llama.modeling import LlamaConfig, LlamaParams
 
 
 PREDEFINED_CONFIGS = {
+    'huggyllama/llama-7b': LlamaConfig(
+        hidden_size=4096,
+        intermediate_size=11008,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=32,
+        rms_norm_eps=1e-06,
+        vocab_size=32000,
+    ),
+    'huggyllama/llama-13b': LlamaConfig(
+        hidden_size=5120,
+        intermediate_size=13824,
+        num_attention_heads=40,
+        num_hidden_layers=40,
+        num_key_value_heads=40,
+        rms_norm_eps=1e-06,
+        vocab_size=32000,
+    ),
+    'huggyllama/llama-30b': LlamaConfig(
+        hidden_size=6656,
+        intermediate_size=17920,
+        num_attention_heads=52,
+        num_hidden_layers=60,
+        num_key_value_heads=52,
+        rms_norm_eps=1e-06,
+        vocab_size=32000,
+    ),
+    'huggyllama/llama-65b': LlamaConfig(
+        hidden_size=8192,
+        intermediate_size=22016,
+        num_attention_heads=64,
+        num_hidden_layers=80,
+        num_key_value_heads=64,
+        rms_norm_eps=1e-05,
+        vocab_size=32000,
+    ),
     'meta-llama/Llama-2-7b-hf': LlamaConfig(
         hidden_size=4096,
         intermediate_size=11008,
@@ -27,6 +63,15 @@ PREDEFINED_CONFIGS = {
         num_attention_heads=40,
         num_hidden_layers=40,
         num_key_value_heads=40,
+        rms_norm_eps=1e-05,
+        vocab_size=32000,
+    ),
+    'meta-llama/Llama-2-70b-hf': LlamaConfig(
+        hidden_size=8192,
+        intermediate_size=28672,
+        num_attention_heads=64,
+        num_hidden_layers=80,
+        num_key_value_heads=8,
         rms_norm_eps=1e-05,
         vocab_size=32000,
     ),

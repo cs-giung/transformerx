@@ -73,8 +73,13 @@ if __name__ == '__main__':
 
     # TODO: consider other model classes
     if args.model_name in (
+            'huggyllama/llama-7b',
+            'huggyllama/llama-13b',
+            'huggyllama/llama-30b',
+            'huggyllama/llama-65b',
             'meta-llama/Llama-2-7b-hf',
             'meta-llama/Llama-2-13b-hf',
+            'meta-llama/Llama-2-70b-hf',
         ):
         from transformerx.models.llama.default import \
             PREDEFINED_CONFIGS, convert_hf_params_to_jx_params
