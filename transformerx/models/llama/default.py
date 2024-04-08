@@ -7,7 +7,7 @@ import jax.numpy as jnp
 import numpy as np
 import torch
 
-from transformers import AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformerx.models.llama.modeling import LlamaConfig, LlamaParams
 
 
@@ -76,6 +76,22 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
 }
+
+
+def load_hf_params(model_name: str) -> OrderedDict:
+    """Load pre-trained parameters from the Hugging Face Hub."""
+    return AutoModelForCausalLM.from_pretrained(
+        model_name, torch_dtype=torch.float16).state_dict()
+
+
+def load_jx_params(model_name: str) -> LlamaParams:
+    """Returns pre-trained parameters."""
+    return convert_hf_params_to_jx_params(load_hf_params(model_name))
+
+
+def load_jx_config(model_name: str) -> LlamaConfig:
+    """Returns pre-defined configuration."""
+    return PREDEFINED_CONFIGS[model_name]
 
 
 def get_tokenize_fn(
