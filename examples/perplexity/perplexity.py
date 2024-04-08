@@ -12,7 +12,7 @@ import numpy as np
 import transformers
 from datasets import load_dataset
 from jax_smi import initialise_tracking
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer
 from tqdm import tqdm
 initialise_tracking()
 
@@ -82,13 +82,12 @@ if __name__ == '__main__':
             'meta-llama/Llama-2-70b-hf',
         ):
         from transformerx.models.llama.default import \
-            PREDEFINED_CONFIGS, convert_hf_params_to_jx_params
+            load_jx_config, load_jx_params
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs
 
-        config = PREDEFINED_CONFIGS[args.model_name]
-        params = convert_hf_params_to_jx_params(
-            AutoModelForCausalLM.from_pretrained(args.model_name).state_dict())
+        config = load_jx_config(args.model_name)
+        params = load_jx_params(args.model_name)
         packing_inputs = lambda input_ids: LlamaInputs(
             input_ids=input_ids, attention_mask=jnp.ones_like(input_ids),
             position_ids=jnp.arange(input_ids.shape[1])[None, :])
