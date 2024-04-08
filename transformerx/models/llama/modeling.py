@@ -10,7 +10,7 @@ Functions:
     forward_fn: Forward function for the Llama model.
 """
 from functools import partial
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 import jax
 from transformerx.models.llama.attention import \

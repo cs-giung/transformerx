@@ -13,7 +13,7 @@ Functions:
 """
 import math
 from functools import partial
-from typing import NamedTuple, Optional, Tuple
+from typing import NamedTuple, Tuple
 
 import jax
 import jax.numpy as jnp
@@ -77,7 +77,7 @@ def forward_fn(
     # pylint: disable=invalid-name,too-many-locals
     x = inputs.hidden_states
 
-    B, L, M = x.shape
+    _, _, M = x.shape
     H = config.num_key_value_heads
     R = config.num_attention_heads // config.num_key_value_heads
     K = config.hidden_size // config.num_attention_heads
