@@ -30,8 +30,8 @@ class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
 
 class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_states: ArrayLike
-    attention_mask: Optional[ArrayLike]
-    position_ids: Optional[ArrayLike]
+    attention_mask: ArrayLike
+    position_ids: ArrayLike
 
 
 class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
@@ -92,24 +92,12 @@ def forward_fn(
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
     v = einsum(x, v_proj, 'B D M, M   H V -> B   H D V')
 
-    # TODO: sanity check
-    if inputs.position_ids is not None:
-        position_ids = inputs.position_ids
-    else:
-        position_ids = repeat(jnp.arange(L), 'L -> B L', B=B)
-
-    cos, sin = make_rotary_embedding(position_ids, K)
+    cos, sin = make_rotary_embedding(inputs.position_ids, K)
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
-    # TODO: sanity check
-    if inputs.attention_mask is not None:
-        attention_mask = inputs.attention_mask.astype(bool)
-    else:
-        attention_mask = jnp.ones((B, L)).astype(bool)
-
-    qk_mask = attention_mask
-    qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', qk_mask, qk_mask))
+    qk_mask = inputs.attention_mask.astype(bool)
+    qk_mask = jnp.tril(einsum(qk_mask, qk_mask, 'B i, B j -> B i j'))
     qk_mask = qk_mask[:, None, None]
 
     qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)

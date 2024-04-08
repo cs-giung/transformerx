@@ -49,8 +49,8 @@ class LlamaConfig(NamedTuple):
 
 class LlamaInputs(NamedTuple): # pylint: disable=missing-class-docstring
     input_ids: ArrayLike
-    attention_mask: Optional[ArrayLike]
-    position_ids: Optional[ArrayLike]
+    attention_mask: ArrayLike
+    position_ids: ArrayLike
 
 
 class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
