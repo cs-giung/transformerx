@@ -17,7 +17,7 @@ from tqdm import tqdm
 initialise_tracking()
 
 from examples.default import get_args, str2bool
-from transformerx.utils.einshard import einshard
+from transformerx.experimental.einshard import einshard
 
 
 if __name__ == '__main__':

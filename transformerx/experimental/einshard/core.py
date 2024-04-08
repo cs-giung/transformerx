@@ -4,7 +4,7 @@ from math import prod
 import jax
 from jax.experimental import mesh_utils
 from jax.sharding import Mesh, NamedSharding, PartitionSpec
-from transformerx.utils.einshard.parser import parse_expression
+from transformerx.experimental.einshard.parser import parse_expression
 from transformerx.typing import Array, ArrayLike
 
 
