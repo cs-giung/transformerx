@@ -7,7 +7,6 @@ import numpy as np
 import jax
 import jax.numpy as jnp
 import torch
-from einops import repeat
 jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
 
 from jax_smi import initialise_tracking
