@@ -14,9 +14,9 @@ initialise_tracking()
 
 from transformers import AutoConfig, AutoTokenizer, LlamaForCausalLM
 from transformerx.models.llama.default import \
-    PREDEFINED_CONFIGS, convert_hf_params_to_jx_params, get_tokenize_fn
+    load_jx_config, load_jx_params, get_tokenize_fn
 from transformerx.models.llama.modeling import LlamaInputs, forward_fn
-from transformerx.utils.einshard import einshard
+from transformerx.experimental.einshard import einshard
 
 
 if __name__ == '__main__':
@@ -65,12 +65,11 @@ if __name__ == '__main__':
         print(tokenizer.batch_decode(output_pt_logits.argmax(-1)))
 
     # transformerx
-    config_jx = PREDEFINED_CONFIGS[NAME]
+    config_jx = load_jx_config(NAME)
 
     device = jax.devices('cpu')[0]
     with jax.default_device(device):
-        params_pt = model_pt.state_dict()
-        params_jx = convert_hf_params_to_jx_params(params_pt)
+        params_jx = load_jx_params(NAME)
 
         tokenize = get_tokenize_fn(
             NAME, max_length=MAX_LENGTH,
