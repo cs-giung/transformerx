@@ -9,6 +9,7 @@ import jax
 import jax.numpy as jnp
 import jaxlib
 import numpy as np
+import qax
 import transformers
 from datasets import load_dataset
 from jax_smi import initialise_tracking
@@ -18,6 +19,7 @@ initialise_tracking()
 
 from examples.default import get_args, str2bool
 from transformerx.experimental.einshard import einshard
+from transformerx.experimental.quantization import SymmetricQuantizedArray
 
 
 if __name__ == '__main__':
@@ -40,6 +42,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--seqlen', default=2048, type=int,
         help='(default: 2048)')
+
+    parser.add_argument(
+        '--quantization', default=None, type=str,
+        choices=['Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0'],
+        help='apply fake quantization if specified (default: None)')
 
     args, print_fn = get_args(
         parser, exist_ok=True, dot_log_file=True,
@@ -95,8 +102,32 @@ if __name__ == '__main__':
     if config is None:
         raise NotImplementedError(f'Unknown args.model_name={args.model_name}')
 
+    # ----------------------------------------------------------------------- #
+    # Setup model
+    # ----------------------------------------------------------------------- #
+    if args.quantization in ['Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0']:
+
+        BITS = int(args.quantization[1])
+        SKIP_PATTERNS = ('embed_tokens', 'lm_head')
+
+        def _quantizer(path, param):
+            if param.ndim < 2:
+                return param
+            if any(isinstance(e1, jax.tree_util.GetAttrKey) and any(
+                    e2 in e1.name for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            if any(isinstance(e1, jax.tree_util.DictKey) and any(
+                    e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            return SymmetricQuantizedArray.quantize(
+                param, bits=BITS,
+                contraction_axis=0, group_size=1).materialize()
+
+        params = jax.tree_util.tree_map_with_path(_quantizer, params)
+
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O1'), params)
+    forward_fn = qax.use_implicit_args(forward_fn)
 
     # ----------------------------------------------------------------------- #
     # Compute perplexity
