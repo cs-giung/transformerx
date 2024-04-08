@@ -35,8 +35,8 @@ if __name__ == '__main__':
         jax.numpy.arange(SEQ_LEN) for _ in range(BATCH_SIZE)]).astype(int)
     attention_mask_jx = jax.numpy.array([
         jax.numpy.concatenate([
-            jax.numpy.arange(i * 100),
-            jax.numpy.zeros(SEQ_LEN - i * 100)])
+            jax.numpy.arange(i * 100 + 10),
+            jax.numpy.zeros(SEQ_LEN - i * 100 - 10)])
         for i in range(BATCH_SIZE)]).astype(int)
 
     # params
