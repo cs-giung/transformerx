@@ -39,6 +39,6 @@ def forward_fn(
     """Forward function for performing RMS normalization."""
     x = inputs.hidden_states
     x = x / jnp.sqrt(jnp.mean(
-        jax.lax.square(x), axis=-1, keepdims=True) + config.rms_norm_eps)
+        jnp.square(x), axis=-1, keepdims=True) + config.rms_norm_eps)
     x = x * params.weight
     return x
