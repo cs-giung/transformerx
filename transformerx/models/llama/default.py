@@ -1,10 +1,13 @@
 """Default configurations and utilities for the Llama model."""
 from collections import OrderedDict
+from typing import Callable, List, Union
 
 import jax
 import jax.numpy as jnp
+import numpy as np
 import torch
 
+from transformers import AutoTokenizer
 from transformerx.models.llama.modeling import LlamaConfig, LlamaParams
 
 
@@ -28,6 +31,56 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
 }
+
+
+def get_tokenize_fn(
+        model_name: str,
+        *,
+        max_length: int,
+        padding_side: str = 'right',
+        return_tensors: str = 'np',
+    ) -> Callable:
+    """Returns customized tokenization function."""
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer.pad_token = tokenizer.eos_token
+
+    if padding_side not in ['right', 'left']:
+        raise AssertionError('padding_side should be `right` or `left`.')
+    tokenizer.padding_side = padding_side
+
+    def tokenize_fn(prompt: Union[str, List[str]]):
+        batch_encoding = tokenizer(
+            prompt, padding='max_length', truncation=True,
+            max_length=max_length, return_tensors='np')
+
+        input_ids = batch_encoding['input_ids']
+        attention_mask = batch_encoding['attention_mask']
+
+        if padding_side == 'right':
+            bos_idx = np.zeros((attention_mask.shape[0]))
+            eos_idx = np.sum(attention_mask, axis=-1)
+        if padding_side == 'left':
+            bos_idx = max_length - np.sum(attention_mask, axis=-1)
+            eos_idx = max_length * np.ones((attention_mask.shape[0]))
+        bos_idx, eos_idx = bos_idx.astype(int), eos_idx.astype(int)
+
+        position_ids = np.zeros_like(attention_mask)
+        for i in range(attention_mask.shape[0]):
+            position_ids[
+                i, bos_idx[i]:eos_idx[i]] = np.arange(eos_idx[i] - bos_idx[i])
+
+        tokenized = {
+            'input_ids': input_ids,
+            'attention_mask': attention_mask,
+            'position_ids': position_ids}
+
+        if return_tensors == 'jax':
+            tokenized = jax.tree_util.tree_map(jnp.array, tokenized)
+
+        return tokenized
+
+    return tokenize_fn
 
 
 def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> LlamaParams:
