@@ -1,1 +1,1 @@
-from .core import SymmetricQuantizedArray
+from .core import AsymmetricQuantizedArray, SymmetricQuantizedArray
