@@ -8,7 +8,8 @@ import numpy as np
 import torch
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformerx.models.llama.modeling import LlamaConfig, LlamaParams
+from transformerx.models.llama.modeling import LlamaConfig
+from transformerx.typing import Pytree
 
 
 PREDEFINED_CONFIGS = {
@@ -84,7 +85,7 @@ def load_hf_params(model_name: str) -> OrderedDict:
         model_name, torch_dtype=torch.float16).state_dict()
 
 
-def load_jx_params(model_name: str) -> LlamaParams:
+def load_jx_params(model_name: str) -> Pytree:
     """Returns pre-trained parameters."""
     return convert_hf_params_to_jx_params(load_hf_params(model_name))
 
@@ -144,7 +145,7 @@ def get_tokenize_fn(
     return tokenize_fn
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> LlamaParams:
+def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
@@ -190,6 +191,6 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> LlamaParams:
         lm_head = {
             'weight': pt2jx(hf_params['lm_head.weight']).T}
 
-        return LlamaParams(
+        return dict(
             embed_tokens=embed_tokens, layers=layers,
             norm=norm, lm_head=lm_head)

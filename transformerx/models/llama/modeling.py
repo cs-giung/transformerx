@@ -58,36 +58,29 @@ class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
     logits: ArrayLike
 
 
-class LlamaParams(NamedTuple): # pylint: disable=missing-class-docstring
-    embed_tokens: PytreeLike
-    layers: PytreeLike
-    norm: PytreeLike
-    lm_head: PytreeLike
-
-
 @partial(jax.jit, static_argnames='config')
 def forward_fn(
-        params: LlamaParams,
+        params: PytreeLike,
         inputs: LlamaInputs,
         config: LlamaConfig,
     ) -> LlamaOutput:
     """Forward function for the Llama model."""
-    hidden_states = params.embed_tokens['weight'][inputs.input_ids]
+    hidden_states = params['embed_tokens']['weight'][inputs.input_ids]
 
     for i in range(config.num_hidden_layers):
 
         residual = hidden_states
         hidden_states = rms_norm_fn(
             params=RMSNormParams(
-                weight=params.layers[f'{i}']['input_layernorm']['weight']),
+                weight=params['layers'][f'{i}']['input_layernorm']['weight']),
             inputs=RMSNormInputs(hidden_states=hidden_states),
             config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
         hidden_states = attention_fn(
             params=AttentionParams(
-                q_proj=params.layers[f'{i}']['self_attn']['q_proj']['weight'],
-                k_proj=params.layers[f'{i}']['self_attn']['k_proj']['weight'],
-                v_proj=params.layers[f'{i}']['self_attn']['v_proj']['weight'],
-                o_proj=params.layers[f'{i}']['self_attn']['o_proj']['weight']),
+                q_proj=params['layers'][f'{i}']['self_attn']['q_proj']['weight'],
+                k_proj=params['layers'][f'{i}']['self_attn']['k_proj']['weight'],
+                v_proj=params['layers'][f'{i}']['self_attn']['v_proj']['weight'],
+                o_proj=params['layers'][f'{i}']['self_attn']['o_proj']['weight']),
             inputs=AttentionInputs(
                 hidden_states=hidden_states,
                 attention_mask=inputs.attention_mask,
@@ -101,24 +94,24 @@ def forward_fn(
         residual = hidden_states
         hidden_states = rms_norm_fn(
             params=RMSNormParams(
-                weight=params.layers[f'{i}']['post_attention_layernorm']['weight']),
+                weight=params['layers'][f'{i}']['post_attention_layernorm']['weight']),
             inputs=RMSNormInputs(hidden_states=hidden_states),
             config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
         hidden_states = mlp_fn(
             params=MLPParams(
-                g_proj=params.layers[f'{i}']['mlp']['g_proj']['weight'],
-                u_proj=params.layers[f'{i}']['mlp']['u_proj']['weight'],
-                d_proj=params.layers[f'{i}']['mlp']['d_proj']['weight']),
+                g_proj=params['layers'][f'{i}']['mlp']['g_proj']['weight'],
+                u_proj=params['layers'][f'{i}']['mlp']['u_proj']['weight'],
+                d_proj=params['layers'][f'{i}']['mlp']['d_proj']['weight']),
             inputs=MLPInputs(hidden_states=hidden_states),
             config=MLPConfig(intermediate_size=config.intermediate_size))
         hidden_states = hidden_states + residual
 
     hidden_states = rms_norm_fn(
         params=RMSNormParams(
-            weight=params.norm['weight']),
+            weight=params['norm']['weight']),
         inputs=RMSNormInputs(hidden_states=hidden_states),
         config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
 
-    logits = hidden_states @ params.lm_head['weight']
+    logits = hidden_states @ params['lm_head']['weight']
 
     return LlamaOutput(last_hidden_states=hidden_states, logits=logits)

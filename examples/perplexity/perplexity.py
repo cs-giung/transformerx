@@ -125,6 +125,8 @@ if __name__ == '__main__':
 
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
+    print(params)
+
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O1'), params)
     forward_fn = qax.use_implicit_args(forward_fn)
