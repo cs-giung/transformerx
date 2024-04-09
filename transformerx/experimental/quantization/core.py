@@ -174,8 +174,8 @@ class AsymmetricQuantizedArray(ImplicitArray):
         ) -> Array:
         """Returns dequantized array."""
 
-        arr = scale_factor[:, None, None] * (
-            q_value - zerop_offset[:, None, None])
+        arr = q_value * scale_factor[:, None, None]
+        arr = arr - (scale_factor * zerop_offset)[:, None, None]
         arr = arr.reshape(
             shape[:contraction_axis]
             + shape[contraction_axis+1:]
