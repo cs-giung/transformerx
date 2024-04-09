@@ -26,10 +26,10 @@ python examples/perplexity/perplexity.py
 
 | Model                       | `FP16` | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
 | :-                          | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-7b`       | 5.673  | 
-| `huggyllama/llama-13b`      | 5.087  | 
-| `huggyllama/llama-30b`      | 4.098  | 
-| `huggyllama/llama-65b`      | 3.531  | 
+| `huggyllama/llama-7b`       | 5.673  | 5.676  | 5.697  | 5.863  | 6.284  |
+| `huggyllama/llama-13b`      | 5.087  | 5.086  | 5.098  | 5.176  | 5.523  |
+| `huggyllama/llama-30b`      | 4.098  | 4.099  | 4.108  | 4.187  | 4.539  |
+| `huggyllama/llama-65b`      | 3.531  | 3.531  | 3.551  | 3.606  | 3.918  |
 | `meta-llama/Llama-2-7b-hf`  | 5.468  | 5.471  | 5.520  | 5.651  | 6.108  |
-| `meta-llama/Llama-2-13b-hf` | 4.880  | 
-| `meta-llama/Llama-2-70b-hf` | 3.317  |  
+| `meta-llama/Llama-2-13b-hf` | 4.880  | 4.882  | 4.903  | 4.960  | 5.203  |
+| `meta-llama/Llama-2-70b-hf` | 3.317  | 3.319  | 3.335  | 3.415  | 3.670  |
