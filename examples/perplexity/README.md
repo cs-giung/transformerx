@@ -20,7 +20,7 @@ python examples/perplexity/perplexity.py
 | `huggyllama/llama-65b`      | 3.531  | 3.531  | 3.557  | 3.633  | 4.393  |
 | `meta-llama/Llama-2-7b-hf`  | 5.468  | 5.471  | 5.524  | 5.677  | 7.134  |
 | `meta-llama/Llama-2-13b-hf` | 4.880  | 4.883  | 4.899  | 4.973  | 5.398  |
-| `meta-llama/Llama-2-70b-hf` | 3.317  | 
+| `meta-llama/Llama-2-70b-hf` | 3.317  | 3.319  | 3.344  | 3.436  | 3.865  |
 
 ### Asymmetric Quantization
 
