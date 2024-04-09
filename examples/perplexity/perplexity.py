@@ -19,7 +19,8 @@ initialise_tracking()
 
 from examples.default import get_args, str2bool
 from transformerx.experimental.einshard import einshard
-from transformerx.experimental.quantization import SymmetricQuantizedArray
+from transformerx.experimental.quantization import \
+    AsymmetricQuantizedArray, SymmetricQuantizedArray
 
 
 if __name__ == '__main__':
@@ -44,9 +45,10 @@ if __name__ == '__main__':
         help='(default: 2048)')
 
     parser.add_argument(
-        '--quantization', default=None, type=str,
-        choices=['Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0'],
-        help='apply fake quantization if specified (default: None)')
+        '--quantization', default=None, type=str, choices=[
+            'Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0',
+            'Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1',
+        ], help='apply fake quantization if specified (default: None)')
 
     args, print_fn = get_args(
         parser, exist_ok=True, dot_log_file=True,
@@ -106,10 +108,8 @@ if __name__ == '__main__':
     # Setup model
     # ----------------------------------------------------------------------- #
     if args.quantization in ['Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0']:
-
         BITS = int(args.quantization[1])
         SKIP_PATTERNS = ('embed_tokens', 'lm_head')
-
         def _quantizer(path, param):
             if param.ndim < 2:
                 return param
@@ -119,14 +119,34 @@ if __name__ == '__main__':
             if any(isinstance(e1, jax.tree_util.DictKey) and any(
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
-            return SymmetricQuantizedArray.quantize(
+            qaram = SymmetricQuantizedArray.quantize(
                 param, bits=BITS,
                 contraction_axis=0, group_size=1).materialize()
+            return qaram
+        params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
+    if args.quantization in ['Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1']:
+        BITS = int(args.quantization[1])
+        SKIP_PATTERNS = ('embed_tokens', 'lm_head')
+        def _quantizer(path, param):
+            if param.ndim < 2:
+                return param
+            if any(isinstance(e1, jax.tree_util.GetAttrKey) and any(
+                    e2 in e1.name for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            if any(isinstance(e1, jax.tree_util.DictKey) and any(
+                    e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            qaram = AsymmetricQuantizedArray.quantize(
+                param, bits=BITS,
+                contraction_axis=0, group_size=1).materialize()
+            return qaram
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O1'), params)
+
+    # TODO: since we now apply fake quantization, qax will not be used.
     forward_fn = qax.use_implicit_args(forward_fn)
 
     # ----------------------------------------------------------------------- #
