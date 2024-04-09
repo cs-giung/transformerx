@@ -10,7 +10,7 @@ Functions:
     forward_fn: Forward function for the Llama model.
 """
 from functools import partial
-from typing import NamedTuple
+from typing import NamedTuple, Tuple
 
 import jax
 from transformerx.models.llama.attention import \
@@ -54,6 +54,7 @@ class LlamaInputs(NamedTuple): # pylint: disable=missing-class-docstring
 
 
 class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
+    intermediates: Tuple[ArrayLike, ...]
     last_hidden_states: ArrayLike
     logits: ArrayLike
 
@@ -63,8 +64,15 @@ def forward_fn(
         params: PytreeLike,
         inputs: LlamaInputs,
         config: LlamaConfig,
+        **kwargs
     ) -> LlamaOutput:
     """Forward function for the Llama model."""
+
+    # it collects intermediate hidden states if necessary
+    intermediates = None
+    if kwargs.pop('return_intermediates', False):
+        intermediates = ()
+
     hidden_states = params['embed_tokens']['weight'][inputs.input_ids]
 
     for i in range(config.num_hidden_layers):
@@ -106,6 +114,9 @@ def forward_fn(
             config=MLPConfig(intermediate_size=config.intermediate_size))
         hidden_states = hidden_states + residual
 
+        if intermediates is not None:
+            intermediates = intermediates + (hidden_states,)
+
     hidden_states = rms_norm_fn(
         params=RMSNormParams(
             weight=params['norm']['weight']),
@@ -114,4 +125,6 @@ def forward_fn(
 
     logits = hidden_states @ params['lm_head']['weight']
 
-    return LlamaOutput(last_hidden_states=hidden_states, logits=logits)
+    return LlamaOutput(
+        intermediates=intermediates,
+        last_hidden_states=hidden_states, logits=logits)
