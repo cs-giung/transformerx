@@ -6,7 +6,7 @@ import jax.numpy as jnp
 from transformerx.typing import Array, PytreeLike
 
 
-class AdamState(NamedTuple):
+class AdamState(NamedTuple): # pylint: disable=missing-class-docstring
     step: int
     position: PytreeLike
     momentum_mu: PytreeLike
@@ -42,6 +42,7 @@ def step(
     Returns:
         a tuple of output
     """
+    # pylint: disable=too-many-arguments,too-many-locals
     grad_fn = jax.value_and_grad(loss_fn, argnums, has_aux)
 
     aux, gradient = grad_fn(state.position)
