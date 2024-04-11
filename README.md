@@ -15,5 +15,6 @@ source .venv/bin/activate
 pip install -U pip setuptools wheel google-cloud-tpu
 pip install -U "jax[tpu]" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install tensorflow-cpu tensorflow-datasets
 pip install datasets einops jax-smi pylint tabulate transformers
 ```
