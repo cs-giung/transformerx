@@ -1,5 +1,5 @@
 """Adam optimizer."""
-from typing import NamedTuple, Optional, Tuple, Union
+from typing import Any, Callable, NamedTuple, Optional, Tuple, Union
 
 import jax
 import jax.numpy as jnp
