@@ -265,7 +265,7 @@ if __name__ == '__main__':
                     jnp.zeros_like, init_position), grad_mask),
             momentum_nu=jax.tree_util.tree_map(
                 _mask_fn, jax.tree_util.tree_map(
-                    jnp.zeros_like, init_position), grad_mask))
+                    jnp.ones_like, init_position), grad_mask))
         optim_step = partial(
             ivon.step,
             effective_sample_size=trn_dataset_size*args.optim_ess_factor,
