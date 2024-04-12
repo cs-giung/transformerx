@@ -43,8 +43,8 @@ def step(
             scalar, including arrays with sahpe `()`, but not arrays with other
             shapes like `(1,)`.
         learning_rate: a float learning rate value.
-        weight_decay: 
-        clip_radius
+        weight_decay: a float value for weight decay regularization.
+        clip_radius: a float value for clipping the update.
         momentums: a tuple of float momentum factors for computing running
             averages of gradient and its square (default: (0.9, 0.999)).
         eps: a small float value added to the denominator to improve numerical

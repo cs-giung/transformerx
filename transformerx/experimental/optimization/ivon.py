@@ -24,7 +24,7 @@ def step(
         effective_sample_size: Scalar,
         weight_decay: Scalar,
         clip_radius: Scalar = None,
-        momentums: Tuple[Scalar, Scalar] = (0.9, 0.999),
+        momentums: Tuple[Scalar, Scalar] = (0.9, 0.99999),
         grad_mask: PytreeLike = None,
         argnums: Union[int, Tuple[int, ...]] = 0,
         has_aux: bool = False,
@@ -35,20 +35,35 @@ def step(
     We follow the algorithm described in Shen et al. (2024).
 
     Args:
-        state
-        loss_fn
-        learning_rate
-        effective_sample_size
-        weight_decay
-        clip_radius
-        momentums
-        grad_mask
-        argnums
-        has_aux
-        axis_name
+        state: the current optimization state.
+        loss_fn: the loss function to be differentiated; it should take
+            arguments at positions specified by `argnums`, which can be arrys,
+            scalars, or common Python containers; the function should return a
+            scalar, including arrays with sahpe `()`, but not arrays with other
+            shapes like `(1,)`.
+        learning_rate: a float learning rate value.
+        effective_sample_size: setting it to the size of training dataset
+            recovers the standard evidence lower bound objective for
+            variational learning; setting it smaller than the size of training
+            dataset is equivalent to increased temperature and setting it
+            higher to decreased temperature.
+        weight_decay: a float value for weight decay regularization.
+        clip_radius: a float value for clipping the update.
+        momentums: a tuple of float momentum factors for computing running
+            averages of gradient and hessian (default: (0.9, 0.99999)).
+        grad_mask: a pytree to mask gradient; it should have the same tree
+            structure to that of `state.position` (default: None).
+        argnums: an integer or a sequence of intergers; it dermines which
+            positional argument(s) to differentiate with (default: 0).
+        has_aux: it indicates whether the `loss_fn` returns a pair, with the
+            first element as the main output of the loss function for
+            differentiation and the second element as optional auxiliary data
+            (default: False).
+        axis_name: when an `axis_name` is provided, the gradient will be
+            averaged across replicas (default: None).
 
     Returns:
-        a tuple of output
+        a tuple of `loss_fn` outputs and the updated optimization state.
     """
     # pylint: disable=too-many-arguments,too-many-locals
     def mask_fn(pytree):
