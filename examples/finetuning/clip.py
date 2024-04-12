@@ -325,3 +325,6 @@ if __name__ == '__main__':
                 wandb.log({
                     **trn_summarized, **val_summarized,
                     'val/best_acc': best_acc})
+
+            if jnp.isnan(val_summarized['val/nll']):
+                break
