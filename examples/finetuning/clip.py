@@ -25,7 +25,7 @@ initialise_tracking()
 
 from examples.default import get_args, str2bool
 from examples.finetuning.input_pipeline import create_trn_iter, create_val_iter
-from transformerx.experimental.optimization import adam
+from transformerx.experimental.optimization import adam, ivon
 
 
 if __name__ == '__main__':
@@ -53,8 +53,23 @@ if __name__ == '__main__':
         '--optim_num_steps', default=5000, type=int,
         help='the number of training steps (default: 5000)')
     parser.add_argument(
-        '--optim_learning_rate', default=1e-05, type=float,
-        help='a peak learning rate for training (default: 1e-05)')
+        '--optim_learning_rate', default=1e-03, type=float,
+        help='a peak learning rate for training (default: 1e-03)')
+    parser.add_argument(
+        '--optim_momentum_mu', default=0.9, type=float,
+        help='a momentum coefficient (default: 0.9)')
+    parser.add_argument(
+        '--optim_momentum_nu', default=0.999, type=float,
+        help='a momentum coefficient (default: 0.999)')
+    parser.add_argument(
+        '--optim_weight_decay', default=0.1, type=float,
+        help='an weight decay coefficient (default: 0.1)')
+    parser.add_argument(
+        '--optim_clip_radius', default=None, type=float,
+        help='clipping update if specified (default: None)')
+    parser.add_argument(
+        '--optim_ess_factor', default=1.0, type=float,
+        help='effective sample size factor (default: 1.0)')
 
     parser.add_argument(
         '--wandb', default=False, type=str2bool,
@@ -226,15 +241,38 @@ if __name__ == '__main__':
             jax.tree_util.keystr(e) for e in path_to_be_freezed))
     print_fn(log_str)
 
-    state = adam.AdamState(
-        step=0, position=init_position,
-        momentum_mu=jax.tree_util.tree_map(
-            _mask_fn,
-            jax.tree_util.tree_map(jnp.zeros_like, init_position), grad_mask),
-        momentum_nu=jax.tree_util.tree_map(
-            _mask_fn,
-            jax.tree_util.tree_map(jnp.zeros_like, init_position), grad_mask))
-    optim_step = adam.step
+    if args.optim == 'adam':
+        state = adam.AdamState(
+            step=0, position=init_position,
+            momentum_mu=jax.tree_util.tree_map(
+                _mask_fn, jax.tree_util.tree_map(
+                    jnp.zeros_like, init_position), grad_mask),
+            momentum_nu=jax.tree_util.tree_map(
+                _mask_fn, jax.tree_util.tree_map(
+                    jnp.zeros_like, init_position), grad_mask))
+        optim_step = partial(
+            adam.step,
+            weight_decay=args.optim_weight_decay,
+            clip_radius=args.optim_clip_radius,
+            momentums=(args.optim_momentum_mu, args.optim_momentum_nu))
+
+    if args.optim == 'ivon':
+        rng_key = jax.random.PRNGKey(args.seed)
+        state = ivon.IVONState(
+            step=0, rng_key=rng_key, position=init_position,
+            momentum_mu=jax.tree_util.tree_map(
+                _mask_fn, jax.tree_util.tree_map(
+                    jnp.zeros_like, init_position), grad_mask),
+            momentum_nu=jax.tree_util.tree_map(
+                _mask_fn, jax.tree_util.tree_map(
+                    jnp.zeros_like, init_position), grad_mask))
+        optim_step = partial(
+            ivon.step,
+            effective_sample_size=trn_dataset_size*args.optim_ess_factor,
+            weight_decay=args.optim_weight_decay,
+            clip_radius=args.optim_clip_radius,
+            momentums=(args.optim_momentum_mu, args.optim_momentum_nu))
+
     state = jax.device_put_replicated(state, jax.local_devices())
 
     best_acc = 0.0 # pylint: disable=invalid-name
