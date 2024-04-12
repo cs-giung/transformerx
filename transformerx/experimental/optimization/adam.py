@@ -6,6 +6,9 @@ import jax.numpy as jnp
 from transformerx.typing import Array, PytreeLike
 
 
+Scalar = Any
+
+
 class AdamState(NamedTuple): # pylint: disable=missing-class-docstring
     step: int
     position: PytreeLike
@@ -15,10 +18,12 @@ class AdamState(NamedTuple): # pylint: disable=missing-class-docstring
 
 def step(
         state: AdamState,
-        loss_fn: Callable[..., float],
-        learning_rate: float,
-        momentums: Tuple[float, float] = (0.9, 0.999),
-        eps: float = 1e-08,
+        loss_fn: Callable[..., Scalar],
+        learning_rate: Scalar,
+        weight_decay: Scalar,
+        clip_radius: Scalar = None,
+        momentums: Tuple[Scalar, Scalar] = (0.9, 0.999),
+        eps: Scalar = 1e-08,
         grad_mask: PytreeLike = None,
         argnums: Union[int, Tuple[int, ...]] = 0,
         has_aux: bool = False,
@@ -32,6 +37,8 @@ def step(
         state
         loss_fn
         learning_rate
+        weight_decay
+        clip_radius
         momentums
         eps
         grad_mask
@@ -68,9 +75,21 @@ def step(
         lambda mu: mu / (1.0 - momentums[0]**(state.step + 1)), new_mu)
     nu_hat = jax.tree_util.tree_map(
         lambda nu: nu / (1.0 - momentums[1]**(state.step + 1)), new_nu)
+
+    _updates = jax.tree_util.tree_map(
+        lambda mu, nu: mu / (jnp.sqrt(nu) + eps), mu_hat, nu_hat)
+    if clip_radius:
+        _updates = jax.tree_util.tree_map(
+            lambda e: jnp.clip(e, -clip_radius, clip_radius), _updates)
+    if grad_mask:
+        _updates = mask_fn(_updates)
+
     new_position = jax.tree_util.tree_map(
-        lambda p, mu, nu: p - learning_rate * mu / (jnp.sqrt(nu) + eps),
-        state.position, mu_hat, nu_hat)
+        lambda p, u: p - learning_rate * u, state.position, _updates)
+
+    new_position = jax.tree_util.tree_map(
+        lambda np, p: np - learning_rate * weight_decay * p,
+        new_position, state.position)
 
     return aux, AdamState(
         step=state.step+1, position=new_position,
