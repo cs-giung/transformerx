@@ -31,23 +31,37 @@ def step(
     ) -> Tuple[Union[Tuple[Array, Any], Array], AdamState]:
     """Step function for Adam.
 
-    We follow the algorithm described in Kingma and Ba (2015).
+    We follow the algorithm described in Kingma and Ba (2015). Note that
+    the `weight_decay` denotes the decoupled weight decay regularization
+    proposed by Loshchilov and Hutter (2019).
 
     Args:
-        state
-        loss_fn
-        learning_rate
-        weight_decay
+        state: the current optimization state.
+        loss_fn: the loss function to be differentiated; it should take
+            arguments at positions specified by `argnums`, which can be arrys,
+            scalars, or common Python containers; the function should return a
+            scalar, including arrays with sahpe `()`, but not arrays with other
+            shapes like `(1,)`.
+        learning_rate: a float learning rate value.
+        weight_decay: 
         clip_radius
-        momentums
-        eps
-        grad_mask
-        argnums
-        has_aux
-        axis_name
+        momentums: a tuple of float momentum factors for computing running
+            averages of gradient and its square (default: (0.9, 0.999)).
+        eps: a small float value added to the denominator to improve numerical
+            stability (default: 1e-08).
+        grad_mask: a pytree to mask gradient; it should have the same tree
+            structure to that of `state.position` (default: None).
+        argnums: an integer or a sequence of intergers; it dermines which
+            positional argument(s) to differentiate with (default: 0).
+        has_aux: it indicates whether the `loss_fn` returns a pair, with the
+            first element as the main output of the loss function for
+            differentiation and the second element as optional auxiliary data
+            (default: False).
+        axis_name: when an `axis_name` is provided, the gradient will be
+            averaged across replicas (default: None).
 
     Returns:
-        a tuple of output
+        a tuple of `loss_fn` outputs and the updated optimization state.
     """
     # pylint: disable=too-many-arguments,too-many-locals
     def mask_fn(pytree):
