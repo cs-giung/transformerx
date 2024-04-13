@@ -257,11 +257,26 @@ if __name__ == '__main__':
     path_to_be_freezed = []
     path_and_leaves, treedef \
         = jax.tree_util.tree_flatten_with_path(init_position)
-    for path, leave in path_and_leaves:
-        if jax.tree_util.DictKey('embeddings') in path:
+
+    if args.lora:
+        for path, leave in path_and_leaves:
+            if jax.tree_util.GetAttrKey('lora_a') in path:
+                path_to_be_updated.append(path)
+                grad_mask.append(False)
+                continue
+            if jax.tree_util.GetAttrKey('lora_b') in path:
+                path_to_be_updated.append(path)
+                grad_mask.append(False)
+                continue
             path_to_be_freezed.append(path)
             grad_mask.append(True)
-        else:
+
+    else:
+        for path, leave in path_and_leaves:
+            if jax.tree_util.DictKey('embeddings') in path:
+                path_to_be_freezed.append(path)
+                grad_mask.append(True)
+                continue
             path_to_be_updated.append(path)
             grad_mask.append(False)
 
