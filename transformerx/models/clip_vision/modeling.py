@@ -5,6 +5,7 @@ Classes:
 
 Functions:
 """
+from functools import partial
 from typing import NamedTuple, Tuple
 
 import jax.numpy as jnp
