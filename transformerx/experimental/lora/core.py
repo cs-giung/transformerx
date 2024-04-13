@@ -17,7 +17,7 @@ class LoraArray(ImplicitArray):
     lora_a: ArrayLike
     lora_b: ArrayLike
     lora_rank: int = aux_field()
-    lora_alpha: float = aux_field(default=1.0)
+    lora_alpha: int = aux_field(default=1)
 
     @staticmethod
     @jax.default_device(jax.devices('cpu')[0])
@@ -26,7 +26,7 @@ class LoraArray(ImplicitArray):
             arr: ArrayLike,
             *,
             rank: int,
-            alpha: float = 1.0,
+            alpha: int = 1,
             a_init: Callable = jax.nn.initializers.normal(stddev=0.01),
             b_init: Callable = jax.nn.initializers.zeros,
         ):
