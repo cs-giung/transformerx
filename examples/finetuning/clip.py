@@ -28,6 +28,7 @@ from examples.default import get_args, str2bool
 from examples.finetuning.input_pipeline import create_trn_iter, create_val_iter
 from transformerx.experimental.lora import LoraArray
 from transformerx.experimental.optimization import adam, ivon
+from transformerx.tree_util import save
 
 
 if __name__ == '__main__':
@@ -369,9 +370,12 @@ if __name__ == '__main__':
             if val_summarized['val/acc'] > best_acc:
                 best_acc = val_summarized['val/acc']
                 if args.save:
-                    ckpt_path = os.path.join(args.save, 'best_acc')
-                    pred_path = os.path.join(args.save, 'predictions')
-                    # TODO
+                    save(
+                        os.path.join(args.save, 'best_acc'),
+                        jax.tree_util.tree_map(lambda x: x[0], state))
+                    save(
+                        os.path.join(args.save, 'predictions'),
+                        {'logits': logits_list, 'labels': labels_list})
 
             if args.wandb:
                 wandb.log({
