@@ -17,6 +17,7 @@ import jax
 import jax.numpy as jnp
 import jaxlib
 import numpy as np
+import qax
 import tensorflow
 import tensorflow_datasets
 import transformers
@@ -25,6 +26,7 @@ initialise_tracking()
 
 from examples.default import get_args, str2bool
 from examples.finetuning.input_pipeline import create_trn_iter, create_val_iter
+from transformerx.experimental.lora import LoraArray
 from transformerx.experimental.optimization import adam, ivon
 
 
@@ -42,6 +44,16 @@ if __name__ == '__main__':
     parser.add_argument(
         '--data_name', default='imagenet2012', type=str,
         help='(default: imagenet2012)')
+
+    parser.add_argument(
+        '--lora', default=False, type=str2bool,
+        help='apply LoRA if specified (default: False)')
+    parser.add_argument(
+        '--lora_rank', default=8, type=int,
+        help='a rank parameter (default: 8)')
+    parser.add_argument(
+        '--lora_alpha', default=16, type=int,
+        help='a scaling parameter (default: 16)')
 
     parser.add_argument(
         '--optim', default='adam', type=str,
@@ -156,6 +168,31 @@ if __name__ == '__main__':
         'ext': params,
         'cls': jnp.load(f'./examples/finetuning/{args.data_name}.npy')}
 
+    if args.lora:
+        RANK = args.lora_rank
+        ALPHA = args.lora_alpha
+        SKIP_PATTERNS = ('embeddings',)
+
+        treedef = jax.tree_util.tree_structure(init_position)
+        rng_keys = jax.random.PRNGKey(args.seed)
+        rng_keys = jax.tree_util.tree_unflatten(
+            treedef, jax.random.split(rng_keys, treedef.num_leaves))
+
+        def _loraizer(path, param, key):
+            if param.ndim != 2:
+                return param
+            if any(isinstance(e1, jax.tree_util.GetAttrKey) and any(
+                    e2 in e1.name for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            if any(isinstance(e1, jax.tree_util.DictKey) and any(
+                    e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            qaram = LoraArray.loraize(key, param, rank=RANK, alpha=ALPHA)
+            return qaram
+        init_position = jax.tree_util.tree_map_with_path(
+            _loraizer, init_position, rng_keys)
+
+    @qax.use_implicit_args
     def forward_fn(params, images): # pylint: disable=redefined-outer-name
         """Returns logit vector for each instance."""
         images = (images / 255.0 - IMAGE_MEAN) / IMAGE_STD
