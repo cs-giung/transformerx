@@ -372,10 +372,12 @@ if __name__ == '__main__':
                 if args.save:
                     save(
                         os.path.join(args.save, 'best_acc'),
-                        jax.tree_util.tree_map(lambda x: x[0], state))
+                        jax.tree_util.tree_map(lambda x: x[0], state),
+                        overwrite=True)
                     save(
                         os.path.join(args.save, 'predictions'),
-                        {'logits': logits_list, 'labels': labels_list})
+                        {'logits': logits_list, 'labels': labels_list},
+                        overwrite=True)
 
             if args.wandb:
                 wandb.log({
