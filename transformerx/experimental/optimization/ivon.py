@@ -3,7 +3,7 @@ from typing import Any, Callable, NamedTuple, Optional, Tuple, Union
 
 import jax
 import jax.numpy as jnp
-from transformerx.typing import Array, PRNGKeyLike, PytreeLike
+from transformerx.typing import Array, PRNGKeyLike, Pytree, PytreeLike
 
 
 Scalar = Any
@@ -127,3 +127,39 @@ def step(
     return aux, IVONState(
         step=state.step+1, rng_key=new_rng_key, position=new_position,
         momentum_mu=new_mu, momentum_nu=new_nu)
+
+
+@jax.default_device(jax.devices('cpu')[0])
+def sample(
+        rng_key: PRNGKeyLike,
+        state: IVONState,
+        effective_sample_size: Scalar,
+        weight_decay: Scalar,
+    ) -> Pytree:
+    """Sample function for IVON.
+
+    Args:
+        rng_key
+        state
+        effective_sample_size
+        weight_decay
+
+    Returns:
+        a sampled position.
+    """
+    def randn_like(rng_key, pytree):
+        treedef = jax.tree_util.tree_structure(pytree)
+        rng_key = jax.tree_util.tree_unflatten(
+            treedef, jax.random.split(rng_key, treedef.num_leaves))
+        return jax.tree_util.tree_map(
+            lambda p, k: jax.random.normal(k, p.shape, p.dtype),
+            pytree, rng_key)
+
+    # TODO: does it make sense?
+    noise = randn_like(rng_key, state.position)
+    noisy_position = jax.tree_util.tree_map(
+        lambda p, n, nu: jnp.where(nu == 0, p, p + n * jnp.sqrt(
+            1.0 / (effective_sample_size * (nu + weight_decay)))),
+        state.position, noise, state.momentum_nu)
+
+    return noisy_position
