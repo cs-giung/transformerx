@@ -12,13 +12,13 @@ import numpy as np
 import qax
 import transformers
 from datasets import load_dataset
+from einshard import einshard
 from jax_smi import initialise_tracking
 from transformers import AutoTokenizer
 from tqdm import tqdm
 initialise_tracking()
 
 from examples.default import get_args, str2bool
-from transformerx.experimental.einshard import einshard
 from transformerx.experimental.quantization import \
     AsymmetricQuantizedArray, SymmetricQuantizedArray
 
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
     params = jax.tree_util.tree_map(
-        lambda e: einshard(e, '... O -> ... O1'), params)
+        lambda e: einshard(e, '... O -> ... O*'), params)
 
     # TODO: since we now apply fake quantization, qax will not be used.
     forward_fn = qax.use_implicit_args(forward_fn)
