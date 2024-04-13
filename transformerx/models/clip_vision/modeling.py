@@ -72,6 +72,7 @@ def embedding_fn(
     return x
 
 
+@partial(jax.jit, static_argnames=('config', 'return_intermediates'))
 def forward_fn(
         params: PytreeLike,
         inputs: CLIPVisionInputs,

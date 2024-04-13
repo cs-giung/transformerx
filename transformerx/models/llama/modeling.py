@@ -59,7 +59,7 @@ class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
     logits: ArrayLike
 
 
-@partial(jax.jit, static_argnames='config')
+@partial(jax.jit, static_argnames=('config', 'return_intermediates'))
 def forward_fn(
         params: PytreeLike,
         inputs: LlamaInputs,
