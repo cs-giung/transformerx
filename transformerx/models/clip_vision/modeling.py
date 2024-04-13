@@ -8,6 +8,7 @@ Functions:
 from functools import partial
 from typing import NamedTuple, Tuple
 
+import jax
 import jax.numpy as jnp
 from einops import repeat
 
