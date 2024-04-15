@@ -29,14 +29,41 @@ The example demonstrates computing accuracy on zero-shot tasks.
 python examples/llama/accuracy.py
     --model_name huggyllama/llama-7b
     --data_name arc_e
+    --quantization {...}
 ```
+
+### Classification accuracy (%)
 
 | Model                       | `FP16` |     | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |     | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
 | :-                          | :-:    | :-: | :-:    | :-:    | :-:    | :-:    | :-: | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-7b`       | 72.63  |     | 72.81  | 72.11  | 72.28  | 70.35  |
-| `huggyllama/llama-13b`      |        |     |
-| `huggyllama/llama-30b`      |        |     |
+| `huggyllama/llama-7b`       | 72.63  |     | 72.81  | 72.11  | 72.28  | 70.35  |     | 72.81  | 73.51  | 72.98  | 72.28  |
+| `huggyllama/llama-13b`      | 75.26  |     | 75.61  | 75.79  | 75.79  | 72.46  |
+| `huggyllama/llama-30b`      | 80.18  |     | 79.65  | 80.88  | 80.18  | 77.02  |
 | `huggyllama/llama-65b`      |        |     |
-| `meta-llama/Llama-2-7b-hf`  |        |     |
-| `meta-llama/Llama-2-13b-hf` |        |     |
+| `meta-llama/Llama-2-7b-hf`  | 74.56  |     | 74.74  | 75.44  | 74.39  | 71.23  |
+| `meta-llama/Llama-2-13b-hf` | 77.19  |     | 77.72  | 77.37  | 77.19  | 75.44  |
+| `meta-llama/Llama-2-70b-hf` |        |     |
+
+### Categorical negative log-likelihood
+
+| Model                       | `FP16` |     | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |     | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
+| :-                          | :-:    | :-: | :-:    | :-:    | :-:    | :-:    | :-: | :-:    | :-:    | :-:    | :-:    |
+| `huggyllama/llama-7b`       | 1.100  |     | 1.104  | 1.117  | 1.119  | 1.368  | 
+| `huggyllama/llama-13b`      | .9724  |     | .9702  | .9769  | .9879  | 1.117  |
+| `huggyllama/llama-30b`      | .8401  |     | .8428  | .8267  | .8581  | .9274  |
+| `huggyllama/llama-65b`      |        |     |
+| `meta-llama/Llama-2-7b-hf`  | 1.081  |     | 1.082  | 1.078  | 1.111  | 1.328  |
+| `meta-llama/Llama-2-13b-hf` | .9345  |     | .9362  | .9443  | .9410  | .9746  |
+| `meta-llama/Llama-2-70b-hf` |        |     |
+
+### Expected calibration error (%)
+
+| Model                       | `FP16` |     | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |     | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
+| :-                          | :-:    | :-: | :-:    | :-:    | :-:    | :-:    | :-: | :-:    | :-:    | :-:    | :-:    |
+| `huggyllama/llama-7b`       | 10.63  |     | 10.49  | 10.67  | 10.81  | 13.33  |
+| `huggyllama/llama-13b`      | 8.412  |     | 9.252  | 8.279  | 8.350  | 10.33  |
+| `huggyllama/llama-30b`      | 7.889  |     | 8.605  | 8.118  | 9.074  | 8.590  |
+| `huggyllama/llama-65b`      |        |     |
+| `meta-llama/Llama-2-7b-hf`  | 10.41  |     | 10.78  | 10.29  | 10.58  | 13.63  |
+| `meta-llama/Llama-2-13b-hf` | 8.983  |     | 9.328  | 8.868  | 9.278  | 9.611  |
 | `meta-llama/Llama-2-70b-hf` |        |     |
