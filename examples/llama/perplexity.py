@@ -9,7 +9,6 @@ import jax
 import jax.numpy as jnp
 import jaxlib
 import numpy as np
-import qax
 import transformers
 from datasets import load_dataset
 from einshard import einshard
@@ -21,6 +20,8 @@ initialise_tracking()
 from examples.default import get_args, str2bool
 from transformerx.experimental.quantization import \
     AsymmetricQuantizedArray, SymmetricQuantizedArray
+from transformerx.models.llama.default import load_jx_config, load_jx_params
+from transformerx.models.llama.modeling import forward_fn, LlamaInputs
 
 
 if __name__ == '__main__':
@@ -31,18 +32,18 @@ if __name__ == '__main__':
     parser = ArgumentParser()
 
     parser.add_argument(
-        '--model_name', default='meta-llama/Llama-2-7b-hf', type=str,
-        help='(default: meta-llama/Llama-2-7b-hf)')
+        '--model_name', default='huggyllama/llama-7b', type=str,
+        help='a model name (default: huggyllama/llama-7b)')
 
     parser.add_argument(
         '--data_name', default='wikitext2', type=str,
-        help='(default: wikitext2)')
+        help='a data name (default: wikitext2)')
     parser.add_argument(
         '--ensure_bos', default=False, type=str2bool,
         help='the first token will be <BOS> if specified (default: False)')
     parser.add_argument(
         '--seqlen', default=2048, type=int,
-        help='(default: 2048)')
+        help='a sequence length for evaluating perplexity (default: 2048)')
 
     parser.add_argument(
         '--quantization', default=None, type=str, choices=[
@@ -80,7 +81,6 @@ if __name__ == '__main__':
     config = None # pylint: disable=invalid-name
     params = None # pylint: disable=invalid-name
 
-    # TODO: consider other model classes
     if args.model_name in (
             'huggyllama/llama-7b',
             'huggyllama/llama-13b',
@@ -90,16 +90,14 @@ if __name__ == '__main__':
             'meta-llama/Llama-2-13b-hf',
             'meta-llama/Llama-2-70b-hf',
         ):
-        from transformerx.models.llama.default import \
-            load_jx_config, load_jx_params
-        from transformerx.models.llama.modeling import \
-            forward_fn, LlamaInputs
-
         config = load_jx_config(args.model_name)
         params = load_jx_params(args.model_name)
-        packing_inputs = lambda input_ids: LlamaInputs(
-            input_ids=input_ids, attention_mask=jnp.ones_like(input_ids),
-            position_ids=jnp.arange(input_ids.shape[1])[None, :])
+
+        def packing_inputs(input_ids):
+            # pylint: disable=missing-function-docstring,redefined-outer-name
+            return LlamaInputs(
+                input_ids=input_ids, attention_mask=jnp.ones_like(input_ids),
+                position_ids=jnp.arange(input_ids.shape[1])[None, :])
 
     if config is None:
         raise NotImplementedError(f'Unknown args.model_name={args.model_name}')
@@ -146,9 +144,6 @@ if __name__ == '__main__':
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O*'), params)
 
-    # TODO: since we now apply fake quantization, qax will not be used.
-    forward_fn = qax.use_implicit_args(forward_fn)
-
     # ----------------------------------------------------------------------- #
     # Compute perplexity
     # ----------------------------------------------------------------------- #
@@ -174,3 +169,5 @@ if __name__ == '__main__':
 
             ppl = np.exp(sum(nlls) / len(nlls) / seqlen)
             pbar.set_description(f'PPL: {ppl:.3e}')
+
+        print_fn(f'PPL: {ppl:.3e}')
