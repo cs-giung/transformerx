@@ -193,6 +193,9 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
         lm_head = {
             'weight': pt2jx(hf_params['lm_head.weight']).T}
 
-        return dict(
-            embed_tokens=embed_tokens, layers=layers,
-            norm=norm, lm_head=lm_head)
+        return {
+            'embed_tokens': embed_tokens,
+            'layers': layers,
+            'norm': norm,
+            'lm_head': lm_head,
+        }
