@@ -31,12 +31,12 @@ python examples/llama/accuracy.py
     --data_name arc_e
 ```
 
-| Model                       | `FP16` | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
-| :-                          | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-7b`       | 72.63  | 72.81  | 72.11  | 72.28  | 70.35  |
-| `huggyllama/llama-13b`      | 
-| `huggyllama/llama-30b`      | 
-| `huggyllama/llama-65b`      | 
-| `meta-llama/Llama-2-7b-hf`  | 
-| `meta-llama/Llama-2-13b-hf` | 
-| `meta-llama/Llama-2-70b-hf` | 
+| Model                       | `FP16` |     | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |     | `Q8_1` | `Q6_1` | `Q5_1` | `Q4_1` |
+| :-                          | :-:    | :-: | :-:    | :-:    | :-:    | :-:    | :-: | :-:    | :-:    | :-:    | :-:    |
+| `huggyllama/llama-7b`       | 72.63  |     | 72.81  | 72.11  | 72.28  | 70.35  |
+| `huggyllama/llama-13b`      |        |     |
+| `huggyllama/llama-30b`      |        |     |
+| `huggyllama/llama-65b`      |        |     |
+| `meta-llama/Llama-2-7b-hf`  |        |     |
+| `meta-llama/Llama-2-13b-hf` |        |     |
+| `meta-llama/Llama-2-70b-hf` |        |     |
