@@ -1,6 +1,6 @@
 """
 Think you have Solved Question Answering? Try ARC, the AI2 Reasoning Challenge
-https://arxiv.org/pdf/1803.05457.pdf
+https://arxiv.org/abs/1803.05457
 """
 from transformerx.tasks.base import MultipleChoiceTask
 

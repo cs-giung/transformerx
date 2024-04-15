@@ -1,6 +1,6 @@
 """
 HellaSwag: Can a Machine Really Finish Your Sentence?
-https://arxiv.org/pdf/1905.07830.pdf
+https://arxiv.org/abs/1905.07830
 """
 import re
 from transformerx.tasks.base import MultipleChoiceTask
