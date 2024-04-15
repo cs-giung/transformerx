@@ -141,7 +141,7 @@ if __name__ == '__main__':
         lambda e: einshard(e, '... O -> ... O*'), params)
 
     # ----------------------------------------------------------------------- #
-    # Compute accuracy
+    # Compute classification metrics
     # ----------------------------------------------------------------------- #
     def _eval_doc(_doc):
         sentence = tokenize_fn([_doc['query'] + e for e in _doc['choices']])
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
         inputs = LlamaInputs(**sentence)
         logits = forward_fn(params, inputs, config).logits
-        scores = []
+        lprobs = []
         for idx in range(logits.shape[0]):
             ans = sentence['input_ids'][
                 idx, jnp.sum(question['attention_mask'][idx]):
@@ -157,15 +157,25 @@ if __name__ == '__main__':
             gss = jax.nn.log_softmax(logits[
                 idx, jnp.sum(question['attention_mask'][idx]) - 1:
                      jnp.sum(sentence['attention_mask'][idx]) - 1])
-            scores.append(float(
+            lprobs.append(float(
                 jnp.sum(jnp.take_along_axis(gss, ans[:, None], axis=-1))))
 
-        return np.argmax(scores) == doc['gold']
+        cat = np.array(lprobs)
+        cat = np.exp(cat - cat.max())
+        cat = cat / cat.sum()
+        nll = np.negative(np.log(cat[doc['gold']]))
+        acc = np.argmax(lprobs) == doc['gold']
+
+        return acc, nll
 
     accs = []
+    nlls = []
     with tqdm(task.valid_docs()) as pbar:
         for doc in pbar:
-            accs.append(_eval_doc(doc))
+            acc, nll = _eval_doc(doc)
+            accs.append(acc)
+            nlls.append(nll)
             acc = np.mean(accs)
-            pbar.set_description(f'ACC: {acc:.3e}')
-        print_fn(f'ACC: {acc:.3e}')
+            nll = np.mean(nlls)
+            pbar.set_description(f'ACC: {acc:.3e}, NLL: {nll:.3e}')
+        print_fn(f'ACC: {acc:.3e}, NLL: {nll:.3e}')
