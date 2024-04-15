@@ -21,9 +21,3 @@ class MultipleChoiceTask(Task):
 
     def doc_to_target(self, doc):
         return ' ' + doc['choices'][doc['gold']]
-
-
-class PerplexityTask(Task):
-
-    def doc_to_target(self, doc):
-        return doc
