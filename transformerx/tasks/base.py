@@ -13,7 +13,8 @@ class Task(abc.ABC):
     def download(self, data_dir, cache_dir, download_mode):
         self.dataset = datasets.load_dataset(
             path=self.DATASET_PATH, name=self.DATASET_NAME, data_dir=data_dir,
-            cache_dir=cache_dir, download_mode=download_mode)
+            cache_dir=cache_dir, download_mode=download_mode,
+            trust_remote_code=True)
 
 
 class MultipleChoiceTask(Task):
@@ -21,3 +22,8 @@ class MultipleChoiceTask(Task):
     def doc_to_target(self, doc):
         return ' ' + doc['choices'][doc['gold']]
 
+
+class PerplexityTask(Task):
+
+    def doc_to_target(self, doc):
+        return doc

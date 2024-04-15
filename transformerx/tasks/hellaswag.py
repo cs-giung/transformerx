@@ -3,20 +3,17 @@ HellaSwag: Can a Machine Really Finish Your Sentence?
 https://arxiv.org/pdf/1905.07830.pdf
 """
 import re
-from .base import MultipleChoiceTask
+from transformerx.tasks.base import MultipleChoiceTask
 
 
 class HellaSwag(MultipleChoiceTask):
     DATASET_PATH = 'hellaswag'
     DATASET_NAME = None
 
-    def training_docs(self):
-        if self._training_docs is None:
-            self._training_docs = list(
-                map(self._process_doc, self.dataset['train']))
-        return self._training_docs
+    def train_docs(self):
+        return list(map(self._process_doc, self.dataset['train']))
 
-    def validation_docs(self):
+    def valid_docs(self):
         return list(map(self._process_doc, self.dataset['validation']))
 
     def _process_doc(self, doc):
