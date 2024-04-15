@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import jaxlib
 import numpy as np
 import transformers
-from datasets import load_dataset
 from einshard import einshard
 from jax_smi import initialise_tracking
 from transformers import AutoTokenizer
@@ -63,12 +62,14 @@ if __name__ == '__main__':
     tokens = None # pylint: disable=invalid-name
 
     if args.data_name == 'wikitext2':
-        tokens = load_dataset('wikitext', 'wikitext-2-raw-v1', split='test')
+        tokens = datasets.load_dataset(
+            'wikitext', 'wikitext-2-raw-v1', split='test')
         tokens = tokenizer(
             '\n\n'.join(tokens['text']), return_tensors='np').input_ids
 
     if args.data_name == 'ptb':
-        tokens = load_dataset('ptb_text_only', 'penn_treebank', split='test')
+        tokens = datasets.load_dataset(
+            'ptb_text_only', 'penn_treebank', split='test')
         tokens = tokenizer(
             ' '.join(tokens['sentence']), return_tensors='np').input_ids
 
