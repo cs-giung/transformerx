@@ -99,6 +99,7 @@ def get_tokenize_fn(
         model_name: str,
         *,
         max_length: int,
+        add_special_tokens: bool = True,
         padding_side: str = 'right',
         return_tensors: str = 'np',
     ) -> Callable:
@@ -113,7 +114,8 @@ def get_tokenize_fn(
 
     def tokenize_fn(prompt: Union[str, List[str]]):
         batch_encoding = tokenizer(
-            prompt, padding='max_length', truncation=True,
+            prompt, add_special_tokens=add_special_tokens,
+            padding='max_length', truncation=True,
             max_length=max_length, return_tensors='np')
 
         input_ids = batch_encoding['input_ids']
