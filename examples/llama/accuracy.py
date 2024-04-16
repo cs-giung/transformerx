@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
         inputs = LlamaInputs(**sentence)
         logits = forward_fn(params, inputs, config).logits
-        scores = []
+        _score = []
         for idx in range(logits.shape[0]):
             ans = sentence['input_ids'][
                 idx, jnp.sum(question['attention_mask'][idx]):
@@ -157,25 +157,15 @@ if __name__ == '__main__':
             gss = jax.nn.log_softmax(logits[
                 idx, jnp.sum(question['attention_mask'][idx]) - 1:
                      jnp.sum(sentence['attention_mask'][idx]) - 1])
-            scores.append(float(
-                jnp.sum(jnp.take_along_axis(gss, ans[:, None], axis=-1))))
+            _score.append(np.array(
+                jnp.take_along_axis(gss, ans[:, None], axis=-1)))
+        return _score
 
-        acc = np.argmax(scores) == _doc['gold']
-        log_prob = np.exp(np.array(scores) - np.max(scores))
-        log_prob = np.log(log_prob / np.sum(log_prob))
+    scores = []
+    for doc in tqdm(task.valid_docs()):
+        scores.append(_eval_doc(doc))
+    metrics = task.evaluate(task.valid_docs(), scores)
 
-        return acc, log_prob
-
-    accs = []
-    lprobs_list = []
-    labels_list = []
-    with tqdm(task.valid_docs()) as pbar:
-        for doc in pbar:
-            acc, log_prob = _eval_doc(doc)
-            accs.append(acc)
-            lprobs_list.append(log_prob)
-            labels_list.append(doc['gold'])
-            pbar.set_description(f'ACC: {np.mean(accs):.3e}')
-
-        metrics = task.evaluate(lprobs_list, labels_list)
-        print_fn(', '.join(f'{k}: {v:.3e}' for k, v in metrics.items()))
+    log_str = ', '.join(f'{k}: {v:.3e}'
+        for k, v in metrics.items() if isinstance(v, float))
+    print_fn(log_str)
