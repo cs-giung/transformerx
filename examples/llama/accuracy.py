@@ -161,11 +161,43 @@ if __name__ == '__main__':
                 jnp.take_along_axis(gss, ans[:, None], axis=-1)))
         return _score
 
-    scores = []
+    log_probs_u = []
+    log_probs_t = []
+    log_probs_b = []
     for doc in tqdm(task.valid_docs()):
-        scores.append(_eval_doc(doc))
-    metrics = task.evaluate(task.valid_docs(), scores)
+        _score = _eval_doc(doc)
 
-    log_str = ', '.join(f'{k}: {v:.3e}'
+        # unnormalized
+        log_prob = np.array([e.sum() for e in _score])
+        log_prob = np.exp(log_prob - log_prob.max())
+        log_prob = np.log(log_prob / log_prob.sum())
+        log_probs_u.append(log_prob)
+
+        # token-length normalized
+        log_prob = np.array([e.sum() for e in _score])
+        log_prob = log_prob / np.array([len(e) for e in _score])
+        log_prob = np.exp(log_prob - log_prob.max())
+        log_prob = np.log(log_prob / log_prob.sum())
+        log_probs_t.append(log_prob)
+
+        # byte-length normalized
+        log_prob = np.array([e.sum() for e in _score])
+        log_prob = log_prob / np.array([len(e) for e in doc['choices']])
+        log_prob = np.exp(log_prob - log_prob.max())
+        log_prob = np.log(log_prob / log_prob.sum())
+        log_probs_b.append(log_prob)
+
+    metrics = task.evaluate(task.valid_docs(), log_probs_u)
+    log_str = 'Unnormalized:' + ', '.join(f'{k}: {v:.3e}'
+        for k, v in metrics.items() if isinstance(v, float))
+    print_fn(log_str)
+
+    metrics = task.evaluate(task.valid_docs(), log_probs_t)
+    log_str = 'Token-length normalized:' + ', '.join(f'{k}: {v:.3e}'
+        for k, v in metrics.items() if isinstance(v, float))
+    print_fn(log_str)
+
+    metrics = task.evaluate(task.valid_docs(), log_probs_b)
+    log_str = 'Byte-length normalized:' + ', '.join(f'{k}: {v:.3e}'
         for k, v in metrics.items() if isinstance(v, float))
     print_fn(log_str)
