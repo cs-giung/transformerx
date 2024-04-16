@@ -11,10 +11,16 @@ class HellaSwag(MultipleChoiceTask):
     DATASET_NAME = None
 
     def train_docs(self):
-        return list(map(self._process_doc, self.dataset['train']))
+        if self._train_docs is None:
+            self._train_docs = list(
+                map(self._process_doc, self.dataset['train']))
+        return self._train_docs
 
     def valid_docs(self):
-        return list(map(self._process_doc, self.dataset['validation']))
+        if self._valid_docs is None:
+            self._valid_docs = list(
+                map(self._process_doc, self.dataset['validation']))
+        return self._valid_docs
 
     def _process_doc(self, doc):
         ctx = doc['ctx_a'] + ' ' + doc['ctx_b'].capitalize()

@@ -10,10 +10,16 @@ class ARCEasy(MultipleChoiceTask):
     DATASET_NAME = 'ARC-Easy'
 
     def train_docs(self):
-        return list(map(self._process_doc, self.dataset['train']))
+        if self._train_docs is None:
+            self._train_docs = list(
+                map(self._process_doc, self.dataset['train']))
+        return self._train_docs
 
     def valid_docs(self):
-        return list(map(self._process_doc, self.dataset['validation']))
+        if self._valid_docs is None:
+            self._valid_docs = list(
+                map(self._process_doc, self.dataset['validation']))
+        return self._valid_docs
 
     def _process_doc(self, doc):
         num2abc = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E'}

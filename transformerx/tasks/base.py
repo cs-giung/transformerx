@@ -10,7 +10,8 @@ class Task(abc.ABC):
 
     def __init__(self, data_dir=None, cache_dir=None, download_mode=None):
         self.download(data_dir, cache_dir, download_mode)
-        self._training_docs = None
+        self._train_docs = None
+        self._valid_docs = None
 
     def download(self, data_dir, cache_dir, download_mode):
         self.dataset = datasets.load_dataset(
