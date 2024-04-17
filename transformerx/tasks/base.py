@@ -12,6 +12,7 @@ class Task(abc.ABC):
         self.download(data_dir, cache_dir, download_mode)
         self._train_docs = None
         self._valid_docs = None
+        self._kshot_docs = None
 
     def download(self, data_dir, cache_dir, download_mode):
         self.dataset = datasets.load_dataset(
