@@ -145,10 +145,12 @@ if __name__ == '__main__':
     log_probs_u = []
     log_probs_t = []
     log_probs_b = []
+    docs = []
     for task in tasks:
         for doc in tqdm(task.valid_docs()):
             examples = task.kshot_docs()[:5]
             _score = _eval_doc(doc, examples, task)
+            docs.append(doc)
 
             # unnormalized
             log_prob = np.array([e.sum() for e in _score])
@@ -170,17 +172,17 @@ if __name__ == '__main__':
             log_prob = np.log(log_prob / log_prob.sum())
             log_probs_b.append(log_prob)
 
-    metrics = task.evaluate(task.valid_docs(), log_probs_u)
+    metrics = task.evaluate(docs, log_probs_u)
     log_str = 'Unnormalized:' + ', '.join(f'{k}: {v:.3e}'
         for k, v in metrics.items() if isinstance(v, float))
     print_fn(log_str)
 
-    metrics = task.evaluate(task.valid_docs(), log_probs_t)
+    metrics = task.evaluate(docs, log_probs_t)
     log_str = 'Token-length normalized:' + ', '.join(f'{k}: {v:.3e}'
         for k, v in metrics.items() if isinstance(v, float))
     print_fn(log_str)
 
-    metrics = task.evaluate(task.valid_docs(), log_probs_b)
+    metrics = task.evaluate(docs, log_probs_b)
     log_str = 'Byte-length normalized:' + ', '.join(f'{k}: {v:.3e}'
         for k, v in metrics.items() if isinstance(v, float))
     print_fn(log_str)
