@@ -21,7 +21,7 @@ CATEGORIES = {
         "professional_law",
         "world_religions",
     ],
-    "social_science": [
+    "social_sciences": [
         "econometrics",
         "high_school_geography",
         "high_school_government_and_politics",
