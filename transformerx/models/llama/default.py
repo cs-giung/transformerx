@@ -111,6 +111,7 @@ def get_tokenize_fn(
     if padding_side not in ['right', 'left']:
         raise AssertionError('padding_side should be `right` or `left`.')
     tokenizer.padding_side = padding_side
+    tokenizer.truncation_side = padding_side
 
     def tokenize_fn(prompt: Union[str, List[str]]):
         batch_encoding = tokenizer(
