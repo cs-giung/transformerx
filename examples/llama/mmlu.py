@@ -22,6 +22,7 @@ from transformerx.experimental.quantization import \
 from transformerx.models.llama.default import \
     load_jx_config, load_jx_params, get_tokenize_fn
 from transformerx.models.llama.modeling import forward_fn, LlamaInputs
+from transformerx.tasks import ARCEasy, ARCChallenge, HellaSwag, PIQA
 from transformerx.tasks.hendrycks_test import HendrycksTest, CATEGORIES
 
 
@@ -37,8 +38,11 @@ if __name__ == '__main__':
         help='a model name (default: huggyllama/llama-7b)')
 
     parser.add_argument(
-        '--task_name', default='humanities', type=str,
+        '--task_name', default='hendrycks_test/humanities', type=str,
         help='a task name (default: humanities)')
+    parser.add_argument(
+        '--n_fewshot', default=5, type=int,
+        help='the number of few-shot examples (default: 5)')
 
     parser.add_argument(
         '--quantization', default=None, type=str, choices=[
@@ -53,7 +57,42 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     # Prepare task
     # ----------------------------------------------------------------------- #
-    tasks = [HendrycksTest(subject=e) for e in CATEGORIES[args.task_name]]
+    tasks = None # pylint: disable=invalid-name
+
+    if args.task_name == 'arc_e':
+        tasks = [ARCEasy(),]
+    if args.task_name == 'arc_c':
+        tasks = [ARCChallenge(),]
+    if args.task_name == 'hellaswag':
+        tasks = [HellaSwag(),]
+    if args.task_name == 'piqa':
+        tasks = [PIQA(),]
+    if args.task_name.startswith('hendrycks_test'):
+        tasks = [
+            HendrycksTest(subject=e)
+            for e in CATEGORIES[args.task_name.split('/')[1]]]
+
+    if tasks is None:
+        raise NotImplementedError(f'Unknown args.task_name={args.task_name}')
+
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer.model_max_length = sys.maxsize
+    tokenizer.pad_token = tokenizer.eos_token
+
+    maxlen = 0 # pylint: disable=invalid-name
+    for task in tasks:
+        example_docs = []
+        if args.n_fewshot > 0:
+            example_docs = task.kshot_docs()[:args.n_fewshot]
+        for doc in task.valid_docs():
+            maxlen = max(maxlen, len(tokenizer(
+                task.create_qa_prompt_choices_fewshot(
+                    example_docs, doc) + chr(65 + doc['gold'])).input_ids))
+
+    maxlen = min(2048, maxlen)
+    tokenize_fn = get_tokenize_fn(
+        args.model_name, max_length=maxlen, add_special_tokens=True,
+        padding_side='left', return_tensors='np')
 
     # ----------------------------------------------------------------------- #
     # Load model
@@ -76,10 +115,8 @@ if __name__ == '__main__':
     if config is None:
         raise NotImplementedError(f'Unknown args.model_name={args.model_name}')
 
-    maxlen = 2048
-    tokenize_fn = get_tokenize_fn(
-        args.model_name, max_length=maxlen, add_special_tokens=False,
-        padding_side='left', return_tensors='np')
+    lm_head = params['lm_head']['weight']
+    del params['lm_head']
 
     # ----------------------------------------------------------------------- #
     # Setup model
@@ -128,61 +165,35 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     def _eval_doc(_doc, _examples, _task):
 
-        prompt = _task.create_fewshot_prompt(_examples, _doc)
-        sentence = tokenize_fn([prompt + e for e in _doc['choices']])
-        question = tokenize_fn([prompt     for e in _doc['choices']])
+        prompt = _task.create_qa_prompt_choices_fewshot(_examples, _doc)
+        inputs = LlamaInputs(**tokenize_fn([prompt]))
 
-        inputs = LlamaInputs(**sentence)
-        logits = forward_fn(params, inputs, config).logits
-        _score = []
-        for idx in range(logits.shape[0]):
-            ans = sentence['input_ids'][idx, -1:]
-            gss = jax.nn.log_softmax(logits[idx, -2:-1])
-            _score.append(np.array(
-                jnp.take_along_axis(gss, ans[:, None], axis=-1)))
-        return _score
+        # TODO: does it make sense?
+        # check validity and get target token indices
+        wordlines = tokenize_fn([
+            prompt + ' ' + chr(65 + i)
+            for i in range(len(_doc['choices']))])['input_ids']
+        token_indices = []
+        for wordline in wordlines:
+            assert wordline[-2] == inputs.input_ids[0][-1]
+            token_indices.append(wordline[-1])
 
-    log_probs_u = []
-    log_probs_t = []
-    log_probs_b = []
+        logits = forward_fn(params, inputs, config).last_hidden_states
+        logits = logits[0, -1, :] @ lm_head[:, token_indices]
+        lprobs = jax.nn.log_softmax(logits)
+        return np.array(lprobs)
+
     docs = []
+    log_probs = []
     for task in tasks:
+        example_docs = []
+        if args.n_fewshot > 0:
+            example_docs = task.kshot_docs()[:args.n_fewshot]
         for doc in tqdm(task.valid_docs()):
-            examples = task.kshot_docs()[:5]
-            _score = _eval_doc(doc, examples, task)
             docs.append(doc)
+            log_probs.append(_eval_doc(doc, example_docs, task))
 
-            # unnormalized
-            log_prob = np.array([e.sum() for e in _score])
-            log_prob = np.exp(log_prob - log_prob.max())
-            log_prob = np.log(log_prob / log_prob.sum())
-            log_probs_u.append(log_prob)
-
-            # token-length normalized
-            log_prob = np.array([e.sum() for e in _score])
-            log_prob = log_prob / np.array([len(e) for e in _score])
-            log_prob = np.exp(log_prob - log_prob.max())
-            log_prob = np.log(log_prob / log_prob.sum())
-            log_probs_t.append(log_prob)
-
-            # byte-length normalized
-            log_prob = np.array([e.sum() for e in _score])
-            log_prob = log_prob / np.array([len(e) for e in doc['choices']])
-            log_prob = np.exp(log_prob - log_prob.max())
-            log_prob = np.log(log_prob / log_prob.sum())
-            log_probs_b.append(log_prob)
-
-    metrics = task.evaluate(docs, log_probs_u)
-    log_str = 'Unnormalized:' + ', '.join(f'{k}: {v:.3e}'
-        for k, v in metrics.items() if isinstance(v, float))
-    print_fn(log_str)
-
-    metrics = task.evaluate(docs, log_probs_t)
-    log_str = 'Token-length normalized:' + ', '.join(f'{k}: {v:.3e}'
-        for k, v in metrics.items() if isinstance(v, float))
-    print_fn(log_str)
-
-    metrics = task.evaluate(docs, log_probs_b)
-    log_str = 'Byte-length normalized:' + ', '.join(f'{k}: {v:.3e}'
+    metrics = task.evaluate(docs, log_probs)
+    log_str = ', '.join(f'{k}: {v:.3e}'
         for k, v in metrics.items() if isinstance(v, float))
     print_fn(log_str)
