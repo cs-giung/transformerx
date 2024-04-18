@@ -155,7 +155,7 @@ class PowerSymmetricQuantizedArray(ImplicitArray):
         q_value = jnp.clip(q_value, -max_q, max_q).astype(itype)
 
         # pylint: disable=too-many-function-args
-        return SymmetricQuantizedArray(
+        return PowerSymmetricQuantizedArray(
             q_value=q_value, scale_factor=scale_factor,
             contraction_axis=contraction_axis, group_size=group_size,
             bits=bits, shape=shape, dtype=dtype, itype=itype)
@@ -187,7 +187,7 @@ class PowerSymmetricQuantizedArray(ImplicitArray):
     def materialize(self) -> Array:
         return self.dequantize(
             self.q_value, self.scale_factor,
-            self.contraction_axis, self.shape)
+            self.contraction_axis, self.shape, self.exponent)
 
     # TODO: any problem?
     def tree_flatten_with_keys(self):
