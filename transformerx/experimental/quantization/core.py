@@ -158,7 +158,8 @@ class PowerSymmetricQuantizedArray(ImplicitArray):
         return PowerSymmetricQuantizedArray(
             q_value=q_value, scale_factor=scale_factor,
             contraction_axis=contraction_axis, group_size=group_size,
-            bits=bits, shape=shape, dtype=dtype, itype=itype)
+            bits=bits, exponent=exponent,
+            shape=shape, dtype=dtype, itype=itype)
 
     @staticmethod
     @jax.default_device(jax.devices('cpu')[0])
