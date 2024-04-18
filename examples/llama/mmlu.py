@@ -22,7 +22,8 @@ from transformerx.experimental.quantization import \
 from transformerx.models.llama.default import \
     load_jx_config, load_jx_params, get_tokenize_fn
 from transformerx.models.llama.modeling import forward_fn, LlamaInputs
-from transformerx.tasks import ARCEasy, ARCChallenge, HellaSwag, PIQA
+from transformerx.tasks import \
+    ARCEasy, ARCChallenge, CommonsenseQA, HellaSwag, PIQA
 from transformerx.tasks.hendrycks_test import HendrycksTest, CATEGORIES
 
 
@@ -63,6 +64,8 @@ if __name__ == '__main__':
         tasks = [ARCEasy(),]
     if args.task_name == 'arc_c':
         tasks = [ARCChallenge(),]
+    if args.task_name == 'commonsense_qa':
+        tasks = [CommonsenseQA(),]
     if args.task_name == 'hellaswag':
         tasks = [HellaSwag(),]
     if args.task_name == 'piqa':
