@@ -97,12 +97,6 @@ class HendrycksTest(MultipleChoiceTask):
                 map(self._process_doc, self.dataset['dev']))
         return self._kshot_docs
 
-    def _process_doc(self, doc):
-        return {
-            'query': doc['question'].strip(),
-            'choices': doc['choices'],
-            'gold': doc['answer']}
-
     def create_qa_prompt_choices(self, doc):
         prompt = doc['query']
         for i, choice in enumerate(doc['choices']):
@@ -120,3 +114,9 @@ class HendrycksTest(MultipleChoiceTask):
             prompt += ' ' + chr(65 + example['gold']) + '\n\n'
         prompt += self.create_qa_prompt_choices(doc)
         return prompt
+
+    def _process_doc(self, doc):
+        return {
+            'query': doc['question'].strip(),
+            'choices': doc['choices'],
+            'gold': doc['answer']}

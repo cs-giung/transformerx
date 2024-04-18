@@ -32,12 +32,6 @@ class CommonsenseQA(MultipleChoiceTask):
         prompt += 'Answer:'
         return prompt
 
-    def _process_doc(self, doc):
-        return {
-            'query': doc['question'],
-            'choices': doc['choices']['text'],
-            'gold': int(ord(doc['answerKey']) - 65)}
-
     def create_qa_prompt_choices_fewshot(self, example_docs, doc):
         prompt = (
             "The following are multiple choice questions (with answers) "
@@ -47,3 +41,9 @@ class CommonsenseQA(MultipleChoiceTask):
             prompt += ' ' + chr(65 + example['gold']) + '\n\n'
         prompt += self.create_qa_prompt_choices(doc)
         return prompt
+
+    def _process_doc(self, doc):
+        return {
+            'query': doc['question'],
+            'choices': doc['choices']['text'],
+            'gold': int(ord(doc['answerKey']) - 65)}
