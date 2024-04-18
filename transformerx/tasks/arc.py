@@ -21,14 +21,35 @@ class ARCEasy(MultipleChoiceTask):
                 map(self._process_doc, self.dataset['validation']))
         return self._valid_docs
 
+    def kshot_docs(self):
+        raise NotImplementedError
+
+    def create_qa_prompt_choices(self, doc):
+        prompt = doc['query']
+        for i, choice in enumerate(doc['choices']):
+            prompt += '\n' + chr(65 + i) + '. ' + choice
+        prompt += '\n'
+        prompt += 'Answer:'
+        return prompt
+
     def _process_doc(self, doc):
-        num2abc = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E'}
-        doc['answerKey'] = num2abc.get(doc['answerKey'], doc['answerKey'])
-        out = {
-            'query': 'Question: ' + doc['question'] + '\nAnswer:',
+        doc['answerKey'] = {
+            chr(49 + i): chr(65 + i) for i in range(5)
+        }.get(doc['answerKey'], doc['answerKey'])
+        return {
+            'query': doc['question'],
             'choices': doc['choices']['text'],
-            'gold': ['A', 'B', 'C', 'D', 'E'].index(doc['answerKey'])}
-        return out
+            'gold': int(ord(doc['answerKey']) - 65)}
+
+    def create_qa_prompt_choices_fewshot(self, example_docs, doc):
+        prompt = (
+            "The following are multiple choice questions (with answers) "
+            "about common sense reasoning.\n\n")
+        for example in example_docs:
+            prompt += self.create_qa_prompt_choices(example)
+            prompt += ' ' + chr(65 + example['gold']) + '\n\n'
+        prompt += self.create_qa_prompt_choices(doc)
+        return prompt
 
 
 class ARCChallenge(ARCEasy):

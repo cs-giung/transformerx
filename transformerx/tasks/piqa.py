@@ -21,9 +21,29 @@ class PIQA(MultipleChoiceTask):
                 map(self._process_doc, self.dataset['validation']))
         return self._valid_docs
 
+    def kshot_docs(self):
+        raise NotImplementedError
+
+    def create_qa_prompt_choices(self, doc):
+        prompt = doc['query']
+        for i, choice in enumerate(doc['choices']):
+            prompt += '\n' + chr(65 + i) + '. ' + choice
+        prompt += '\n'
+        prompt += 'Answer:'
+        return prompt
+
+    def create_qa_prompt_choices_fewshot(self, example_docs, doc):
+        prompt = (
+            "The following are multiple choice questions (with answers) "
+            "about common sense reasoning.\n\n")
+        for example in example_docs:
+            prompt += self.create_qa_prompt_choices(example)
+            prompt += ' ' + chr(65 + example['gold']) + '\n\n'
+        prompt += self.create_qa_prompt_choices(doc)
+        return prompt
+
     def _process_doc(self, doc):
-        out = {
-            'query': 'Question: ' + doc['goal'] + '\nAnswer:',
+        return {
+            'query': doc['goal'],
             'choices': [doc['sol1'], doc['sol2']],
             'gold': doc['label']}
-        return out

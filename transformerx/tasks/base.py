@@ -23,9 +23,6 @@ class Task(abc.ABC):
 
 class MultipleChoiceTask(Task):
 
-    def doc_to_target(self, doc):
-        return ' ' + doc['choices'][doc['gold']]
-
     @classmethod
     def evaluate(cls, docs, log_probs, n_bins=15):
         """

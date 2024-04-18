@@ -22,18 +22,36 @@ class HellaSwag(MultipleChoiceTask):
                 map(self._process_doc, self.dataset['validation']))
         return self._valid_docs
 
-    def _process_doc(self, doc):
-        ctx = doc['ctx_a'] + ' ' + doc['ctx_b'].capitalize()
-        out = {
-            'query': self.preprocess(doc['activity_label'] + ': ' + ctx),
-            'choices': [self.preprocess(ending) for ending in doc['endings']],
-            'gold': int(doc['label'])}
-        return out
+    def kshot_docs(self):
+        raise NotImplementedError
 
-    @classmethod
-    def preprocess(cls, text):
-        text = text.strip()
-        text = text.replace(' [title]', '. ')
-        text = re.sub('\\[.*?\\]', '', text)
-        text = text.replace('  ', ' ')
-        return text
+    def create_qa_prompt_choices(self, doc):
+        prompt = doc['query']
+        for i, choice in enumerate(doc['choices']):
+            prompt += '\n' + chr(65 + i) + '. ' + choice
+        prompt += '\n'
+        prompt += 'Answer:'
+        return prompt
+
+    def create_qa_prompt_choices_fewshot(self, example_docs, doc):
+        prompt = (
+            "The following are multiple choice questions (with answers) "
+            "about common sense reasoning.\n\n")
+        for example in example_docs:
+            prompt += self.create_qa_prompt_choices(example)
+            prompt += ' ' + chr(65 + example['gold']) + '\n\n'
+        prompt += self.create_qa_prompt_choices(doc)
+        return prompt
+
+    def _process_doc(self, doc):
+        def _preprocess(text):
+            text = text.strip()
+            text = text.replace(' [title]', '. ')
+            text = re.sub('\\[.*?\\]', '', text)
+            text = text.replace('  ', ' ')
+            text = text.strip()
+            return text
+        return {
+            'query': _preprocess(doc['ctx']),
+            'choices': [_preprocess(e) for e in doc['endings']],
+            'gold': int(doc['label'])}

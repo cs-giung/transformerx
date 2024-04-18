@@ -75,19 +75,15 @@ CATEGORIES = {
 
 
 class HendrycksTest(MultipleChoiceTask):
-    """
-    This implementation resolves specific concerns regarding prompting;
-        (1) adding a space after "Answer:" rather than spaces before "A/B/C/D".
-        (2) mitigating occurences of double spaces after "about".
-
-    https://github.com/hendrycks/test/pull/13
-    """
     DATASET_PATH = 'hails/mmlu_no_train'
     DATASET_NAME = None
 
     def __init__(self, subject: str):
         self.DATASET_NAME = subject
         super().__init__()
+
+    def train_docs(self):
+        raise NotImplementedError
 
     def valid_docs(self):
         if self._valid_docs is None:
@@ -102,21 +98,25 @@ class HendrycksTest(MultipleChoiceTask):
         return self._kshot_docs
 
     def _process_doc(self, doc):
-        keys = ['A', 'B', 'C', 'D']
-        out = {
-            'query': doc['question'] + '\n' + '\n'.join([
-                f'{k}. {a}' for k, a in zip(keys, doc['choices'])
-            ]) + '\nAnswer:\n',
-            'choices': keys,
+        return {
+            'query': doc['question'],
+            'choices': doc['choices'],
             'gold': doc['answer']}
-        return out
 
-    def create_fewshot_prompt(self, example_docs, doc):
+    def create_qa_prompt_choices(self, doc):
+        prompt = doc['query']
+        for i, choice in enumerate(doc['choices']):
+            prompt += '\n' + chr(65 + i) + '. ' + choice
+        prompt += '\n'
+        prompt += 'Answer:'
+        return prompt
+
+    def create_qa_prompt_choices_fewshot(self, example_docs, doc):
         prompt = (
             "The following are multiple choice questions (with answers) "
             "about {}.\n\n".format(' '.join(self.DATASET_NAME.split('_'))))
         for example in example_docs:
-            prompt += example['query']
-            prompt += '{}\n\n'.format(example['choices'][example['gold']])
-        prompt += doc['query']
+            prompt += self.create_qa_prompt_choices(example)
+            prompt += ' ' + chr(65 + example['gold']) + '\n\n'
+        prompt += self.create_qa_prompt_choices(doc)
         return prompt
