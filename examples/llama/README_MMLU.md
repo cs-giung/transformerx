@@ -123,7 +123,7 @@ Answer:
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
 | `huggyllama/llama-13b` | `humanities`     | 43.82  |
 |                        | `social_science` | 54.01  |
-|                        | `stem`           | 38.32  |
+|                        | `stem`           | 38.63  |
 |                        | `other`          | 52.39  |
 
 ### Negative Log-Likelihood
@@ -133,13 +133,13 @@ Answer:
 | `huggyllama/llama-13b` | `humanities`     | 1.222  |
 |                        | `social_science` | 1.056  |
 |                        | `stem`           | 1.273  |
-|                        | `other`          | 1.039  |
+|                        | `other`          | 1.044  |
 
 ### Expected Calibration Error
 
 | Model                  | Task             | `FP16` | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-13b` | `humanities`     | 5.727  |
+| `huggyllama/llama-13b` | `humanities`     | 5.167  |
 |                        | `social_science` | 5.441  |
-|                        | `stem`           | 5.787  |
-|                        | `other`          | 9.318  |
+|                        | `stem`           | 5.679  |
+|                        | `other`          | 9.269  |
