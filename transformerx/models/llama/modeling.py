@@ -123,8 +123,11 @@ def forward_fn(
         inputs=RMSNormInputs(hidden_states=hidden_states),
         config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
 
-    logits = hidden_states @ params['lm_head']['weight']
+    logits = None
+    if 'lm_head' in params:
+        logits = hidden_states @ params['lm_head']['weight']
 
     return LlamaOutput(
         intermediates=intermediates,
-        last_hidden_states=hidden_states, logits=logits)
+        last_hidden_states=hidden_states,
+        logits=logits)
