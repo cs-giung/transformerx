@@ -99,7 +99,7 @@ class HendrycksTest(MultipleChoiceTask):
 
     def _process_doc(self, doc):
         return {
-            'query': doc['question'],
+            'query': doc['question'].strip(),
             'choices': doc['choices'],
             'gold': doc['answer']}
 
