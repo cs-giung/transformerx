@@ -31,7 +31,7 @@ Answer:
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
 | `huggyllama/llama-13b` | `arc_e`          | 69.47  | 69.47  | 69.12  | 66.49  | 55.26  |
 |                        | `arc_c`          | 47.16  | 46.82  | 46.82  | 42.81  | 32.78  |
-|                        | `commonsense_qa` | 
+|                        | `commonsense_qa` | 54.30  | 54.63  | 54.05  | 50.78  | 37.18  |
 |                        | `piqa`           | 64.80  | 65.23  | 64.58  | 65.02  | 61.43  |
 
 ### Negative Log-Likelihood
@@ -40,7 +40,7 @@ Answer:
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
 | `huggyllama/llama-13b` | `arc_e`          | .9329  | .9319  | .9391  | .9798  | 1.127  |
 |                        | `arc_c`          | 1.238  | 1.237  | 1.240  | 1.249  | 1.385  |
-|                        | `commonsense_qa` | 
+|                        | `commonsense_qa` | 1.268  | 1.270  | 1.281  | 1.321  | 1.481  |
 |                        | `piqa`           | .6223  | .6226  | .6215  | .6266  | .6434  |
 
 ### Expected Calibration Error
@@ -49,7 +49,7 @@ Answer:
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
 | `huggyllama/llama-13b` | `arc_e`          | 21.88  | 21.76  | 21.49  | 21.00  | 16.83  |
 |                        | `arc_c`          | 8.796  | 8.751  | 7.797  | 7.011  | 7.332  |
-|                        | `commonsense_qa` | 
+|                        | `commonsense_qa` | 17.12  | 17.59  | 17.31  | 15.66  | 7.607  |
 |                        | `piqa`           | 3.981  | 4.663  | 4.032  | 6.574  | 2.515  |
 
 ## MMLU Results (5-shot)
@@ -121,25 +121,28 @@ Answer:
 
 | Model                  | Task             | `FP16` | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-13b` | `humanities`     | 43.82  |
-|                        | `social_science` | 54.01  |
-|                        | `stem`           | 38.63  |
-|                        | `other`          | 52.39  |
+| `huggyllama/llama-13b` | `humanities`     | 43.82  | 43.24  | 41.12  | 39.77  | 38.61  |
+|                        | `social_science` | 54.01  | 53.41  | 54.30  | 54.01  | 47.18  |
+|                        | `stem`           | 38.63  | 38.63  | 37.38  | 39.25  | 35.51  |
+|                        | `other`          | 52.39  | 53.24  | 54.08  | 50.99  | 49.58  |
+|                        | (AVG)            | 47.21  |
 
 ### Negative Log-Likelihood
 
 | Model                  | Task             | `FP16` | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-13b` | `humanities`     | 1.222  |
-|                        | `social_science` | 1.056  |
-|                        | `stem`           | 1.273  |
-|                        | `other`          | 1.044  |
+| `huggyllama/llama-13b` | `humanities`     | 1.222  | 1.222  | 1.233  | 1.240  | 1.294  |
+|                        | `social_science` | 1.056  | 1.057  | 1.065  | 1.083  | 1.166  |
+|                        | `stem`           | 1.273  | 1.272  | 1.284  | 1.282  | 1.333  |
+|                        | `other`          | 1.044  | 1.045  | 1.049  | 1.061  | 1.108  |
+|                        | (AVG)            | 
 
 ### Expected Calibration Error
 
 | Model                  | Task             | `FP16` | `Q8_0` | `Q6_0` | `Q5_0` | `Q4_0` |
 | :-                     | :-               | :-:    | :-:    | :-:    | :-:    | :-:    |
-| `huggyllama/llama-13b` | `humanities`     | 5.167  |
-|                        | `social_science` | 5.441  |
-|                        | `stem`           | 5.679  |
-|                        | `other`          | 9.269  |
+| `huggyllama/llama-13b` | `humanities`     | 5.167  | 6.455  | 6.025  | 6.872  | 6.221  |
+|                        | `social_science` | 5.441  | 4.853  | 4.160  | 7.089  | 5.164  |
+|                        | `stem`           | 5.679  | 4.919  | 5.202  | 7.966  | 5.494  |
+|                        | `other`          | 9.269  | 8.485  | 4.709  | 7.246  | 5.796  |
+|                        | (AVG)            | 
