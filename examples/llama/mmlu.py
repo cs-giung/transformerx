@@ -18,7 +18,9 @@ initialise_tracking()
 
 from examples.default import get_args, str2bool
 from transformerx.experimental.quantization import \
-    AsymmetricQuantizedArray, SymmetricQuantizedArray
+    AsymmetricQuantizedArray, \
+    PowerSymmetricQuantizedArray, \
+    SymmetricQuantizedArray
 from transformerx.models.llama.default import \
     load_jx_config, load_jx_params, get_tokenize_fn
 from transformerx.models.llama.modeling import forward_fn, LlamaInputs
@@ -48,8 +50,12 @@ if __name__ == '__main__':
     parser.add_argument(
         '--quantization', default=None, type=str, choices=[
             'Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0',
+            'PQ3_0', 'PQ4_0', 'PQ5_0', 'PQ6_0', 'PQ7_0', 'PQ8_0',
             'Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1',
         ], help='apply fake quantization if specified (default: None)')
+    parser.add_argument(
+        '--exponent', default=1.0, type=float,
+        help='an exponent parameter for PowerQuant (default: 1.0)')
 
     args, print_fn = get_args(
         parser, exist_ok=True, dot_log_file=True,
@@ -124,7 +130,7 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     # Setup model
     # ----------------------------------------------------------------------- #
-    if args.quantization in ['Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0']:
+    if args.quantization in [f'Q{e}_0' for e in range(3, 9)]:
         BITS = int(args.quantization[1])
         SKIP_PATTERNS = ('embed_tokens', 'lm_head')
         def _quantizer(path, param):
@@ -137,12 +143,29 @@ if __name__ == '__main__':
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
             qaram = SymmetricQuantizedArray.quantize(
-                param, bits=BITS,
-                contraction_axis=0, group_size=1).materialize()
-            return qaram
+                param, bits=BITS, contraction_axis=0, group_size=1)
+            return qaram.materialize()
+        params = jax.tree_util.tree_map_with_path(_quantizer, params)
+    
+    if args.quantization in [f'PQ{e}_0' for e in range(3, 9)]:
+        BITS = int(args.quantization[2])
+        SKIP_PATTERNS = ('embed_tokens', 'lm_head')
+        def _quantizer(path, param):
+            if param.ndim < 2:
+                return param
+            if any(isinstance(e1, jax.tree_util.GetAttrKey) and any(
+                    e2 in e1.name for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            if any(isinstance(e1, jax.tree_util.DictKey) and any(
+                    e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
+                return param
+            qaram = PowerSymmetricQuantizedArray.quantize(
+                param, bits=BITS, contraction_axis=0, group_size=1,
+                exponent=args.exponent)
+            return qaram.materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
-    if args.quantization in ['Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1']:
+    if args.quantization in [f'Q{e}_1' for e in range(3, 9)]:
         BITS = int(args.quantization[1])
         SKIP_PATTERNS = ('embed_tokens', 'lm_head')
         def _quantizer(path, param):
@@ -155,9 +178,8 @@ if __name__ == '__main__':
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
             qaram = AsymmetricQuantizedArray.quantize(
-                param, bits=BITS,
-                contraction_axis=0, group_size=1).materialize()
-            return qaram
+                param, bits=BITS, contraction_axis=0, group_size=1)
+            return qaram.materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
     params = jax.tree_util.tree_map(
