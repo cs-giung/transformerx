@@ -117,6 +117,7 @@ if __name__ == '__main__':
             'meta-llama/Llama-2-7b-hf',
             'meta-llama/Llama-2-13b-hf',
             'meta-llama/Llama-2-70b-hf',
+            'meta-llama/Meta-Llama-3-8B',
         ):
         config = load_jx_config(args.model_name)
         params = load_jx_params(args.model_name)

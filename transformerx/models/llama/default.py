@@ -76,6 +76,15 @@ PREDEFINED_CONFIGS = {
         rms_norm_eps=1e-05,
         vocab_size=32000,
     ),
+    'meta-llama/Meta-Llama-3-8B': LlamaConfig(
+        hidden_size=4096,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        vocab_size=128256,
+    ),
 }
 
 
