@@ -2,6 +2,7 @@
 import sys
 sys.path.append('./') # pylint: disable=wrong-import-position
 
+import warnings
 from argparse import ArgumentParser
 
 import datasets
@@ -12,6 +13,7 @@ import numpy as np
 import transformers
 from einshard import einshard
 from jax_smi import initialise_tracking
+from scipy.optimize import minimize
 from transformers import AutoTokenizer
 from tqdm import tqdm
 initialise_tracking()
@@ -54,8 +56,8 @@ if __name__ == '__main__':
             'Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1',
         ], help='apply fake quantization if specified (default: None)')
     parser.add_argument(
-        '--exponent', default=1.0, type=float,
-        help='an exponent parameter for PowerQuant (default: 1.0)')
+        '--exponent', default=None, type=float,
+        help='use global exponent parameter for PowerQuant (default: None)')
 
     args, print_fn = get_args(
         parser, exist_ok=True, dot_log_file=True,
@@ -172,9 +174,21 @@ if __name__ == '__main__':
             if any(isinstance(e1, jax.tree_util.DictKey) and any(
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
-            qaram = PowerSymmetricQuantizedArray.quantize(
-                param, bits=BITS, contraction_axis=0, group_size=1,
-                exponent=args.exponent)
+            if args.exponent:
+                qaram = PowerSymmetricQuantizedArray.quantize(
+                    param, bits=BITS, contraction_axis=0, group_size=1,
+                    exponent=args.exponent)
+            else:
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore')
+                    def obj(args):
+                        return np.mean((PowerSymmetricQuantizedArray.quantize(
+                            param, bits=BITS, contraction_axis=0, group_size=1,
+                            exponent=args[0]).materialize() - param)**2)
+                    qaram = PowerSymmetricQuantizedArray.quantize(
+                        param, bits=BITS, contraction_axis=0, group_size=1,
+                        exponent=minimize(
+                        obj, x0=np.array([1.0]), method='nelder-mead').x[0])
             return qaram.materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
