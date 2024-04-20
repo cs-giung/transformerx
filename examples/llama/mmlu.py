@@ -41,8 +41,8 @@ if __name__ == '__main__':
         help='a model name (default: huggyllama/llama-7b)')
 
     parser.add_argument(
-        '--task_name', default='hendrycks_test/humanities', type=str,
-        help='a task name (default: humanities)')
+        '--task_name', default='hendrycks_test', type=str,
+        help='a task name (default: hendrycks_test)')
     parser.add_argument(
         '--n_fewshot', default=5, type=int,
         help='the number of few-shot examples (default: 5)')
@@ -68,18 +68,29 @@ if __name__ == '__main__':
 
     if args.task_name == 'arc_e':
         tasks = [ARCEasy(),]
+        tasknames = ['arc_e',]
+
     if args.task_name == 'arc_c':
         tasks = [ARCChallenge(),]
+        tasknames = ['arc_c',]
+
     if args.task_name == 'commonsense_qa':
         tasks = [CommonsenseQA(),]
+        tasknames = ['commonsense_qa',]
+
     if args.task_name == 'hellaswag':
         tasks = [HellaSwag(),]
+        tasknames = ['hellaswag',]
+
     if args.task_name == 'piqa':
         tasks = [PIQA(),]
-    if args.task_name.startswith('hendrycks_test'):
+        tasknames = ['piqa',]
+
+    if args.task_name == 'hendrycks_test':
         tasks = [
-            HendrycksTest(subject=e)
-            for e in CATEGORIES[args.task_name.split('/')[1]]]
+            HendrycksTest(subject=s)
+            for c in CATEGORIES for s in CATEGORIES[c]]
+        tasknames = [s for c in CATEGORIES for s in CATEGORIES[c]]
 
     if tasks is None:
         raise NotImplementedError(f'Unknown args.task_name={args.task_name}')
@@ -209,17 +220,39 @@ if __name__ == '__main__':
         lprobs = jax.nn.log_softmax(logits)
         return np.array(lprobs)
 
-    docs = []
-    log_probs = []
-    for task in tasks:
+    all_docs = []
+    all_log_probs = []
+    all_metrics = []
+    for task, taskname in zip(tasks, tasknames):
         example_docs = []
         if args.n_fewshot > 0:
             example_docs = task.kshot_docs()[:args.n_fewshot]
-        for doc in tqdm(task.valid_docs()):
+
+        docs = []
+        log_probs = []
+        for doc in task.valid_docs():
             docs.append(doc)
             log_probs.append(_eval_doc(doc, example_docs, task))
+        all_docs += docs
+        all_log_probs += log_probs
 
-    metrics = task.evaluate(docs, log_probs)
-    log_str = ', '.join(f'{k}: {v:.3e}'
-        for k, v in metrics.items() if isinstance(v, float))
-    print_fn(log_str)
+        metrics = task.evaluate(docs, log_probs)
+        all_metrics.append(metrics)
+
+        log_str = f'{taskname} ({len(docs)} docs) ' + ', '.join(f'{k}: {v:.3e}'
+            for k, v in metrics.items() if isinstance(v, float))
+        print_fn(log_str)
+
+    if len(tasks) > 1:
+
+        metrics = {
+            k: sum(map(lambda e: e[k], all_metrics)) / len(all_metrics)
+            for k in all_metrics[0] if isinstance(all_metrics[0][k], float)}
+        log_str = 'Total (macro-average) ' + ', '.join(f'{k}: {v:.3e}'
+            for k, v in metrics.items() if isinstance(v, float))
+        print_fn(log_str)
+
+        metrics = task.evaluate(all_docs, all_log_probs)
+        log_str = 'Total (micro-average) ' + ', '.join(f'{k}: {v:.3e}'
+            for k, v in metrics.items() if isinstance(v, float))
+        print_fn(log_str)
