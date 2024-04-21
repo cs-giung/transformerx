@@ -43,6 +43,9 @@ class HellaSwag(MultipleChoiceTask):
         prompt += self.create_qa_prompt_choices(doc)
         return prompt
 
+    def create_qa_prompt_choices_fewshot_for_train(self, example_docs, doc):
+        return self.create_qa_prompt_choices_fewshot(example_docs, doc)
+
     def _process_doc(self, doc):
         def _preprocess(text):
             text = text.strip()
