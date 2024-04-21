@@ -1,0 +1,81 @@
+[2024-04-21 19:37:13] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.2 (main, Feb 25 2024, 16:35:05) [GCC 11.4.0]
+datasets      2.18.0 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.26 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.26 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.39.3 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-04-21 19:37:13] Command line arguments:
+- args.model_name   : meta-llama/Meta-Llama-3-8B
+- args.task_name    : hendrycks_test
+- args.n_fewshot    : 0
+- args.quantization : Q6_0
+- args.exponent     : None
+- args.save         : None
+- args.seed         : 13564693
+
+[2024-04-21 19:37:13] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-04-21 19:41:40] formal_logic (14 docs) acc: 2.143e-01, nll: 1.618e+00, ece: 1.973e-01
+[2024-04-21 19:41:50] high_school_european_history (18 docs) acc: 6.667e-01, nll: 8.867e-01, ece: 3.040e-01
+[2024-04-21 19:42:02] high_school_us_history (22 docs) acc: 6.818e-01, nll: 6.152e-01, ece: 2.141e-01
+[2024-04-21 19:42:17] high_school_world_history (26 docs) acc: 7.692e-01, nll: 8.065e-01, ece: 2.055e-01
+[2024-04-21 19:42:25] international_law (13 docs) acc: 8.462e-01, nll: 5.827e-01, ece: 2.554e-01
+[2024-04-21 19:42:31] jurisprudence (11 docs) acc: 4.545e-01, nll: 1.201e+00, ece: 3.302e-01
+[2024-04-21 19:42:41] logical_fallacies (18 docs) acc: 6.111e-01, nll: 7.698e-01, ece: 1.626e-01
+[2024-04-21 19:43:01] moral_disputes (38 docs) acc: 5.526e-01, nll: 1.256e+00, ece: 2.525e-01
+[2024-04-21 19:43:53] moral_scenarios (100 docs) acc: 2.200e-01, nll: 1.445e+00, ece: 1.649e-01
+[2024-04-21 19:44:11] philosophy (34 docs) acc: 7.647e-01, nll: 8.082e-01, ece: 2.312e-01
+[2024-04-21 19:44:29] prehistory (35 docs) acc: 6.857e-01, nll: 9.422e-01, ece: 2.318e-01
+[2024-04-21 19:45:59] professional_law (170 docs) acc: 3.647e-01, nll: 1.425e+00, ece: 1.628e-01
+[2024-04-21 19:46:09] world_religions (19 docs) acc: 7.895e-01, nll: 5.560e-01, ece: 1.747e-01
+[2024-04-21 19:46:16] econometrics (12 docs) acc: 5.000e-01, nll: 1.049e+00, ece: 2.795e-01
+[2024-04-21 19:46:27] high_school_geography (22 docs) acc: 8.636e-01, nll: 4.697e-01, ece: 1.152e-01
+[2024-04-21 19:46:38] high_school_government_and_politics (21 docs) acc: 6.667e-01, nll: 7.571e-01, ece: 2.831e-01
+[2024-04-21 19:47:01] high_school_macroeconomics (43 docs) acc: 4.884e-01, nll: 1.134e+00, ece: 1.612e-01
+[2024-04-21 19:47:15] high_school_microeconomics (26 docs) acc: 5.769e-01, nll: 9.209e-01, ece: 1.779e-01
+[2024-04-21 19:47:46] high_school_psychology (60 docs) acc: 8.167e-01, nll: 4.478e-01, ece: 6.981e-02
+[2024-04-21 19:47:53] human_sexuality (12 docs) acc: 8.333e-01, nll: 1.068e+00, ece: 3.520e-01
+[2024-04-21 19:48:29] professional_psychology (69 docs) acc: 6.087e-01, nll: 1.039e+00, ece: 1.290e-01
+[2024-04-21 19:48:35] public_relations (12 docs) acc: 4.167e-01, nll: 1.354e+00, ece: 3.820e-01
+[2024-04-21 19:48:49] security_studies (27 docs) acc: 7.037e-01, nll: 8.395e-01, ece: 1.626e-01
+[2024-04-21 19:49:01] sociology (22 docs) acc: 8.636e-01, nll: 3.660e-01, ece: 1.261e-01
+[2024-04-21 19:49:07] us_foreign_policy (11 docs) acc: 7.273e-01, nll: 4.657e-01, ece: 2.278e-01
+[2024-04-21 19:49:13] abstract_algebra (11 docs) acc: 2.727e-01, nll: 1.560e+00, ece: 2.625e-01
+[2024-04-21 19:49:21] astronomy (16 docs) acc: 5.625e-01, nll: 1.055e+00, ece: 2.142e-01
+[2024-04-21 19:49:29] college_biology (16 docs) acc: 5.625e-01, nll: 9.421e-01, ece: 1.709e-01
+[2024-04-21 19:49:33] college_chemistry (8 docs) acc: 5.000e-01, nll: 1.147e+00, ece: 2.275e-01
+[2024-04-21 19:49:38] college_computer_science (11 docs) acc: 4.545e-01, nll: 1.213e+00, ece: 1.846e-01
+[2024-04-21 19:49:44] college_mathematics (11 docs) acc: 2.727e-01, nll: 1.239e+00, ece: 2.474e-01
+[2024-04-21 19:49:50] college_physics (11 docs) acc: 4.545e-01, nll: 1.127e+00, ece: 1.752e-01
+[2024-04-21 19:49:56] computer_security (11 docs) acc: 7.273e-01, nll: 1.117e+00, ece: 3.577e-01
+[2024-04-21 19:50:09] conceptual_physics (26 docs) acc: 5.000e-01, nll: 1.020e+00, ece: 1.906e-01
+[2024-04-21 19:50:18] electrical_engineering (16 docs) acc: 6.250e-01, nll: 1.030e+00, ece: 2.832e-01
+[2024-04-21 19:50:39] elementary_mathematics (41 docs) acc: 4.146e-01, nll: 1.239e+00, ece: 1.632e-01
+[2024-04-21 19:50:56] high_school_biology (32 docs) acc: 5.938e-01, nll: 1.028e+00, ece: 1.217e-01
+[2024-04-21 19:51:08] high_school_chemistry (22 docs) acc: 4.091e-01, nll: 1.512e+00, ece: 3.847e-01
+[2024-04-21 19:51:13] high_school_computer_science (9 docs) acc: 6.667e-01, nll: 6.631e-01, ece: 2.283e-01
+[2024-04-21 19:51:29] high_school_mathematics (29 docs) acc: 2.069e-01, nll: 1.453e+00, ece: 1.768e-01
+[2024-04-21 19:51:37] high_school_physics (17 docs) acc: 1.765e-01, nll: 1.404e+00, ece: 2.623e-01
+[2024-04-21 19:51:48] high_school_statistics (23 docs) acc: 3.913e-01, nll: 1.120e+00, ece: 1.811e-01
+[2024-04-21 19:51:53] machine_learning (11 docs) acc: 5.455e-01, nll: 1.137e+00, ece: 3.264e-01
+[2024-04-21 19:52:00] anatomy (14 docs) acc: 5.000e-01, nll: 1.150e+00, ece: 2.966e-01
+[2024-04-21 19:52:06] business_ethics (11 docs) acc: 5.455e-01, nll: 8.980e-01, ece: 3.108e-01
+[2024-04-21 19:52:21] clinical_knowledge (29 docs) acc: 6.897e-01, nll: 7.991e-01, ece: 2.028e-01
+[2024-04-21 19:52:33] college_medicine (22 docs) acc: 7.273e-01, nll: 7.570e-01, ece: 2.728e-01
+[2024-04-21 19:52:39] global_facts (10 docs) acc: 3.000e-01, nll: 1.256e+00, ece: 2.819e-01
+[2024-04-21 19:52:51] human_aging (23 docs) acc: 6.957e-01, nll: 8.525e-01, ece: 2.580e-01
+[2024-04-21 19:52:57] management (11 docs) acc: 9.091e-01, nll: 3.747e-01, ece: 1.199e-01
+[2024-04-21 19:53:10] marketing (25 docs) acc: 7.600e-01, nll: 6.697e-01, ece: 1.541e-01
+[2024-04-21 19:53:16] medical_genetics (11 docs) acc: 8.182e-01, nll: 3.916e-01, ece: 1.500e-01
+[2024-04-21 19:54:01] miscellaneous (86 docs) acc: 7.558e-01, nll: 6.083e-01, ece: 1.031e-01
+[2024-04-21 19:54:18] nutrition (33 docs) acc: 6.061e-01, nll: 8.705e-01, ece: 1.562e-01
+[2024-04-21 19:54:35] professional_accounting (31 docs) acc: 3.226e-01, nll: 1.292e+00, ece: 1.616e-01
+[2024-04-21 19:54:51] professional_medicine (31 docs) acc: 6.774e-01, nll: 9.517e-01, ece: 2.450e-01
+[2024-04-21 19:55:00] virology (18 docs) acc: 5.000e-01, nll: 1.226e+00, ece: 2.689e-01
+[2024-04-21 19:55:00] Total (macro-average) acc: 5.760e-01, nll: 9.812e-01, ece: 2.192e-01
+[2024-04-21 19:55:01] Total (micro-average) acc: 5.545e-01, nll: 1.022e+00, ece: 6.015e-02
