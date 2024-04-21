@@ -48,6 +48,9 @@ if __name__ == '__main__':
     parser.add_argument(
         '--n_fewshot', default=5, type=int,
         help='the number of few-shot examples (default: 5)')
+    parser.add_argument(
+        '--maxlen', default=2048, type=int,
+        help='the maximum number of tokens (default: 2048)')
 
     parser.add_argument(
         '--quantization', default=None, type=str, choices=[
@@ -111,7 +114,7 @@ if __name__ == '__main__':
                 task.create_qa_prompt_choices_fewshot(
                     example_docs, doc) + chr(65 + doc['gold'])).input_ids))
 
-    maxlen = min(2048, maxlen)
+    maxlen = min(args.maxlen, maxlen)
     tokenize_fn = get_tokenize_fn(
         args.model_name, max_length=maxlen, add_special_tokens=True,
         padding_side='left', return_tensors='np')
