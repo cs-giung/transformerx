@@ -115,6 +115,15 @@ class HendrycksTest(MultipleChoiceTask):
         prompt += self.create_qa_prompt_choices(doc)
         return prompt
 
+    def create_qa_prompt_choices_fewshot_for_train(self, example_docs, doc):
+        prompt = \
+            "The following are multiple choice questions (with answers).\n\n"
+        for example in example_docs:
+            prompt += self.create_qa_prompt_choices(example)
+            prompt += ' ' + chr(65 + example['gold']) + '\n\n'
+        prompt += self.create_qa_prompt_choices(doc)
+        return prompt
+
     def _process_doc(self, doc):
         return {
             'query': doc['question'].strip(),
