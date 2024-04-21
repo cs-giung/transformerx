@@ -179,7 +179,8 @@ if __name__ == '__main__':
                     param, bits=BITS, contraction_axis=0, group_size=1,
                     exponent=args.exponent)
             else:
-                with warnings.catch_warnings():
+                with warnings.catch_warnings(), \
+                        jax.default_device(jax.devices('cpu')[0]):
                     warnings.simplefilter('ignore')
                     def obj(args):
                         return np.mean((PowerSymmetricQuantizedArray.quantize(
