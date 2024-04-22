@@ -90,7 +90,7 @@ PREDEFINED_CONFIGS = {
         num_hidden_layers=32,
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
-        rope_theta=10000.0,
+        rope_theta=500000.0,
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-70B': LlamaConfig(
