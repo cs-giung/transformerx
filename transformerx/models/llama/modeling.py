@@ -36,7 +36,9 @@ class LlamaConfig(NamedTuple):
             grouped-query attention. When it equals to `num_attention_heads`,
             multi-head attention is used. If it is set to one, multi-query
             attention is applied.
+        rope_theta (float):
         rms_norm_eps (float): an epsilon value for RMS normalization.
+        vocab_size (int):
     """
     hidden_size: int
     intermediate_size: int
@@ -44,6 +46,7 @@ class LlamaConfig(NamedTuple):
     num_hidden_layers: int
     num_key_value_heads: int
     rms_norm_eps: float
+    rope_theta: float
     vocab_size: int
 
 
@@ -96,7 +99,8 @@ def forward_fn(
             config=AttentionConfig(
                 hidden_size=config.hidden_size,
                 num_attention_heads=config.num_attention_heads,
-                num_key_value_heads=config.num_key_value_heads))
+                num_key_value_heads=config.num_key_value_heads,
+                rope_theta=config.rope_theta))
         hidden_states = hidden_states + residual
 
         residual = hidden_states

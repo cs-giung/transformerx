@@ -38,14 +38,16 @@ class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_size: int
     num_attention_heads: int
     num_key_value_heads: int
+    rope_theta: float
 
 
 def make_rotary_embedding(
         position_ids: ArrayLike,
         d_k: int,
+        rope_theta: float,
     ) -> Tuple[Array, Array]:
     """Make rotary embedding based on position indices."""
-    inv_freq = 1. / (10000 ** (jnp.arange(0, d_k, 2) / d_k))
+    inv_freq = 1. / (rope_theta ** (jnp.arange(0, d_k, 2) / d_k))
     sinusoid = einsum(inv_freq, position_ids.astype(float), 'j, B L -> B L j')
     cos = repeat(jnp.cos(sinusoid), 'B L j -> B L (i j)', i=2)
     sin = repeat(jnp.sin(sinusoid), 'B L j -> B L (i j)', i=2)
@@ -92,7 +94,7 @@ def forward_fn(
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
     v = einsum(x, v_proj, 'B D M, M   H V -> B   H D V')
 
-    cos, sin = make_rotary_embedding(inputs.position_ids, K)
+    cos, sin = make_rotary_embedding(inputs.position_ids, K, config.rope_theta)
     q = apply_rotary_embedding(q, cos, sin)
     k = apply_rotary_embedding(k, cos, sin)
 
