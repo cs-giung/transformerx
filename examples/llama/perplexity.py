@@ -156,7 +156,6 @@ if __name__ == '__main__':
         for i in pbar:
 
             labels = tokens[:, (i * seqlen) : ((i + 1) * seqlen)][:, 1:][0]
-            target = jax.nn.one_hot(labels, config.vocab_size)
             input_ids = tokens[:, (i * seqlen) : ((i + 1) * seqlen)]
             if args.ensure_bos:
                 input_ids[0][0] = tokenizer.bos_token_id
@@ -164,9 +163,9 @@ if __name__ == '__main__':
             inputs = packing_inputs(input_ids)
             logits = forward_fn(params, inputs, config).logits
             logits = logits[:, :-1, :][0]
-
-            nlls.append(float(jnp.sum(jnp.negative(
-                jnp.sum(target * jax.nn.log_softmax(logits), axis=-1)))))
+            lprobs = jax.nn.log_softmax(logits)
+            lprobs = jnp.take_along_axis(lprobs, labels[:, None], axis=-1)
+            nlls.append(float(jnp.sum(jnp.negative(lprobs))))
 
             ppl = np.exp(sum(nlls) / len(nlls) / seqlen)
             pbar.set_description(f'PPL: {ppl:.3e}')
