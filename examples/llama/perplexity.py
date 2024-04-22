@@ -90,6 +90,8 @@ if __name__ == '__main__':
             'meta-llama/Llama-2-7b-hf',
             'meta-llama/Llama-2-13b-hf',
             'meta-llama/Llama-2-70b-hf',
+            'meta-llama/Meta-Llama-3-8B',
+            'meta-llama/Meta-Llama-3-70B',
         ):
         config = load_jx_config(args.model_name)
         params = load_jx_params(args.model_name)
@@ -119,9 +121,8 @@ if __name__ == '__main__':
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
             qaram = SymmetricQuantizedArray.quantize(
-                param, bits=BITS,
-                contraction_axis=0, group_size=1).materialize()
-            return qaram
+                param, bits=BITS, contraction_axis=0, group_size=1)
+            return qaram.materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
     if args.quantization in ['Q3_1', 'Q4_1', 'Q5_1', 'Q6_1', 'Q7_1', 'Q8_1']:
@@ -137,9 +138,8 @@ if __name__ == '__main__':
                     e2 in e1.key for e2 in SKIP_PATTERNS) for e1 in path):
                 return param
             qaram = AsymmetricQuantizedArray.quantize(
-                param, bits=BITS,
-                contraction_axis=0, group_size=1).materialize()
-            return qaram
+                param, bits=BITS, contraction_axis=0, group_size=1)
+            return qaram.materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
 
     params = jax.tree_util.tree_map(
