@@ -7,6 +7,7 @@ Classes:
     LlamaConfig:
 
 Functions:
+    block_fn: Forward function for each transformer block.
     forward_fn: Forward function for the Llama model.
 """
 from functools import partial
@@ -22,7 +23,7 @@ from transformerx.models.llama.mlp import \
 from transformerx.models.llama.normalization import \
     RMSNormParams, RMSNormInputs, RMSNormConfig, \
     forward_fn as rms_norm_fn
-from transformerx.typing import ArrayLike, PytreeLike
+from transformerx.typing import Array, ArrayLike, PytreeLike
 
 
 class LlamaConfig(NamedTuple):
@@ -62,6 +63,54 @@ class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
     logits: ArrayLike
 
 
+def block_fn(
+        params: PytreeLike,
+        inputs: LlamaInputs,
+        config: LlamaConfig,
+        hidden: ArrayLike,
+    ) -> Array:
+    """Forward function for each transformer block."""
+    residu = hidden
+    hidden = rms_norm_fn(
+        params=RMSNormParams(
+            weight=params['input_layernorm']['weight']),
+        inputs=RMSNormInputs(hidden_states=hidden),
+        config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
+    hidden = attention_fn(
+        params=AttentionParams(
+            q_proj=params['self_attn']['q_proj']['weight'],
+            k_proj=params['self_attn']['k_proj']['weight'],
+            v_proj=params['self_attn']['v_proj']['weight'],
+            o_proj=params['self_attn']['o_proj']['weight']),
+        inputs=AttentionInputs(
+            hidden_states=hidden,
+            attention_mask=inputs.attention_mask,
+            position_ids=inputs.position_ids),
+        config=AttentionConfig(
+            hidden_size=config.hidden_size,
+            num_attention_heads=config.num_attention_heads,
+            num_key_value_heads=config.num_key_value_heads,
+            rope_theta=config.rope_theta))
+    hidden = hidden + residu
+
+    residu = hidden
+    hidden = rms_norm_fn(
+        params=RMSNormParams(
+            weight=params['post_attention_layernorm']['weight']),
+        inputs=RMSNormInputs(hidden_states=hidden),
+        config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
+    hidden = mlp_fn(
+        params=MLPParams(
+            g_proj=params['mlp']['g_proj']['weight'],
+            u_proj=params['mlp']['u_proj']['weight'],
+            d_proj=params['mlp']['d_proj']['weight']),
+        inputs=MLPInputs(hidden_states=hidden),
+        config=MLPConfig(intermediate_size=config.intermediate_size))
+    hidden = hidden + residu
+
+    return hidden
+
+
 @partial(jax.jit, static_argnames=('config', 'return_intermediates'))
 def forward_fn(
         params: PytreeLike,
@@ -77,47 +126,9 @@ def forward_fn(
         intermediates = ()
 
     hidden_states = params['embed_tokens']['weight'][inputs.input_ids]
-
     for i in range(config.num_hidden_layers):
-
-        residual = hidden_states
-        hidden_states = rms_norm_fn(
-            params=RMSNormParams(
-                weight=params['layers'][f'{i}']['input_layernorm']['weight']),
-            inputs=RMSNormInputs(hidden_states=hidden_states),
-            config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
-        hidden_states = attention_fn(
-            params=AttentionParams(
-                q_proj=params['layers'][f'{i}']['self_attn']['q_proj']['weight'],
-                k_proj=params['layers'][f'{i}']['self_attn']['k_proj']['weight'],
-                v_proj=params['layers'][f'{i}']['self_attn']['v_proj']['weight'],
-                o_proj=params['layers'][f'{i}']['self_attn']['o_proj']['weight']),
-            inputs=AttentionInputs(
-                hidden_states=hidden_states,
-                attention_mask=inputs.attention_mask,
-                position_ids=inputs.position_ids),
-            config=AttentionConfig(
-                hidden_size=config.hidden_size,
-                num_attention_heads=config.num_attention_heads,
-                num_key_value_heads=config.num_key_value_heads,
-                rope_theta=config.rope_theta))
-        hidden_states = hidden_states + residual
-
-        residual = hidden_states
-        hidden_states = rms_norm_fn(
-            params=RMSNormParams(
-                weight=params['layers'][f'{i}']['post_attention_layernorm']['weight']),
-            inputs=RMSNormInputs(hidden_states=hidden_states),
-            config=RMSNormConfig(rms_norm_eps=config.rms_norm_eps))
-        hidden_states = mlp_fn(
-            params=MLPParams(
-                g_proj=params['layers'][f'{i}']['mlp']['g_proj']['weight'],
-                u_proj=params['layers'][f'{i}']['mlp']['u_proj']['weight'],
-                d_proj=params['layers'][f'{i}']['mlp']['d_proj']['weight']),
-            inputs=MLPInputs(hidden_states=hidden_states),
-            config=MLPConfig(intermediate_size=config.intermediate_size))
-        hidden_states = hidden_states + residual
-
+        hidden_states = block_fn(
+            params['layers'][f'{i}'], inputs, config, hidden=hidden_states)
         if intermediates is not None:
             intermediates = intermediates + (hidden_states,)
 
