@@ -20,6 +20,15 @@ PREDEFINED_CONFIGS = {
         projection_dim=512,
         layer_norm_eps=1e-05,
     ),
+    'openai/clip-vit-base-patch16': CLIPVisionConfig(
+        hidden_size=768,
+        intermediate_size=3072,
+        num_attention_heads=12,
+        num_hidden_layers=12,
+        patch_size=16,
+        projection_dim=512,
+        layer_norm_eps=1e-05,
+    ),
     'openai/clip-vit-large-patch14': CLIPVisionConfig(
         hidden_size=1024,
         intermediate_size=4096,
