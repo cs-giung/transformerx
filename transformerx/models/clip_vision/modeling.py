@@ -28,6 +28,7 @@ class CLIPVisionConfig(NamedTuple):
     """
     Attributes:
     """
+    hidden_act: str
     hidden_size: int
     intermediate_size: int
     num_attention_heads: int
@@ -145,7 +146,9 @@ def forward_fn(
                 d_proj_w=params['layers'][f'{i}']['mlp']['d_proj']['weight'],
                 d_proj_b=params['layers'][f'{i}']['mlp']['d_proj']['bias']),
             inputs=MLPInputs(hidden_states=hidden_states),
-            config=MLPConfig(intermediate_size=config.intermediate_size))
+            config=MLPConfig(
+                hidden_act=config.hidden_act,
+                intermediate_size=config.intermediate_size))
         hidden_states = hidden_states + residual
 
         if intermediates is not None:

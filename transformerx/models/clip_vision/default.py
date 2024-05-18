@@ -12,6 +12,7 @@ from transformerx.typing import Pytree
 
 PREDEFINED_CONFIGS = {
     'openai/clip-vit-base-patch32': CLIPVisionConfig(
+        hidden_act='quick_gelu',
         hidden_size=768,
         intermediate_size=3072,
         num_attention_heads=12,
@@ -21,6 +22,7 @@ PREDEFINED_CONFIGS = {
         layer_norm_eps=1e-05,
     ),
     'openai/clip-vit-base-patch16': CLIPVisionConfig(
+        hidden_act='quick_gelu',
         hidden_size=768,
         intermediate_size=3072,
         num_attention_heads=12,
@@ -30,12 +32,33 @@ PREDEFINED_CONFIGS = {
         layer_norm_eps=1e-05,
     ),
     'openai/clip-vit-large-patch14': CLIPVisionConfig(
+        hidden_act='quick_gelu',
         hidden_size=1024,
         intermediate_size=4096,
         num_attention_heads=16,
         num_hidden_layers=24,
         patch_size=14,
         projection_dim=768,
+        layer_norm_eps=1e-05,
+    ),
+    'laion/CLIP-ViT-H-14-laion2B-s32B-b79K': CLIPVisionConfig(
+        hidden_act='gelu',
+        hidden_size=1280,
+        intermediate_size=5120,
+        num_attention_heads=16,
+        num_hidden_layers=32,
+        patch_size=14,
+        projection_dim=1024,
+        layer_norm_eps=1e-05,
+    ),
+    'laion/CLIP-ViT-bigG-14-laion2B-39B-b160k': CLIPVisionConfig(
+        hidden_act='gelu',
+        hidden_size=1664,
+        intermediate_size=8192,
+        num_attention_heads=16,
+        num_hidden_layers=48,
+        patch_size=14,
+        projection_dim=1280,
         layer_norm_eps=1e-05,
     ),
 }

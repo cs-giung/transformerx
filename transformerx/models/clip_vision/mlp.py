@@ -19,6 +19,7 @@ from transformerx.typing import Array, ArrayLike
 
 
 class MLPConfig(NamedTuple): # pylint: disable=missing-class-docstring
+    hidden_act: str
     intermediate_size: int
 
 
@@ -43,8 +44,12 @@ def forward_fn(
     x = inputs.hidden_states
     x = einsum(x, params.u_proj_w, 'B S M, M H -> B S H')
     x = x + params.u_proj_b[None, None]
-    x = jnp.multiply( # pylint: disable=not-callable
-        x, jax.nn.sigmoid(1.702 * x))
+    if config.hidden_act == 'quick_gelu':
+        x = x * jax.nn.sigmoid(1.702 * x)
+    elif config.hidden_act == 'gelu':
+        x = jax.nn.gelu(x, approximate=False)
+    else:
+        raise NotImplementedError(f'unknown hidden_act={config.hidden_act}')
     x = einsum(x, params.d_proj_w, 'B S H, H M -> B S M')
     x = x + params.d_proj_b[None, None]
     return x
