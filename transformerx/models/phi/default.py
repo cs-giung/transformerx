@@ -29,7 +29,7 @@ PREDEFINED_CONFIGS = {
 def load_hf_params(model_name: str) -> OrderedDict:
     """Load pre-trained parameters from the Hugging Face Hub."""
     return AutoModelForCausalLM.from_pretrained(
-        model_name, torch_dtype=torch.float32).state_dict()
+        model_name, torch_dtype=torch.float16).state_dict()
 
 
 def load_jx_params(model_name: str) -> Pytree:
