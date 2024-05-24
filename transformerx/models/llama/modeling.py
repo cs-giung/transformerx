@@ -1,6 +1,7 @@
 """
-Modeling Llama-2 architecture.
-https://arxiv.org/abs/2307.09288
+Modeling Llama architecture with following options:
+    - `num_key_value_heads` implements Grouped Query Attention.
+    - `sliding_window` implements Sliding Window Attention.
 """
 from functools import partial
 from typing import NamedTuple, Tuple
@@ -40,6 +41,7 @@ class LlamaConfig(NamedTuple):
     num_key_value_heads: int
     rms_norm_eps: float
     rope_theta: float
+    sliding_window: int
     vocab_size: int
 
 
@@ -82,7 +84,8 @@ def block_fn(
             hidden_size=config.hidden_size,
             num_attention_heads=config.num_attention_heads,
             num_key_value_heads=config.num_key_value_heads,
-            rope_theta=config.rope_theta))
+            rope_theta=config.rope_theta,
+            sliding_window=config.sliding_window))
     hidden = hidden + residu
 
     residu = hidden

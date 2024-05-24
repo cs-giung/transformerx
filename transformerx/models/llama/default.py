@@ -21,6 +21,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=32,
         rms_norm_eps=1e-06,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'huggyllama/llama-13b': LlamaConfig(
@@ -31,6 +32,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=40,
         rms_norm_eps=1e-06,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'huggyllama/llama-30b': LlamaConfig(
@@ -41,6 +43,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=52,
         rms_norm_eps=1e-06,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'huggyllama/llama-65b': LlamaConfig(
@@ -51,6 +54,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=64,
         rms_norm_eps=1e-05,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-7b-hf': LlamaConfig(
@@ -61,6 +65,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=32,
         rms_norm_eps=1e-05,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-13b-hf': LlamaConfig(
@@ -71,6 +76,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=40,
         rms_norm_eps=1e-05,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-70b-hf': LlamaConfig(
@@ -81,6 +87,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=10000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'meta-llama/Meta-Llama-3-8B': LlamaConfig(
@@ -91,6 +98,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=500000.0,
+        sliding_window=None,
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-8B-Instruct': LlamaConfig(
@@ -101,6 +109,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=500000.0,
+        sliding_window=None,
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-70B': LlamaConfig(
@@ -111,7 +120,19 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=500000.0,
+        sliding_window=None,
         vocab_size=128256,
+    ),
+    'mistralai/Mistral-7B-Instruct-v0.1': LlamaConfig(
+        hidden_size=4096,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_theta=10000.0,
+        sliding_window=4096,
+        vocab_size=32768,
     ),
     'mistralai/Mistral-7B-Instruct-v0.2': LlamaConfig(
         hidden_size=4096,
@@ -121,6 +142,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=1000000.0,
+        sliding_window=None,
         vocab_size=32000,
     ),
     'mistralai/Mistral-7B-Instruct-v0.3': LlamaConfig(
@@ -131,6 +153,7 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=1000000.0,
+        sliding_window=None,
         vocab_size=32768,
     ),
 }

@@ -27,6 +27,7 @@ class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
     num_attention_heads: int
     num_key_value_heads: int
     rope_theta: float
+    sliding_window: int
 
 
 def make_rotary_embedding(
@@ -88,6 +89,10 @@ def forward_fn(
 
     qk_mask = inputs.attention_mask.astype(bool)
     qk_mask = jnp.tril(einsum(qk_mask, qk_mask, 'B i, B j -> B i j'))
+    if config.sliding_window is not None:
+        qk_mask = jnp.logical_and(qk_mask, jnp.triu(jnp.tril(jnp.full(
+            qk_mask.shape, dtype=qk_mask.dtype, fill_value=True
+        ), k=0), k=-config.sliding_window))
     qk_mask = qk_mask[:, None, None]
 
     qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)
