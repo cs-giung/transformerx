@@ -162,9 +162,11 @@ def get_tokenize_fn(
         if padding_side == 'right':
             bos_idx = np.zeros((attention_mask.shape[0]))
             eos_idx = np.sum(attention_mask, axis=-1)
-        if padding_side == 'left':
+        elif padding_side == 'left':
             bos_idx = max_length - np.sum(attention_mask, axis=-1)
             eos_idx = max_length * np.ones((attention_mask.shape[0]))
+        else:
+            raise AssertionError(f'Unknown padding_side={padding_side}')
         bos_idx, eos_idx = bos_idx.astype(int), eos_idx.astype(int)
 
         position_ids = np.zeros_like(attention_mask)
