@@ -156,6 +156,28 @@ PREDEFINED_CONFIGS = {
         sliding_window=None,
         vocab_size=32768,
     ),
+    'microsoft/Phi-3-mini-4k-instruct': LlamaConfig(
+        hidden_size=3072,
+        intermediate_size=8192,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=32,
+        rms_norm_eps=1e-05,
+        rope_theta=10000.0,
+        sliding_window=2047,
+        vocab_size=32064,
+    ),
+    'microsoft/Phi-3-medium-4k-instruct': LlamaConfig(
+        hidden_size=5120,
+        intermediate_size=17920,
+        num_attention_heads=40,
+        num_hidden_layers=40,
+        num_key_value_heads=10,
+        rms_norm_eps=1e-05,
+        rope_theta=10000.0,
+        sliding_window=2047,
+        vocab_size=32064,
+    ),
 }
 
 
@@ -167,7 +189,8 @@ def load_hf_params(model_name: str) -> OrderedDict:
 
 def load_jx_params(model_name: str) -> Pytree:
     """Returns pre-trained parameters."""
-    return convert_hf_params_to_jx_params(load_hf_params(model_name))
+    return convert_hf_params_to_jx_params(
+        load_hf_params(model_name), model_name)
 
 
 def load_jx_config(model_name: str) -> LlamaConfig:
@@ -230,7 +253,8 @@ def get_tokenize_fn(
     return tokenize_fn
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
+def convert_hf_params_to_jx_params(
+        hf_params: OrderedDict, model_name: str) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
@@ -248,31 +272,86 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
             'weight': pt2jx(hf_params['model.embed_tokens.weight'])}
         norm = {
             'weight': pt2jx(hf_params['model.norm.weight'])}
-        layers = {
-            f'{i}': {
-                'input_layernorm': {
+        layers = {}
+        for i in range(num_hidden_layers):
+            layers[f'{i}'] = {}
+            layers[f'{i}']['input_layernorm'] = {
+                'weight': pt2jx(hf_params[
+                    f'model.layers.{i}.input_layernorm.weight'])}
+            layers[f'{i}']['post_attention_layernorm'] = {
+                'weight': pt2jx(hf_params[
+                    f'model.layers.{i}.post_attention_layernorm.weight'])}
+
+            layers[f'{i}']['self_attn'] = {}
+            layers[f'{i}']['mlp'] = {}
+            if model_name == 'microsoft/Phi-3-mini-4k-instruct':
+                layers[f'{i}']['self_attn']['q_proj'] = {
                     'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.input_layernorm.weight'])},
-                'self_attn': {
-                    'q_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.q_proj.weight']).T},
-                    'k_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.k_proj.weight']).T},
-                    'v_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.v_proj.weight']).T},
-                    'o_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.o_proj.weight']).T}},
-                'post_attention_layernorm': {
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][0:3072]).T}
+                layers[f'{i}']['self_attn']['k_proj'] = {
                     'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.post_attention_layernorm.weight'])},
-                'mlp': {
-                    'g_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.mlp.gate_proj.weight']).T},
-                    'u_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.mlp.up_proj.weight']).T},
-                    'd_proj': {'weight': pt2jx(hf_params[
-                        f'model.layers.{i}.mlp.down_proj.weight']).T}}
-            } for i in range(num_hidden_layers)}
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][3072:6144]).T}
+                layers[f'{i}']['self_attn']['v_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][6144:9216]).T}
+                layers[f'{i}']['mlp']['g_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'
+                    ][:8192]).T}
+                layers[f'{i}']['mlp']['u_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'
+                    ][8192:]).T}
+
+            elif model_name == 'microsoft/Phi-3-medium-4k-instruct':
+                layers[f'{i}']['self_attn']['q_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][0:5120]).T}
+                layers[f'{i}']['self_attn']['k_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][5120:6400]).T}
+                layers[f'{i}']['self_attn']['v_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'
+                    ][6400:7680]).T}
+                layers[f'{i}']['mlp']['g_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'
+                    ][:17920]).T}
+                layers[f'{i}']['mlp']['u_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'
+                    ][17920:]).T}
+
+            else:
+                layers[f'{i}']['self_attn']['q_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.q_proj.weight']).T}
+                layers[f'{i}']['self_attn']['k_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.k_proj.weight']).T}
+                layers[f'{i}']['self_attn']['v_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.v_proj.weight']).T}
+                layers[f'{i}']['mlp']['g_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_proj.weight']).T}
+                layers[f'{i}']['mlp']['u_proj'] = {
+                    'weight': pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.up_proj.weight']).T}
+
+            layers[f'{i}']['self_attn']['o_proj'] = {
+                'weight': pt2jx(hf_params[
+                    f'model.layers.{i}.self_attn.o_proj.weight']).T}
+            layers[f'{i}']['mlp']['d_proj'] = {
+                'weight': pt2jx(hf_params[
+                    f'model.layers.{i}.mlp.down_proj.weight']).T}
+
         lm_head = {
             'weight': pt2jx(hf_params['lm_head.weight']).T}
 
