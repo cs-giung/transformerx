@@ -1,0 +1,24 @@
+[2024-05-24 21:58:39] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.3 (main, Apr 27 2024, 19:00:21) [GCC 11.4.0]
+datasets      2.19.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.41.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-05-24 21:58:39] Command line arguments:
+- args.model  : meta-llama/Meta-Llama-3-8B
+- args.data   : ptb
+- args.seqlen : 2048
+- args.quant  : Q4_0
+- args.save   : examples/perplexity/save/ptb/meta-llama/Meta-Llama-3-8B
+- args.seed   : 40178732
+
+[2024-05-24 21:58:39] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
+[2024-05-24 22:00:47] nlls=[1.799e+04, 1.709e+04, 1.761e+04, 1.662e+04, 1.723e+04, 1.681e+04, 1.722e+04, 1.766e+04, 1.667e+04, 1.811e+04, 1.789e+04, 1.607e+04, 1.674e+04, 1.735e+04, 1.830e+04, 1.735e+04, 1.728e+04, 1.694e+04, 1.720e+04, 1.717e+04, 1.862e+04, 1.686e+04, 1.700e+04, 1.779e+04, 1.734e+04, 1.744e+04, 1.720e+04, 1.722e+04, 1.679e+04, 1.770e+04, 1.646e+04, 1.722e+04, 1.690e+04, 1.678e+04, 1.732e+04, 1.771e+04, 1.741e+04, 1.700e+04, 1.711e+04, 1.665e+04, 1.677e+04, 1.706e+04, 1.741e+04, 1.711e+04, 1.738e+04, 1.670e+04]
+[2024-05-24 22:00:47] ppls=[8.783e+00, 8.563e+00, 8.575e+00, 8.460e+00, 8.451e+00, 8.411e+00, 8.410e+00, 8.437e+00, 8.404e+00, 8.448e+00, 8.473e+00, 8.421e+00, 8.402e+00, 8.407e+00, 8.442e+00, 8.444e+00, 8.444e+00, 8.434e+00, 8.433e+00, 8.430e+00, 8.462e+00, 8.451e+00, 8.445e+00, 8.455e+00, 8.455e+00, 8.457e+00, 8.455e+00, 8.453e+00, 8.445e+00, 8.451e+00, 8.438e+00, 8.437e+00, 8.431e+00, 8.424e+00, 8.425e+00, 8.431e+00, 8.433e+00, 8.430e+00, 8.428e+00, 8.420e+00, 8.415e+00, 8.413e+00, 8.415e+00, 8.413e+00, 8.415e+00, 8.409e+00]
+[2024-05-24 22:00:47] PPL: 8.409e+00
