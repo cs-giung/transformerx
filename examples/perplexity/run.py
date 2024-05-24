@@ -55,20 +55,19 @@ if __name__ == '__main__':
             'meta-llama/Llama-2-13b-hf',
             'meta-llama/Llama-2-70b-hf',
             'meta-llama/Meta-Llama-3-8B',
+            'meta-llama/Meta-Llama-3-8B-Instruct',
             'meta-llama/Meta-Llama-3-70B',
+            'meta-llama/Meta-Llama-3-70B-Instruct',
+            'mistralai/Mistral-7B-Instruct-v0.1',
+            'mistralai/Mistral-7B-Instruct-v0.2',
+            'mistralai/Mistral-7B-Instruct-v0.3',
+            'microsoft/Phi-3-mini-4k-instruct',
+            'microsoft/Phi-3-medium-4k-instruct',
         ):
         from transformerx.models.llama.default import \
             load_jx_config, load_jx_params
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
-
-    elif args.model in (
-            'microsoft/Phi-3-mini-4k-instruct',
-        ):
-        from transformerx.models.phi.default import \
-            load_jx_config, load_jx_params
-        from transformerx.models.phi.modeling import \
-            forward_fn, PhiInputs as Inputs
 
     else:
         raise NotImplementedError(
