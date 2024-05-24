@@ -23,6 +23,16 @@ PREDEFINED_CONFIGS = {
         rope_theta=10000.0,
         vocab_size=32064,
     ),
+    'microsoft/Phi-3-medium-4k-instruct': PhiConfig(
+        hidden_size=5120,
+        intermediate_size=17920,
+        num_attention_heads=40,
+        num_hidden_layers=40,
+        num_key_value_heads=10,
+        rms_norm_eps=1e-05,
+        rope_theta=10000.0,
+        vocab_size=32064,
+    ),
 }
 
 
@@ -34,7 +44,8 @@ def load_hf_params(model_name: str) -> OrderedDict:
 
 def load_jx_params(model_name: str) -> Pytree:
     """Returns pre-trained parameters."""
-    return convert_hf_params_to_jx_params(load_hf_params(model_name))
+    return convert_hf_params_to_jx_params(
+        load_hf_params(model_name), model_name)
 
 
 def load_jx_config(model_name: str) -> PhiConfig:
@@ -97,7 +108,8 @@ def get_tokenize_fn(
     return tokenize_fn
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
+def convert_hf_params_to_jx_params(
+        hf_params: OrderedDict, model_name: str) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
@@ -108,6 +120,18 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
     num_hidden_layers = 1 + max(
         int(e.split('.')[2]) for e in hf_params.keys()
         if e.startswith('model.layers.'))
+    if model_name == 'microsoft/Phi-3-mini-4k-instruct':
+        qkv2q = lambda e: e[   0:3072]
+        qkv2k = lambda e: e[3072:6144]
+        qkv2v = lambda e: e[6144:9216]
+        gu2g = lambda e: e[    0:8192]
+        gu2u = lambda e: e[8192:16384]
+    if model_name == 'microsoft/Phi-3-medium-4k-instruct':
+        qkv2q = lambda e: e[   0:5120]
+        qkv2k = lambda e: e[5120:6400]
+        qkv2v = lambda e: e[6400:7680]
+        gu2g = lambda e: e[    0:17920]
+        gu2u = lambda e: e[17920:35840]
 
     device = jax.devices('cpu')[0]
     with jax.default_device(device):
@@ -121,22 +145,22 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
                     'weight': pt2jx(hf_params[
                         f'model.layers.{i}.input_layernorm.weight'])},
                 'self_attn': {
-                    'q_proj': {'weight': jnp.split(pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.qkv_proj.weight']), 3)[0].T},
-                    'k_proj': {'weight': jnp.split(pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.qkv_proj.weight']), 3)[1].T},
-                    'v_proj': {'weight': jnp.split(pt2jx(hf_params[
-                        f'model.layers.{i}.self_attn.qkv_proj.weight']), 3)[2].T},
+                    'q_proj': {'weight': qkv2q(pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'])).T},
+                    'k_proj': {'weight': qkv2k(pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'])).T},
+                    'v_proj': {'weight': qkv2v(pt2jx(hf_params[
+                        f'model.layers.{i}.self_attn.qkv_proj.weight'])).T},
                     'o_proj': {'weight': pt2jx(hf_params[
                         f'model.layers.{i}.self_attn.o_proj.weight']).T}},
                 'post_attention_layernorm': {
                     'weight': pt2jx(hf_params[
                         f'model.layers.{i}.post_attention_layernorm.weight'])},
                 'mlp': {
-                    'g_proj': {'weight': jnp.split(pt2jx(hf_params[
-                        f'model.layers.{i}.mlp.gate_up_proj.weight']), 2)[0].T},
-                    'u_proj': {'weight': jnp.split(pt2jx(hf_params[
-                        f'model.layers.{i}.mlp.gate_up_proj.weight']), 2)[1].T},
+                    'g_proj': {'weight': gu2g(pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'])).T},
+                    'u_proj': {'weight': gu2u(pt2jx(hf_params[
+                        f'model.layers.{i}.mlp.gate_up_proj.weight'])).T},
                     'd_proj': {'weight': pt2jx(hf_params[
                         f'model.layers.{i}.mlp.down_proj.weight']).T}}
             } for i in range(num_hidden_layers)}
