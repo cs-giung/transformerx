@@ -1,5 +1,4 @@
-# pylint: disable=duplicate-code
-"""Testing Llama Model."""
+"""Testing Llama."""
 import sys
 sys.path.append('./') # pylint: disable=wrong-import-position
 
@@ -7,21 +6,20 @@ import numpy as np
 import jax
 import jax.numpy as jnp
 import torch
-jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
-
+from einshard import einshard
 from jax_smi import initialise_tracking
+from transformers import AutoConfig, AutoTokenizer, LlamaForCausalLM
+jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
 initialise_tracking()
 
-from transformers import AutoConfig, AutoTokenizer, LlamaForCausalLM
 from transformerx.models.llama.default import \
     load_jx_config, load_jx_params, get_tokenize_fn
 from transformerx.models.llama.modeling import LlamaInputs, forward_fn
-from transformerx.experimental.einshard import einshard
 
 
 if __name__ == '__main__':
 
-    NAME = 'meta-llama/Llama-2-7b-hf'
+    NAME = 'meta-llama/Meta-Llama-3-8B'
     CONFIG = AutoConfig.from_pretrained(NAME)
     PROMPT = [
         "Hey, are you conscious? This is",
@@ -99,7 +97,7 @@ if __name__ == '__main__':
 
     # model parallel via einshard
     params_jx = jax.tree_util.tree_map(
-        lambda e: einshard(e, '... O -> ... O1'), params_jx)
+        lambda e: einshard(e, '... O -> ... O*'), params_jx)
 
     tokenize = get_tokenize_fn(
         NAME, max_length=MAX_LENGTH,
