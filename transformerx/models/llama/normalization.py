@@ -1,15 +1,4 @@
-"""
-This module contains functions and classes for performing RMS normalization.
-
-Classes:
-    RMSNormParams: NamedTuple for RMS normalization parameters.
-    RMSNormInputs: NamedTuple for RMS normalization inputs.
-    RMSNormConfig: NamedTuple for RMS normalization configuration.
-
-Functions:
-    forward_fn: Forward function for RMS normalization.
-
-"""
+"""Functions and classes for the RMS normalization module."""
 from functools import partial
 from typing import NamedTuple
 

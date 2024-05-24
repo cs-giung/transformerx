@@ -1,15 +1,4 @@
-"""
-Llama Model.
-
-Classes:
-    LlamaParams:
-    LlamaInputs:
-    LlamaConfig:
-
-Functions:
-    block_fn: Forward function for each transformer block.
-    forward_fn: Forward function for the Llama model.
-"""
+"""Modeling Llama."""
 from functools import partial
 from typing import NamedTuple, Tuple
 

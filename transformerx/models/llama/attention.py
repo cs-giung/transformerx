@@ -1,16 +1,4 @@
-"""
-This module contains functions and classes for the attention module.
-
-Classes:
-    AttentionParams:
-    AttentionInputs:
-    AttentionConfig:
-
-Functions:
-    make_rotary_embedding: Make rotary embedding based on position indices.
-    apply_rotary_embedding: Apply rotary embedding to an input array.
-    forward_fn: Forward function for the attention module.
-"""
+"""Functions and classes for the attention module."""
 import math
 from functools import partial
 from typing import NamedTuple, Tuple

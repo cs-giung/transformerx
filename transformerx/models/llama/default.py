@@ -1,4 +1,4 @@
-"""Default configurations and utilities for the Llama model."""
+"""Default configurations and utilities."""
 from collections import OrderedDict
 from typing import Callable, List, Union
 
