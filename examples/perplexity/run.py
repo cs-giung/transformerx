@@ -111,6 +111,11 @@ if __name__ == '__main__':
             'wikitext', 'wikitext-2-raw-v1', split='test')
         tokens = '\n\n'.join(tokens['text']) # pylint: disable=invalid-name
 
+    if args.data == 'ptb':
+        tokens = datasets.load_dataset(
+            'ptb_text_only', 'penn_treebank', split='test')
+        tokens = ' '.join(tokens['sentence']) # pylint: disable=invalid-name
+
     else:
         raise NotImplementedError(
             f'Unknown args.data={args.data}')
