@@ -1,4 +1,7 @@
-"""Modeling Llama."""
+"""
+Modeling Llama-2 architecture.
+https://arxiv.org/abs/2307.09288
+"""
 from functools import partial
 from typing import NamedTuple, Tuple
 
