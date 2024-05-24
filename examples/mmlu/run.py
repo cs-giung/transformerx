@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 inputs = Inputs(**tokenize_fn([prompt]))
                 answer = detokenize_fn([jnp.argmax(
                     forward_fn(params, inputs, config).logits[0, -1, :])])
-                correct += int(answer == chr(65 + doc['gold']))
+                correct += int(answer.strip() == chr(65 + doc['gold']))
                 num_doc += 1
             data.append((category, subject, correct, num_doc))
             print_fn(f'{category}/{subject}: {correct} / {num_doc}')
