@@ -1,0 +1,148 @@
+[2024-05-25 15:02:51] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.3 (main, Apr 27 2024, 19:00:21) [GCC 11.4.0]
+datasets      2.19.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.41.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-05-25 15:02:51] Command line arguments:
+- args.model  : mistralai/Mistral-7B-v0.1
+- args.shot   : 0
+- args.maxlen : 2048
+- args.quant  : None
+- args.save   : examples/mmlu/save/mmlu-0shot/mistralai/Mistral-7B-v0.1
+- args.seed   : 51685403
+
+[2024-05-25 15:02:51] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
+[2024-05-25 15:04:13] humanities/formal_logic: 1 / 14
+[2024-05-25 15:04:16] humanities/high_school_european_history: 9 / 18
+[2024-05-25 15:04:20] humanities/high_school_us_history: 12 / 22
+[2024-05-25 15:04:23] humanities/high_school_world_history: 16 / 26
+[2024-05-25 15:04:25] humanities/international_law: 11 / 13
+[2024-05-25 15:04:28] humanities/jurisprudence: 6 / 11
+[2024-05-25 15:04:30] humanities/logical_fallacies: 15 / 18
+[2024-05-25 15:04:35] humanities/moral_disputes: 22 / 38
+[2024-05-25 15:04:47] humanities/moral_scenarios: 31 / 100
+[2024-05-25 15:04:51] humanities/philosophy: 26 / 34
+[2024-05-25 15:04:56] humanities/prehistory: 20 / 35
+[2024-05-25 15:05:15] humanities/professional_law: 68 / 170
+[2024-05-25 15:05:18] humanities/world_religions: 16 / 19
+[2024-05-25 15:05:20] social_sciences/econometrics: 8 / 12
+[2024-05-25 15:05:23] social_sciences/high_school_geography: 17 / 22
+[2024-05-25 15:05:26] social_sciences/high_school_government_and_politics: 16 / 21
+[2024-05-25 15:05:32] social_sciences/high_school_macroeconomics: 22 / 43
+[2024-05-25 15:05:36] social_sciences/high_school_microeconomics: 12 / 26
+[2024-05-25 15:05:43] social_sciences/high_school_psychology: 51 / 60
+[2024-05-25 15:05:45] social_sciences/human_sexuality: 5 / 12
+[2024-05-25 15:05:54] social_sciences/professional_psychology: 42 / 69
+[2024-05-25 15:05:56] social_sciences/public_relations: 6 / 12
+[2024-05-25 15:06:00] social_sciences/security_studies: 21 / 27
+[2024-05-25 15:06:03] social_sciences/sociology: 21 / 22
+[2024-05-25 15:06:05] social_sciences/us_foreign_policy: 9 / 11
+[2024-05-25 15:06:07] stem/abstract_algebra: 3 / 11
+[2024-05-25 15:06:09] stem/astronomy: 9 / 16
+[2024-05-25 15:06:12] stem/college_biology: 11 / 16
+[2024-05-25 15:06:14] stem/college_chemistry: 1 / 8
+[2024-05-25 15:06:15] stem/college_computer_science: 5 / 11
+[2024-05-25 15:06:17] stem/college_mathematics: 3 / 11
+[2024-05-25 15:06:20] stem/college_physics: 6 / 11
+[2024-05-25 15:06:22] stem/computer_security: 5 / 11
+[2024-05-25 15:06:25] stem/conceptual_physics: 13 / 26
+[2024-05-25 15:06:28] stem/electrical_engineering: 9 / 16
+[2024-05-25 15:06:37] stem/elementary_mathematics: 14 / 41
+[2024-05-25 15:06:42] stem/high_school_biology: 19 / 32
+[2024-05-25 15:06:49] stem/high_school_chemistry: 8 / 22
+[2024-05-25 15:06:51] stem/high_school_computer_science: 5 / 9
+[2024-05-25 15:06:55] stem/high_school_mathematics: 2 / 29
+[2024-05-25 15:06:58] stem/high_school_physics: 3 / 17
+[2024-05-25 15:07:01] stem/high_school_statistics: 9 / 23
+[2024-05-25 15:07:03] stem/machine_learning: 6 / 11
+[2024-05-25 15:07:06] other/anatomy: 10 / 14
+[2024-05-25 15:07:08] other/business_ethics: 6 / 11
+[2024-05-25 15:07:12] other/clinical_knowledge: 17 / 29
+[2024-05-25 15:07:15] other/college_medicine: 11 / 22
+[2024-05-25 15:07:17] other/global_facts: 4 / 10
+[2024-05-25 15:07:20] other/human_aging: 17 / 23
+[2024-05-25 15:07:22] other/management: 10 / 11
+[2024-05-25 15:07:26] other/marketing: 20 / 25
+[2024-05-25 15:07:28] other/medical_genetics: 10 / 11
+[2024-05-25 15:07:38] other/miscellaneous: 61 / 86
+[2024-05-25 15:07:42] other/nutrition: 27 / 33
+[2024-05-25 15:07:46] other/professional_accounting: 11 / 31
+[2024-05-25 15:07:50] other/professional_medicine: 19 / 31
+[2024-05-25 15:07:53] other/virology: 8 / 18
+[2024-05-25 15:07:53] Detailed results:
+           category                              subject  correct  num_doc
+0        humanities                         formal_logic        1       14
+1        humanities         high_school_european_history        9       18
+2        humanities               high_school_us_history       12       22
+3        humanities            high_school_world_history       16       26
+4        humanities                    international_law       11       13
+5        humanities                        jurisprudence        6       11
+6        humanities                    logical_fallacies       15       18
+7        humanities                       moral_disputes       22       38
+8        humanities                      moral_scenarios       31      100
+9        humanities                           philosophy       26       34
+10       humanities                           prehistory       20       35
+11       humanities                     professional_law       68      170
+12       humanities                      world_religions       16       19
+13  social_sciences                         econometrics        8       12
+14  social_sciences                high_school_geography       17       22
+15  social_sciences  high_school_government_and_politics       16       21
+16  social_sciences           high_school_macroeconomics       22       43
+17  social_sciences           high_school_microeconomics       12       26
+18  social_sciences               high_school_psychology       51       60
+19  social_sciences                      human_sexuality        5       12
+20  social_sciences              professional_psychology       42       69
+21  social_sciences                     public_relations        6       12
+22  social_sciences                     security_studies       21       27
+23  social_sciences                            sociology       21       22
+24  social_sciences                    us_foreign_policy        9       11
+25             stem                     abstract_algebra        3       11
+26             stem                            astronomy        9       16
+27             stem                      college_biology       11       16
+28             stem                    college_chemistry        1        8
+29             stem             college_computer_science        5       11
+30             stem                  college_mathematics        3       11
+31             stem                      college_physics        6       11
+32             stem                    computer_security        5       11
+33             stem                   conceptual_physics       13       26
+34             stem               electrical_engineering        9       16
+35             stem               elementary_mathematics       14       41
+36             stem                  high_school_biology       19       32
+37             stem                high_school_chemistry        8       22
+38             stem         high_school_computer_science        5        9
+39             stem              high_school_mathematics        2       29
+40             stem                  high_school_physics        3       17
+41             stem               high_school_statistics        9       23
+42             stem                     machine_learning        6       11
+43            other                              anatomy       10       14
+44            other                      business_ethics        6       11
+45            other                   clinical_knowledge       17       29
+46            other                     college_medicine       11       22
+47            other                         global_facts        4       10
+48            other                          human_aging       17       23
+49            other                           management       10       11
+50            other                            marketing       20       25
+51            other                     medical_genetics       10       11
+52            other                        miscellaneous       61       86
+53            other                            nutrition       27       33
+54            other              professional_accounting       11       31
+55            other                professional_medicine       19       31
+56            other                             virology        8       18
+
+[2024-05-25 15:07:53] humanities macro-average: 0.5711
+[2024-05-25 15:07:53] humanities micro-average: 0.4884
+[2024-05-25 15:07:53] social_sciences macro-average: 0.6750
+[2024-05-25 15:07:53] social_sciences micro-average: 0.6825
+[2024-05-25 15:07:53] stem macro-average: 0.4152
+[2024-05-25 15:07:53] stem micro-average: 0.4081
+[2024-05-25 15:07:53] other macro-average: 0.6459
+[2024-05-25 15:07:53] other micro-average: 0.6507
+[2024-05-25 15:07:53] total macro-average: 0.5621
+[2024-05-25 15:07:53] total micro-average: 0.5519
