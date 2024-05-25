@@ -61,8 +61,11 @@ if __name__ == '__main__':
             'meta-llama/Meta-Llama-3-8B-Instruct',
             'meta-llama/Meta-Llama-3-70B',
             'meta-llama/Meta-Llama-3-70B-Instruct',
+            'mistralai/Mistral-7B-v0.1',
             'mistralai/Mistral-7B-Instruct-v0.1',
+            'mistral-community/Mistral-7B-v0.2',
             'mistralai/Mistral-7B-Instruct-v0.2',
+            'mistralai/Mistral-7B-v0.3',
             'mistralai/Mistral-7B-Instruct-v0.3',
             'microsoft/Phi-3-mini-4k-instruct',
             'microsoft/Phi-3-medium-4k-instruct',
@@ -111,7 +114,7 @@ if __name__ == '__main__':
             'wikitext', 'wikitext-2-raw-v1', split='test')
         tokens = '\n\n'.join(tokens['text']) # pylint: disable=invalid-name
 
-    if args.data == 'ptb':
+    elif args.data == 'ptb':
         tokens = datasets.load_dataset(
             'ptb_text_only', 'penn_treebank', split='test')
         tokens = ' '.join(tokens['sentence']) # pylint: disable=invalid-name
