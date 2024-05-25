@@ -16,9 +16,12 @@ python examples/perplexity/run.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 6.501 | 6.512 | 6.509 | 6.511 | 6.646 | 8.313 | 12.66 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 5.324 | 5.321 | 5.320 | 5.325 | 5.371 | 5.325 | 9.600 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 5.547 | 5.555 | 5.553 | 5.545 | 5.559 | 5.712 | 13.85 |
+| `mistral-community/Mistral-7B-v0.2`   | 5.918 | 5.927 | 5.921 | 6.323 | 6.718 | 6.692 | 9.189 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 5.503 | 5.504 | 5.510 | 5.517 | 5.535 | 5.689 | 8.784 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 5.982 | 5.996 | 6.086 | 6.878 | 7.174 | 7.091 | 9.630 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 5.793 | 5.778 | 5.827 | 6.222 | 6.837 | 6.830 | 9.628 |
+| `mistralai/Mistral-7B-v0.1`           | 5.846 | 5.833 | 5.835 | 6.173 | 6.564 | 6.550 | 9.662 |
+| `mistralai/Mistral-7B-v0.3`           | 5.918 | 5.928 | 5.921 | 6.323 | 6.718 | 6.693 | 9.190 |
 
 ## PTB
 
@@ -31,6 +34,9 @@ python examples/perplexity/run.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 6.861 | 6.898 | 6.894 | 6.873 | 7.033 | 8.409 | 12.72 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 5.562 | 5.565 | 5.561 | 5.554 | 5.582 | 5.643 | 9.580 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 5.625 | 5.632 | 5.641 | 5.629 | 5.625 | 5.932 | 13.88 |
+| `mistral-community/Mistral-7B-v0.2`   | 6.692 | 6.692 | 6.709 | 7.439 | 7.908 | 7.741 | 9.711 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 6.804 | 6.802 | 6.817 | 6.843 | 6.725 | 6.934 | 8.812 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 6.667 | 6.682 | 6.723 | 7.426 | 7.955 | 7.931 | 9.888 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 6.907 | 6.895 | 6.907 | 7.001 | 7.530 | 7.957 | 9.806 |
+| `mistralai/Mistral-7B-v0.1`           | 6.667 | 6.658 | 6.696 | 7.411 | 7.213 | 7.041 | 9.768 |
+| `mistralai/Mistral-7B-v0.3`           | 6.705 | 6.707 | 6.735 | 7.268 | 7.808 | 7.742 | 9.636 |
