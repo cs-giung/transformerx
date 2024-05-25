@@ -1,4 +1,4 @@
-# MMLU
+# MMLU (0-shot)
 
 The example demonstrates MMLU evaluation.
 ```bash
@@ -16,9 +16,12 @@ python examples/mmlu/run.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.6377 | 0.6352 | 0.6383 | 0.6267 | 0.6145 | 0.4603 | 0.0016 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.7675 | 0.7622 | 0.7567 | 0.7673 | 0.7519 | 0.6007 | 0.0017 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.6622 | 0.6625 | 0.6688 | 0.6650 | 0.6332 | 0.4106 | 0.0050 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.5410 | 0.5405 | 0.5440 | 0.5523 | 0.5066 | 0.5044 | 0.0009 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.5452 | 0.5450 | 0.5469 | 0.5457 | 0.5482 | 0.5304 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6165 | 0.6155 | 0.6144 | 0.6139 | 0.6193 | 0.5795 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.6170 | 0.6139 | 0.6146 | 0.6161 | 0.6139 | 0.5734 | 0.0003 |
+| `mistralai/Mistral-7B-v0.1`           | 0.5621 | 0.5542 | 0.5625 | 0.5483 | 0.5869 | 0.5115 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.5410 | 0.5405 | 0.5440 | 0.5523 | 0.5066 | 0.5044 | 0.0009 |
 
 ## micro-average
 
@@ -31,9 +34,12 @@ python examples/mmlu/run.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.6094 | 0.6074 | 0.6140 | 0.5976 | 0.5931 | 0.4481 | 0.0013 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.7740 | 0.7734 | 0.7681 | 0.7753 | 0.7590 | 0.5813 | 0.0020 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.6662 | 0.6669 | 0.6721 | 0.6656 | 0.6381 | 0.4167 | 0.0046 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.5297 | 0.5297 | 0.5304 | 0.5369 | 0.4977 | 0.4749 | 0.0013 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.5284 | 0.5265 | 0.5278 | 0.5265 | 0.5291 | 0.5147 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6035 | 0.6055 | 0.6029 | 0.5996 | 0.6029 | 0.5617 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.5983 | 0.5957 | 0.5983 | 0.5931 | 0.5963 | 0.5513 | 0.0007 |
+| `mistralai/Mistral-7B-v0.1`           | 0.5519 | 0.5434 | 0.5513 | 0.5408 | 0.5689 | 0.5121 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.5297 | 0.5297 | 0.5304 | 0.5369 | 0.4977 | 0.4749 | 0.0013 |
 
 # Reasoning
 
@@ -42,7 +48,7 @@ The example demonstrates reasoning tasks.
 python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 ```
 
-## ARC-C
+## ARC-C (0-shot)
 
 | `model`                               | `FP16` | `Q8_0` | `Q7_0` | `Q6_0` | `Q5_0` | `Q4_0` | `Q3_0` |
 | :-                                    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    |
@@ -53,9 +59,12 @@ python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.8060 | 0.8094 | 0.7960 | 0.7993 | 0.7425 | 0.5284 | 0.0000 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.9097 | 0.9097 | 0.8997 | 0.8997 | 0.8963 | 0.8796 | 0.0000 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.8763 | 0.8729 | 0.8763 | 0.8696 | 0.8662 | 0.7960 | 0.0000 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.7592 | 0.7559 | 0.7592 | 0.7625 | 0.7458 | 0.6455 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.6856 | 0.6890 | 0.6890 | 0.6856 | 0.6990 | 0.6455 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.7559 | 0.7592 | 0.7592 | 0.7659 | 0.7391 | 0.7157 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.8027 | 0.7993 | 0.7960 | 0.7860 | 0.7893 | 0.7157 | 0.0000 |
+| `mistralai/Mistral-7B-v0.1`           | 0.7391 | 0.7391 | 0.7458 | 0.7291 | 0.7358 | 0.6421 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.7592 | 0.7559 | 0.7592 | 0.7625 | 0.7458 | 0.6455 | 0.0000 |
 
 ## ARC-E
 
@@ -68,9 +77,12 @@ python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.8842 | 0.8807 | 0.8877 | 0.8825 | 0.8561 | 0.7158 | 0.0035 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.9649 | 0.9667 | 0.9596 | 0.9614 | 0.9579 | 0.9474 | 0.0035 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.9526 | 0.9509 | 0.9491 | 0.9509 | 0.9456 | 0.9123 | 0.0000 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.8719 | 0.8684 | 0.8684 | 0.8684 | 0.8614 | 0.8140 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.8281 | 0.8281 | 0.8263 | 0.8316 | 0.8228 | 0.8158 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.8509 | 0.8509 | 0.8491 | 0.8491 | 0.8439 | 0.8351 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.8807 | 0.8772 | 0.8789 | 0.8842 | 0.8667 | 0.8368 | 0.0000 |
+| `mistralai/Mistral-7B-v0.1`           | 0.8561 | 0.8509 | 0.8614 | 0.8632 | 0.8526 | 0.8193 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.8719 | 0.8684 | 0.8684 | 0.8684 | 0.8614 | 0.8140 | 0.0000 |
 
 ## CommonsenseQA
 
@@ -83,9 +95,12 @@ python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.6962 | 0.7002 | 0.6880 | 0.6937 | 0.6437 | 0.4685 | 0.0000 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.7871 | 0.7887 | 0.7887 | 0.7821 | 0.7731 | 0.7477 | 0.0025 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.7592 | 0.7592 | 0.7535 | 0.7707 | 0.7387 | 0.6675 | 0.0016 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.6749 | 0.6740 | 0.6740 | 0.6790 | 0.6568 | 0.5299 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.6593 | 0.6642 | 0.6560 | 0.6519 | 0.6536 | 0.6183 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6749 | 0.6757 | 0.6708 | 0.6757 | 0.6765 | 0.6355 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.7002 | 0.7068 | 0.6986 | 0.7068 | 0.6953 | 0.6470 | 0.0000 |
+| `mistralai/Mistral-7B-v0.1`           | 0.6773 | 0.6814 | 0.6773 | 0.6732 | 0.6478 | 0.5799 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.6749 | 0.6740 | 0.6740 | 0.6790 | 0.6568 | 0.5299 | 0.0000 |
 
 ## HellSwag
 
@@ -98,9 +113,12 @@ python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.6020 | 0.5967 | 0.5957 | 0.5667 | 0.4594 | 0.2464 | 0.0009 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.8899 | 0.8878 | 0.8910 | 0.8879 | 0.8698 | 0.7865 | 0.0020 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.8182 | 0.8178 | 0.8146 | 0.8128 | 0.8075 | 0.6247 | 0.0014 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.5244 | 0.5306 | 0.5149 | 0.5191 | 0.4735 | 0.2884 | 0.0001 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.5960 | 0.5967 | 0.5992 | 0.6002 | 0.5933 | 0.5560 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6500 | 0.6493 | 0.6464 | 0.6578 | 0.6496 | 0.5628 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.6722 | 0.6713 | 0.6727 | 0.6747 | 0.6597 | 0.5130 | 0.0002 |
+| `mistralai/Mistral-7B-v0.1`           | 0.5213 | 0.5182 | 0.5112 | 0.5485 | 0.4921 | 0.3590 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.5244 | 0.5306 | 0.5149 | 0.5191 | 0.4735 | 0.2884 | 0.0001 |
 
 ## PIQA
 
@@ -113,6 +131,9 @@ python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
 | `meta-llama/Meta-Llama-3-8B`          | 0.7644 | 0.7606 | 0.7622 | 0.7758 | 0.6779 | 0.6039 | 0.0000 |
 | `microsoft/Phi-3-medium-4k-instruct`  | 0.8999 | 0.9004 | 0.9021 | 0.9015 | 0.8977 | 0.7737 | 0.0033 |
 | `microsoft/Phi-3-mini-4k-instruct`    | 0.8411 | 0.8384 | 0.8346 | 0.8395 | 0.8324 | 0.7155 | 0.0005 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.7693 | 0.7693 | 0.7688 | 0.7693 | 0.7388 | 0.6567 | 0.0011 |
 | `mistralai/Mistral-7B-Instruct-v0.1`  | 0.7508 | 0.7535 | 0.7535 | 0.7546 | 0.7579 | 0.7682 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.2`  | 0.7720 | 0.7699 | 0.7737 | 0.7780 | 0.7590 | 0.7530 | 0.0000 |
 | `mistralai/Mistral-7B-Instruct-v0.3`  | 0.8058 | 0.8069 | 0.8030 | 0.8058 | 0.8009 | 0.7427 | 0.0005 |
+| `mistralai/Mistral-7B-v0.1`           | 0.8003 | 0.8041 | 0.8030 | 0.7971 | 0.7677 | 0.7160 | 0.0000 |
+| `mistralai/Mistral-7B-v0.3`           | 0.7693 | 0.7693 | 0.7688 | 0.7693 | 0.7388 | 0.6567 | 0.0011 |
