@@ -1,0 +1,47 @@
+[2024-05-25 07:58:49] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.3 (main, Apr 27 2024, 19:00:21) [GCC 11.4.0]
+datasets      2.19.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.41.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-05-25 07:58:49] Command line arguments:
+- args.model  : meta-llama/Meta-Llama-3-8B-Instruct
+- args.tasks  : ['arc_e', 'arc_c', 'commonsense_qa', 'hellaswag', 'piqa']
+- args.shot   : 0
+- args.maxlen : 2048
+- args.quant  : Q8_0
+- args.save   : examples/mmlu/save/reasoning-0shot/meta-llama/Meta-Llama-3-8B-Instruct
+- args.seed   : 50674636
+
+[2024-05-25 07:58:49] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
+[2024-05-25 08:01:40] arc_e: 521 / 570
+[2024-05-25 08:02:12] arc_c: 244 / 299
+[2024-05-25 08:04:21] commonsense_qa: 910 / 1221
+[2024-05-25 08:22:09] hellaswag: 7511 / 10042
+[2024-05-25 08:25:23] piqa: 1500 / 1838
+[2024-05-25 08:25:23] Detailed results:
+         taskname  correct  num_doc
+0           arc_e      521      570
+1           arc_c      244      299
+2  commonsense_qa      910     1221
+3       hellaswag     7511    10042
+4            piqa     1500     1838
+
+[2024-05-25 08:25:23] arc_e macro-average: 0.9140
+[2024-05-25 08:25:23] arc_e micro-average: 0.9140
+[2024-05-25 08:25:23] arc_c macro-average: 0.8161
+[2024-05-25 08:25:23] arc_c micro-average: 0.8161
+[2024-05-25 08:25:23] commonsense_qa macro-average: 0.7453
+[2024-05-25 08:25:23] commonsense_qa micro-average: 0.7453
+[2024-05-25 08:25:23] hellaswag macro-average: 0.7480
+[2024-05-25 08:25:23] hellaswag micro-average: 0.7480
+[2024-05-25 08:25:23] piqa macro-average: 0.8161
+[2024-05-25 08:25:23] piqa micro-average: 0.8161
+[2024-05-25 08:25:23] total macro-average: 0.8079
+[2024-05-25 08:25:23] total micro-average: 0.7649
