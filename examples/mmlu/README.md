@@ -1,8 +1,51 @@
+# MMLU (5-shot)
+
+The example demonstrates MMLU evaluation.
+```bash
+python examples/mmlu/run.py --model microsoft/Phi-3-mini-4k-instruct --shot 5
+```
+
+## macro-average
+
+| `model`                               | `FP16` | `Q8_0` | `Q7_0` | `Q6_0` | `Q5_0` | `Q4_0` | `Q3_0` |
+| :-                                    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    |
+| `huggyllama/llama-7b`                 | 0.3308 | 0.3430 | 0.3289 | 0.3403 | 0.3328 | 0.2597 | 0.0000 |
+| `meta-llama/Llama-2-7b-chat-hf`       | 0.4901 | 0.4870 | 0.4874 | 0.4827 | 0.4827 | 0.3946 | 0.0000 |
+| `meta-llama/Llama-2-7b-hf`            | 0.4713 | 0.4634 | 0.4584 | 0.4587 | 0.4388 | 0.3769 | 0.0000 |
+| `meta-llama/Meta-Llama-3-8B-Instruct` | 0.6528 | 0.6617 | 0.6612 | 0.6621 | 0.6409 | 0.5162 | 0.0000 |
+| `meta-llama/Meta-Llama-3-8B`          | 0.6418 | 0.6439 | 0.6490 | 0.6384 | 0.6179 | 0.4186 | 0.0010 |
+| `microsoft/Phi-3-medium-4k-instruct`  | 0.7907 | 0.7950 | 0.7903 | 0.7920 | 0.7827 | 0.7477 | 0.0018 |
+| `microsoft/Phi-3-mini-4k-instruct`    | 0.7134 | 0.7143 | 0.7068 | 0.7007 | 0.7004 | 0.6171 | 0.0029 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.6089 | 0.6194 | 0.6072 | 0.6084 | 0.6060 | 0.5650 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.1`  | 0.5401 | 0.5424 | 0.5339 | 0.5428 | 0.5359 | 0.5237 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6092 | 0.6065 | 0.6108 | 0.6162 | 0.6068 | 0.5648 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.3`  | 0.6276 | 0.6279 | 0.6269 | 0.6404 | 0.6307 | 0.5749 | 0.0000 |
+| `mistralai/Mistral-7B-v0.1`           | 0.6299 | 0.6281 | 0.6221 | 0.6213 | 0.6209 | 0.5632 | 0.0024 |
+| `mistralai/Mistral-7B-v0.3`           | 0.6089 | 0.6194 | 0.6072 | 0.6084 | 0.6060 | 0.5650 | 0.0000 |
+
+## micro-average
+
+| `model`                               | `FP16` | `Q8_0` | `Q7_0` | `Q6_0` | `Q5_0` | `Q4_0` | `Q3_0` |
+| :-                                    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    |
+| `huggyllama/llama-7b`                 | 0.3364 | 0.3429 | 0.3325 | 0.3429 | 0.3383 | 0.2743 | 0.0000 |
+| `meta-llama/Llama-2-7b-chat-hf`       | 0.4703 | 0.4703 | 0.4709 | 0.4677 | 0.4624 | 0.3926 | 0.0000 |
+| `meta-llama/Llama-2-7b-hf`            | 0.4526 | 0.4442 | 0.4415 | 0.4455 | 0.4252 | 0.3651 | 0.0000 |
+| `meta-llama/Meta-Llama-3-8B-Instruct` | 0.6401 | 0.6453 | 0.6453 | 0.6440 | 0.6270 | 0.5042 | 0.0000 |
+| `meta-llama/Meta-Llama-3-8B`          | 0.6303 | 0.6303 | 0.6375 | 0.6218 | 0.6107 | 0.4121 | 0.0007 |
+| `microsoft/Phi-3-medium-4k-instruct`  | 0.8008 | 0.8060 | 0.8014 | 0.8073 | 0.7923 | 0.7440 | 0.0013 |
+| `microsoft/Phi-3-mini-4k-instruct`    | 0.7146 | 0.7126 | 0.7080 | 0.7048 | 0.7015 | 0.6061 | 0.0020 |
+| `mistral-community/Mistral-7B-v0.2`   | 0.5976 | 0.6048 | 0.5924 | 0.5944 | 0.5898 | 0.5460 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.1`  | 0.5258 | 0.5271 | 0.5219 | 0.5278 | 0.5206 | 0.5101 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.2`  | 0.6029 | 0.6029 | 0.6074 | 0.6088 | 0.6029 | 0.5624 | 0.0000 |
+| `mistralai/Mistral-7B-Instruct-v0.3`  | 0.6172 | 0.6166 | 0.6199 | 0.6231 | 0.6218 | 0.5604 | 0.0000 |
+| `mistralai/Mistral-7B-v0.1`           | 0.6114 | 0.6088 | 0.6048 | 0.6035 | 0.6068 | 0.5434 | 0.0020 |
+| `mistralai/Mistral-7B-v0.3`           | 0.5976 | 0.6048 | 0.5924 | 0.5944 | 0.5898 | 0.5460 | 0.0000 |
+
 # MMLU (0-shot)
 
 The example demonstrates MMLU evaluation.
 ```bash
-python examples/mmlu/run.py --model meta-llama/Meta-Llama-3-8B
+python examples/mmlu/run.py --model microsoft/Phi-3-mini-4k-instruct --shot 0
 ```
 
 ## macro-average
@@ -41,14 +84,14 @@ python examples/mmlu/run.py --model meta-llama/Meta-Llama-3-8B
 | `mistralai/Mistral-7B-v0.1`           | 0.5519 | 0.5434 | 0.5513 | 0.5408 | 0.5689 | 0.5121 | 0.0000 |
 | `mistralai/Mistral-7B-v0.3`           | 0.5297 | 0.5297 | 0.5304 | 0.5369 | 0.4977 | 0.4749 | 0.0013 |
 
-# Reasoning
+# Reasoning (0-shot)
 
 The example demonstrates reasoning tasks.
 ```bash
-python examples/mmlu/run_reasoning.py --model meta-llama/Meta-Llama-3-8B
+python examples/mmlu/run_reasoning.py --model microsoft/Phi-3-mini-4k-instruct
 ```
 
-## ARC-C (0-shot)
+## ARC-C
 
 | `model`                               | `FP16` | `Q8_0` | `Q7_0` | `Q6_0` | `Q5_0` | `Q4_0` | `Q3_0` |
 | :-                                    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    | :-:    |
