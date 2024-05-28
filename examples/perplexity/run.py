@@ -76,7 +76,6 @@ if __name__ == '__main__':
             load_jx_config, load_jx_params
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
-        forward_fn = qax.use_implicit_args(forward_fn)
 
     else:
         raise NotImplementedError(
