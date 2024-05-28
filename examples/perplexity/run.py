@@ -35,12 +35,14 @@ if __name__ == '__main__':
         help='a sequence length (default: 2048)')
 
     parser.add_argument(
-        '--quant', default=None, type=str, choices=[
-            'Q3_0', 'Q4_0', 'Q5_0', 'Q6_0', 'Q7_0', 'Q8_0',
-        ], help='apply fake quantization if specified (default: None)')
+        '--bits', default=None, type=int,
+        help='apply fake quantization if specified (default: None)')
+    parser.add_argument(
+        '--group_size', default=128, type=int,
+        help='a group size to use for quantization (default: 128)')
 
     args, print_fn = get_args(
-        parser, exist_ok=True, dot_log_file=False,
+        parser, exist_ok=False, dot_log_file=False,
         libraries=(datasets, jax, jaxlib, transformers))
 
     # ----------------------------------------------------------------------- #
@@ -74,6 +76,7 @@ if __name__ == '__main__':
             load_jx_config, load_jx_params
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
+        forward_fn = qax.use_implicit_args(forward_fn)
 
     else:
         raise NotImplementedError(
@@ -82,10 +85,8 @@ if __name__ == '__main__':
     config = load_jx_config(args.model)
     params = load_jx_params(args.model)
 
-    # apply fake quantization
-    if args.quant in [f'Q{i}_0' for i in range(3, 9)]:
-        BITS = int(args.quant[1])
-        SKIP_PATTERNS = ('lm_head',)
+    # apply quantization
+    if args.bits:
         def _quantizer(path, param):
             if param.ndim < 2:
                 return param
@@ -95,16 +96,12 @@ if __name__ == '__main__':
             if any(isinstance(e1, jax.tree_util.DictKey)
                 and e1.key == 'embed_tokens' for e1 in path):
                 return SymmetricQuantizedArray.quantize(
-                    param, bits=BITS, contraction_axis=1, group_size=1
-                ).materialize()
+                    param, bits=args.bits,
+                    contraction_axis=1, group_size=1).materialize()
             return SymmetricQuantizedArray.quantize(
-                param, bits=BITS, contraction_axis=0, group_size=1
-            ).materialize()
+                param, bits=args.bits,
+                contraction_axis=0, group_size=args.group_size).materialize()
         params = jax.tree_util.tree_map_with_path(_quantizer, params)
-
-    elif args.quant is not None:
-        raise NotImplementedError(
-            f'Unknown args.quant={args.quant}')
 
     # ----------------------------------------------------------------------- #
     # Prepare datasets
@@ -135,7 +132,7 @@ if __name__ == '__main__':
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O*'), params)
     attention_mask = jnp.ones((1, args.seqlen))
-    position_ids = jnp.ones((1, args.seqlen))
+    position_ids = jnp.arange(args.seqlen)[None, :]
 
     nlls = []
     ppls = []
