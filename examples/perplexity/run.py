@@ -7,6 +7,7 @@ import datasets
 import jax
 import jax.numpy as jnp
 import jaxlib
+import numpy as np
 import transformers
 from einshard import einshard
 from jax_smi import initialise_tracking
@@ -146,7 +147,7 @@ if __name__ == '__main__':
         lprobs = jnp.take_along_axis(
             jax.nn.log_softmax(logits[0, :-1, :]), input_ids[1:, None], axis=1)
         nlls.append(float(jnp.sum(jnp.negative(lprobs))))
-        ppls.append(sum(nlls) / len(nlls) / args.seqlen)
+        ppls.append(np.exp(sum(nlls) / len(nlls) / args.seqlen))
         pbar.set_description(f'PPL: {ppls[-1]:.3e}')
     print_fn('nlls=[' + ', '.join([f'{e:.3e}' for e in nlls]) + ']')
     print_fn('ppls=[' + ', '.join([f'{e:.3e}' for e in ppls]) + ']')
