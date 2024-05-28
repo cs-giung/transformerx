@@ -35,8 +35,8 @@ if __name__ == '__main__':
         help='a sequence length (default: 2048)')
 
     parser.add_argument(
-        '--bits', default=None, type=int,
-        help='apply fake quantization if specified (default: None)')
+        '--bits', default=0, type=int,
+        help='apply fake quantization if specified (default: 0)')
     parser.add_argument(
         '--group_size', default=128, type=int,
         help='a group size to use for quantization (default: 128)')
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     params = load_jx_params(args.model)
 
     # apply quantization
-    if args.bits:
+    if args.bits > 0:
         def _quantizer(path, param):
             if param.ndim < 2:
                 return param
