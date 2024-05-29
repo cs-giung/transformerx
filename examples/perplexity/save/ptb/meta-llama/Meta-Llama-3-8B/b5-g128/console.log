@@ -1,0 +1,25 @@
+[2024-05-29 03:09:51] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.3 (main, Apr 27 2024, 19:00:21) [GCC 11.4.0]
+datasets      2.19.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.41.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-05-29 03:09:51] Command line arguments:
+- args.model      : meta-llama/Meta-Llama-3-8B
+- args.data       : ptb
+- args.seqlen     : 2048
+- args.bits       : 5
+- args.group_size : 128
+- args.save       : save/ptb/meta-llama/Meta-Llama-3-8B/b5-g128
+- args.seed       : 52676825
+
+[2024-05-29 03:09:51] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
+[2024-05-29 03:12:18] nlls=[7.936e+03, 7.372e+03, 7.780e+03, 7.915e+03, 7.610e+03, 7.493e+03, 7.362e+03, 7.530e+03, 7.283e+03, 7.268e+03, 6.977e+03, 7.503e+03, 7.459e+03, 7.747e+03, 7.774e+03, 7.247e+03, 7.705e+03, 7.655e+03, 7.412e+03, 7.455e+03, 7.650e+03, 7.808e+03, 7.329e+03, 7.755e+03, 7.570e+03, 7.406e+03, 7.677e+03, 7.608e+03, 7.713e+03, 7.627e+03, 7.876e+03, 7.619e+03, 8.324e+03, 7.916e+03, 7.803e+03, 7.912e+03, 7.613e+03, 7.560e+03, 8.308e+03, 8.258e+03, 7.017e+03, 7.546e+03, 7.431e+03, 7.501e+03, 7.624e+03, 7.682e+03]
+[2024-05-29 03:12:18] ppls=[4.818e+01, 4.198e+01, 4.285e+01, 4.401e+01, 4.342e+01, 4.261e+01, 4.166e+01, 4.139e+01, 4.063e+01, 4.000e+01, 3.899e+01, 3.899e+01, 3.893e+01, 3.926e+01, 3.959e+01, 3.925e+01, 3.946e+01, 3.960e+01, 3.948e+01, 3.941e+01, 3.952e+01, 3.977e+01, 3.959e+01, 3.977e+01, 3.979e+01, 3.968e+01, 3.978e+01, 3.983e+01, 3.994e+01, 3.999e+01, 4.019e+01, 4.023e+01, 4.068e+01, 4.087e+01, 4.099e+01, 4.116e+01, 4.116e+01, 4.113e+01, 4.149e+01, 4.181e+01, 4.150e+01, 4.146e+01, 4.136e+01, 4.131e+01, 4.131e+01, 4.134e+01]
+[2024-05-29 03:12:18] PPL: 4.134e+01

@@ -1,0 +1,25 @@
+[2024-05-29 02:24:46] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.3 (main, Apr 27 2024, 19:00:21) [GCC 11.4.0]
+datasets      2.19.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.28 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.41.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-05-29 02:24:46] Command line arguments:
+- args.model      : meta-llama/Llama-2-7b-hf
+- args.data       : ptb
+- args.seqlen     : 2048
+- args.bits       : 3
+- args.group_size : 1
+- args.save       : save/ptb/meta-llama/Llama-2-7b-hf/b3-g1
+- args.seed       : 47449778
+
+[2024-05-29 02:24:46] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
+[2024-05-29 02:26:31] nlls=[2.169e+04, 2.220e+04, 2.338e+04, 2.270e+04, 2.148e+04, 2.039e+04, 2.233e+04, 2.151e+04, 2.255e+04, 2.029e+04, 2.184e+04, 2.046e+04, 2.006e+04, 1.932e+04, 2.061e+04, 2.165e+04, 2.085e+04, 2.085e+04, 2.230e+04, 2.066e+04, 2.178e+04, 2.012e+04, 2.099e+04, 2.268e+04, 2.269e+04, 2.208e+04, 2.155e+04, 1.931e+04, 2.038e+04, 2.123e+04, 2.230e+04, 2.180e+04, 2.057e+04, 2.073e+04, 2.144e+04, 2.204e+04, 2.092e+04, 2.199e+04, 2.103e+04, 2.151e+04, 2.114e+04, 2.178e+04, 2.249e+04, 2.150e+04, 2.166e+04, 2.071e+04, 2.005e+04, 2.226e+04, 2.129e+04, 2.064e+04, 2.106e+04, 1.944e+04]
+[2024-05-29 02:26:31] ppls=[3.974e+04, 4.502e+04, 5.683e+04, 5.881e+04, 5.327e+04, 4.566e+04, 4.681e+04, 4.536e+04, 4.683e+04, 4.303e+04, 4.301e+04, 4.064e+04, 3.817e+04, 3.525e+04, 3.430e+04, 3.458e+04, 3.403e+04, 3.355e+04, 3.439e+04, 3.378e+04, 3.411e+04, 3.318e+04, 3.295e+04, 3.388e+04, 3.477e+04, 3.520e+04, 3.527e+04, 3.398e+04, 3.343e+04, 3.337e+04, 3.388e+04, 3.411e+04, 3.370e+04, 3.340e+04, 3.346e+04, 3.378e+04, 3.358e+04, 3.386e+04, 3.372e+04, 3.378e+04, 3.369e+04, 3.386e+04, 3.430e+04, 3.435e+04, 3.445e+04, 3.420e+04, 3.373e+04, 3.404e+04, 3.401e+04, 3.377e+04, 3.367e+04, 3.308e+04]
+[2024-05-29 02:26:31] PPL: 3.308e+04
