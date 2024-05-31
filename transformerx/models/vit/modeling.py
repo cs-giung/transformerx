@@ -1,9 +1,6 @@
 """
-Vision Transformer Model.
-
-Classes:
-
-Functions:
+Modeling Vision Transformer architecture.
+https://arxiv.org/abs/2010.11929
 """
 from functools import partial
 from typing import NamedTuple, Tuple

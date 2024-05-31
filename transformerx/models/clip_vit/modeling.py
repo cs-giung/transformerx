@@ -1,5 +1,6 @@
 """
-Modeling CLIP-ViT architecture without convolution operations.
+Modeling Vision Transformer architecture in CLIP.
+https://arxiv.org/abs/2103.00020
 """
 from functools import partial
 from typing import NamedTuple, Tuple

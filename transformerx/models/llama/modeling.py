@@ -1,7 +1,6 @@
 """
-Modeling Llama architecture with following options:
-    - `num_key_value_heads` implements Grouped Query Attention.
-    - `sliding_window` implements Sliding Window Attention.
+Modeling Large Language Model Meta AI architecture.
+https://arxiv.org/abs/2302.13971
 """
 from functools import partial
 from typing import NamedTuple, Tuple

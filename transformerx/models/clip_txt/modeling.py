@@ -1,5 +1,6 @@
 """
-Modeling CLIP-TxT architecture.
+Modeling Text Transformer architecture in CLIP.
+https://arxiv.org/abs/2103.00020
 """
 from functools import partial
 from typing import NamedTuple, Tuple
