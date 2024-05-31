@@ -1,8 +1,10 @@
-# transformerx
+# Transformerx
 
-## Getting started
+This project takes inspiration from [🤗 Transformers](https://github.com/huggingface/transformers) and aims to implement modern deep neural network architectures in [JAX](https://github.com/google/jax) with minimal dependencies.
 
-This project requires Python 3.12.
+## Getting Started
+
+This project is being developed in a Python 3.12 environment, and using other Python versions could result in unexpected behaviors.
 
 ### Create virtualenv
 
