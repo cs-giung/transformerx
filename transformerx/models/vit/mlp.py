@@ -3,7 +3,6 @@ from functools import partial
 from typing import NamedTuple
 
 import jax
-import jax.numpy as jnp
 from einops import einsum
 from transformerx.typing import Array, ArrayLike
 

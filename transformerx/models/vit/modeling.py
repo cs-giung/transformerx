@@ -27,10 +27,11 @@ class ViTConfig(NamedTuple):
     """
     hidden_size: int
     intermediate_size: int
+    layer_norm_eps: float
     num_attention_heads: int
     num_hidden_layers: int
     patch_size: int
-    layer_norm_eps: float
+    representation_size: int
 
 
 class ViTInputs(NamedTuple): # pylint: disable=missing-class-docstring
@@ -40,6 +41,7 @@ class ViTInputs(NamedTuple): # pylint: disable=missing-class-docstring
 class ViTOutput(NamedTuple): # pylint: disable=missing-class-docstring
     intermediates: Tuple[ArrayLike, ...]
     last_hidden_states: ArrayLike
+    pre_logits: ArrayLike
     logits: ArrayLike
 
 
@@ -150,6 +152,13 @@ def forward_fn(
         config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
     hidden_states = hidden_states[:, 0, :]
 
+    pre_logits = None
+    if 'pooler' in params:
+        pre_logits = hidden_states @ params['pooler']['weight']
+        pre_logits = pre_logits + params['pooler']['bias'][None, :]
+        pre_logits = jax.nn.tanh(pre_logits)
+        hidden_states = pre_logits
+
     logits = None
     if 'head' in params:
         logits = hidden_states @ params['head']['weight']
@@ -158,4 +167,5 @@ def forward_fn(
     return ViTOutput(
         intermediates=intermediates,
         last_hidden_states=hidden_states,
+        pre_logits=pre_logits,
         logits=logits)

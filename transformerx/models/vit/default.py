@@ -5,51 +5,33 @@ import jax
 import jax.numpy as jnp
 import torch
 
-from transformers import ViTForImageClassification
+from transformers import ViTModel, ViTForImageClassification
 from transformerx.models.vit.modeling import ViTConfig
 from transformerx.typing import Pytree
 
 
 PREDEFINED_CONFIGS = {
-    'WinKawaks/vit-tiny-patch16-224': ViTConfig(
-        hidden_size=192,
-        intermediate_size=768,
-        num_attention_heads=3,
-        num_hidden_layers=12,
-        patch_size=16,
-        layer_norm_eps=1e-12,
-    ),
-    'WinKawaks/vit-small-patch16-224': ViTConfig(
-        hidden_size=384,
-        intermediate_size=1536,
-        num_attention_heads=6,
-        num_hidden_layers=12,
-        patch_size=16,
-        layer_norm_eps=1e-12,
-    ),
-    'google/vit-base-patch16-224': ViTConfig(
+    'cs-giung/vit-base-patch16-imagenet21k': ViTConfig(
         hidden_size=768,
         intermediate_size=3072,
+        layer_norm_eps=1e-06,
         num_attention_heads=12,
         num_hidden_layers=12,
         patch_size=16,
-        layer_norm_eps=1e-12,
-    ),
-    'google/vit-large-patch16-224': ViTConfig(
-        hidden_size=1024,
-        intermediate_size=4096,
-        num_attention_heads=16,
-        num_hidden_layers=24,
-        patch_size=16,
-        layer_norm_eps=1e-12,
+        representation_size=768,
     ),
 }
 
 
 def load_hf_params(model_name: str) -> OrderedDict:
     """Load pre-trained parameters from the Hugging Face Hub."""
-    return ViTForImageClassification.from_pretrained(
+    d1 = ViTModel.from_pretrained(
         model_name, torch_dtype=torch.float32).state_dict()
+    d2 = ViTForImageClassification.from_pretrained(
+        model_name, torch_dtype=torch.float32).state_dict()
+    d2['vit.pooler.dense.bias'] = d1['pooler.dense.bias']
+    d2['vit.pooler.dense.weight'] = d1['pooler.dense.weight']
+    return d2
 
 
 def load_jx_params(model_name: str) -> Pytree:
@@ -153,6 +135,9 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
         post_layernorm = {
             'weight': pt2jx(hf_params['vit.layernorm.weight']),
             'bias': pt2jx(hf_params['vit.layernorm.bias'])}
+        pooler = {
+            'weight': pt2jx(hf_params['vit.pooler.dense.weight']).T,
+            'bias': pt2jx(hf_params['vit.pooler.dense.bias'])}
         head = {
             'weight': pt2jx(hf_params['classifier.weight']).T,
             'bias': pt2jx(hf_params['classifier.bias'])}
@@ -161,5 +146,6 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
         'embeddings': embeddings,
         'layers': layers,
         'post_layernorm': post_layernorm,
+        'pooler': pooler,
         'head': head,
     }
