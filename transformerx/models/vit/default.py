@@ -11,15 +11,15 @@ from transformerx.typing import Pytree
 
 
 PREDEFINED_CONFIGS = {
-    'cs-giung/vit-base-patch16-imagenet21k': ViTConfig(
-        hidden_size=768,
-        intermediate_size=3072,
+    'cs-giung/vit-large-patch16-imagenet21k': ViTConfig(
+        hidden_size=1024,
+        intermediate_size=4096,
         layer_norm_eps=1e-06,
-        num_attention_heads=12,
-        num_hidden_layers=12,
+        num_attention_heads=16,
+        num_hidden_layers=24,
         num_labels=21843,
         patch_size=16,
-        representation_size=768,
+        representation_size=1024,
     ),
     'cs-giung/vit-tiny-patch16-imagenet21k-augreg': ViTConfig(
         hidden_size=192,
