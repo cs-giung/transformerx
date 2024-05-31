@@ -1,14 +1,4 @@
-"""
-This module contains functions and classes for the attention module.
-
-Classes:
-    AttentionParams:
-    AttentionInputs:
-    AttentionConfig:
-
-Functions:
-    forward_fn: Forward function for the attention module.
-"""
+"""Functions and classes for the attention module."""
 import math
 from functools import partial
 from typing import NamedTuple

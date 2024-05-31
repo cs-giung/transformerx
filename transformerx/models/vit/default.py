@@ -1,4 +1,4 @@
-"""Default configurations and utilities for the ViTmodel."""
+"""Default configurations and utilities."""
 from collections import OrderedDict
 
 import jax
