@@ -31,7 +31,7 @@ PREDEFINED_CONFIGS = {
         patch_size=16,
         representation_size=None,
     ),
-    'cs-giung/vit-base-patch16-imagenet21k-augreg': ViTConfig(
+    'cs-giung/vit-small-patch16-imagenet21k-augreg': ViTConfig(
         hidden_size=384,
         intermediate_size=1536,
         layer_norm_eps=1e-06,
@@ -51,7 +51,7 @@ PREDEFINED_CONFIGS = {
         patch_size=16,
         representation_size=None,
     ),
-    'cs-giung/vit-base-patch16-imagenet21k-augreg': ViTConfig(
+    'cs-giung/vit-large-patch16-imagenet21k-augreg': ViTConfig(
         hidden_size=1024,
         intermediate_size=4096,
         layer_norm_eps=1e-06,
