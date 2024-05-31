@@ -47,7 +47,8 @@ def load_hf_params(model_name: str) -> OrderedDict:
 
 def load_jx_params(model_name: str) -> Pytree:
     """Returns pre-trained parameters."""
-    return convert_hf_params_to_jx_params(load_hf_params(model_name))
+    return convert_hf_params_to_jx_params(
+        load_hf_params(model_name), load_jx_config(model_name))
 
 
 def load_jx_config(model_name: str) -> ViTConfig:
@@ -55,7 +56,8 @@ def load_jx_config(model_name: str) -> ViTConfig:
     return PREDEFINED_CONFIGS[model_name]
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
+def convert_hf_params_to_jx_params(
+        hf_params: OrderedDict, jx_config: ViTConfig) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
@@ -153,10 +155,15 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
             'weight': pt2jx(hf_params['classifier.weight']).T,
             'bias': pt2jx(hf_params['classifier.bias'])}
 
-    return {
-        'embeddings': embeddings,
-        'layers': layers,
-        'post_layernorm': post_layernorm,
-        'pooler': pooler,
-        'head': head,
-    }
+        params = {
+            'embeddings': embeddings,
+            'layers': layers,
+            'post_layernorm': post_layernorm}
+
+        if jx_config.representation_size:
+            params['pooler'] = pooler
+
+        if jx_config.num_labels:
+            params['head'] = head
+
+        return params
