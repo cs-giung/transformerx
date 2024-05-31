@@ -30,6 +30,7 @@ class ViTConfig(NamedTuple):
     layer_norm_eps: float
     num_attention_heads: int
     num_hidden_layers: int
+    num_labels: int
     patch_size: int
     representation_size: int
 
