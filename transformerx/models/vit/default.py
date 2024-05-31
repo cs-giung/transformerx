@@ -88,7 +88,7 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
                     'vit.embeddings.patch_embeddings.projection.bias'])},
             'position_embedding': {
                 'weight': pt2jx(hf_params[
-                    'vit.embeddings.position_embeddings'])}}
+                    'vit.embeddings.position_embeddings'][0])}}
         layers = {
             f'{i}': {
                 'pre_layernorm': {

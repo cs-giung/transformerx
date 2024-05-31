@@ -69,7 +69,7 @@ def embedding_fn(
     x = x + embedding_params['patch_embedding']['bias'][None, None, :]
     x = jnp.concatenate((repeat(embedding_params[
         'class_embedding']['weight'], '1 i -> B 1 i', B=B), x), axis=1)
-    x = x + embedding_params['position_embedding']['weight']
+    x = x + embedding_params['position_embedding']['weight'][None]
 
     return x
 
