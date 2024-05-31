@@ -17,8 +17,19 @@ PREDEFINED_CONFIGS = {
         layer_norm_eps=1e-06,
         num_attention_heads=12,
         num_hidden_layers=12,
+        num_labels=21843,
         patch_size=16,
         representation_size=768,
+    ),
+    'cs-giung/vit-base-patch16-imagenet21k-augreg': ViTConfig(
+        hidden_size=768,
+        intermediate_size=3072,
+        layer_norm_eps=1e-06,
+        num_attention_heads=12,
+        num_hidden_layers=12,
+        num_labels=21843,
+        patch_size=16,
+        representation_size=None,
     ),
 }
 
