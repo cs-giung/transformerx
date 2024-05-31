@@ -169,7 +169,7 @@ def forward_fn(
 
     proj_hidden_states = hidden_states @ params['projection']['weight']
 
-    return CLIPVisionOutput(
+    return CLIPViTOutput(
         intermediates=intermediates,
         last_hidden_states=hidden_states,
         proj_hidden_states=proj_hidden_states)
