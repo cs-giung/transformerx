@@ -1,9 +1,5 @@
 """
-CLIP Vision Model.
-
-Classes:
-
-Functions:
+Modeling CLIP-ViT architecture without convolution operations.
 """
 from functools import partial
 from typing import NamedTuple, Tuple
@@ -12,21 +8,29 @@ import jax
 import jax.numpy as jnp
 from einops import repeat
 
-from transformerx.models.clip_vision.attention import \
+from transformerx.models.clip_vit.attention import \
     AttentionConfig, AttentionInputs, AttentionParams, \
     forward_fn as attention_fn
-from transformerx.models.clip_vision.mlp import \
+from transformerx.models.clip_vit.mlp import \
     MLPConfig, MLPInputs, MLPParams, \
     forward_fn as mlp_fn
-from transformerx.models.clip_vision.normalization import \
+from transformerx.models.clip_vit.normalization import \
     LayerNormConfig, LayerNormInputs, LayerNormParams, \
     forward_fn as layer_norm_fn
 from transformerx.typing import Array, ArrayLike, PytreeLike
 
 
-class CLIPVisionConfig(NamedTuple):
+class CLIPViTConfig(NamedTuple):
     """
     Attributes:
+        hidden_act (str): an activation function in MLP modules.
+        hidden_size (int): a dimension of the hidden representations.
+        intermediate_size (int): an intermediate size in MLP modules.
+        num_attention_heads (int): the number of attention heads.
+        num_hidden_layers (int): the number of hidden layers.
+        patch_size (int): a size of each patch.
+        projection_dim (int): a dimensionality of the shared embedding space.
+        layer_norm_eps (float): an epsilon value for layer normalization.
     """
     hidden_act: str
     hidden_size: int
@@ -38,11 +42,11 @@ class CLIPVisionConfig(NamedTuple):
     layer_norm_eps: float
 
 
-class CLIPVisionInputs(NamedTuple): # pylint: disable=missing-class-docstring
+class CLIPViTInputs(NamedTuple): # pylint: disable=missing-class-docstring
     input_pixels: ArrayLike
 
 
-class CLIPVisionOutput(NamedTuple): # pylint: disable=missing-class-docstring
+class CLIPViTOutput(NamedTuple): # pylint: disable=missing-class-docstring
     intermediates: Tuple[ArrayLike, ...]
     last_hidden_states: ArrayLike
     proj_hidden_states: ArrayLike
@@ -78,10 +82,10 @@ def embedding_fn(
 @partial(jax.jit, static_argnames=('config', 'return_intermediates'))
 def forward_fn(
         params: PytreeLike,
-        inputs: CLIPVisionInputs,
-        config: CLIPVisionConfig,
+        inputs: CLIPViTInputs,
+        config: CLIPViTConfig,
         **kwargs
-    ) -> CLIPVisionOutput:
+    ) -> CLIPViTOutput:
     """Forward function for the CLIP Vision Model."""
 
     # it collects intermediate hidden states if necessary

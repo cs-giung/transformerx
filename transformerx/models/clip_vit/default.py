@@ -1,4 +1,4 @@
-"""Default configurations and utilities for the CLIP model."""
+"""Default configurations and utilities."""
 from collections import OrderedDict
 
 import jax
@@ -6,12 +6,12 @@ import jax.numpy as jnp
 import torch
 
 from transformers import CLIPModel
-from transformerx.models.clip_vision.modeling import CLIPVisionConfig
+from transformerx.models.clip_vit.modeling import CLIPViTConfig
 from transformerx.typing import Pytree
 
 
 PREDEFINED_CONFIGS = {
-    'openai/clip-vit-base-patch32': CLIPVisionConfig(
+    'openai/clip-vit-base-patch32': CLIPViTConfig(
         hidden_act='quick_gelu',
         hidden_size=768,
         intermediate_size=3072,
@@ -21,7 +21,7 @@ PREDEFINED_CONFIGS = {
         projection_dim=512,
         layer_norm_eps=1e-05,
     ),
-    'openai/clip-vit-base-patch16': CLIPVisionConfig(
+    'openai/clip-vit-base-patch16': CLIPViTConfig(
         hidden_act='quick_gelu',
         hidden_size=768,
         intermediate_size=3072,
@@ -31,7 +31,7 @@ PREDEFINED_CONFIGS = {
         projection_dim=512,
         layer_norm_eps=1e-05,
     ),
-    'openai/clip-vit-large-patch14': CLIPVisionConfig(
+    'openai/clip-vit-large-patch14': CLIPViTConfig(
         hidden_act='quick_gelu',
         hidden_size=1024,
         intermediate_size=4096,
@@ -41,7 +41,7 @@ PREDEFINED_CONFIGS = {
         projection_dim=768,
         layer_norm_eps=1e-05,
     ),
-    'laion/CLIP-ViT-H-14-laion2B-s32B-b79K': CLIPVisionConfig(
+    'laion/CLIP-ViT-H-14-laion2B-s32B-b79K': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1280,
         intermediate_size=5120,
@@ -51,7 +51,7 @@ PREDEFINED_CONFIGS = {
         projection_dim=1024,
         layer_norm_eps=1e-05,
     ),
-    'laion/CLIP-ViT-bigG-14-laion2B-39B-b160k': CLIPVisionConfig(
+    'laion/CLIP-ViT-bigG-14-laion2B-39B-b160k': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1664,
         intermediate_size=8192,
@@ -75,7 +75,7 @@ def load_jx_params(model_name: str) -> Pytree:
     return convert_hf_params_to_jx_params(load_hf_params(model_name))
 
 
-def load_jx_config(model_name: str) -> CLIPVisionConfig:
+def load_jx_config(model_name: str) -> CLIPViTConfig:
     """Returns pre-defined configurations."""
     return PREDEFINED_CONFIGS[model_name]
 

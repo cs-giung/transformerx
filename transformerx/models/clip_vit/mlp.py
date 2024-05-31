@@ -1,14 +1,4 @@
-"""
-This module contains functions and classes for the MLP module.
-
-Classes:
-    MLPParams:
-    MLPInputs:
-    MLPConfig:
-
-Functions:
-    foward_fn: Forward function for the MLP module.
-"""
+"""Functions and classes for the MLP module."""
 from functools import partial
 from typing import NamedTuple
 

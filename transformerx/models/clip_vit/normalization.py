@@ -1,14 +1,4 @@
-"""
-This module contains functions and classes for performing layer normalization.
-
-Classes:
-    LayerNormParams:
-    LayerNormInputs:
-    LayerNormConfig:
-
-Functions:
-    forward_fn: Forward function for layer normalization.
-"""
+"""Functions and classes for the layer normalization module."""
 from functools import partial
 from typing import NamedTuple
 
