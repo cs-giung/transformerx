@@ -35,7 +35,8 @@ def forward_fn(
     x = einsum(x, params.u_proj_w, 'B S M, M H -> B S H')
     x = x + params.u_proj_b[None, None]
     if config.hidden_act == 'quick_gelu':
-        x = x * jax.nn.sigmoid(1.702 * x)
+        x = jnp.multiply( # pylint: disable=not-callable
+            x, jax.nn.sigmoid(1.702 * x))
     elif config.hidden_act == 'gelu':
         x = jax.nn.gelu(x, approximate=False)
     else:
