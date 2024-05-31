@@ -33,7 +33,7 @@ def forward_fn(
     x = inputs.hidden_states
     x = einsum(x, params.u_proj_w, 'B S M, M H -> B S H')
     x = x + params.u_proj_b[None, None]
-    x = jax.nn.gelu(x)
+    x = jax.nn.gelu(x, approximate=False)
     x = einsum(x, params.d_proj_w, 'B S H, H M -> B S M')
     x = x + params.d_proj_b[None, None]
     return x
