@@ -7,16 +7,16 @@ import jax.numpy as jnp
 from transformerx.typing import Array, ArrayLike
 
 
-class RMSNormParams(NamedTuple): # pylint: disable=missing-class-docstring
-    weight: ArrayLike
+class RMSNormConfig(NamedTuple): # pylint: disable=missing-class-docstring
+    rms_norm_eps: float
 
 
 class RMSNormInputs(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_states: ArrayLike
 
 
-class RMSNormConfig(NamedTuple): # pylint: disable=missing-class-docstring
-    rms_norm_eps: float
+class RMSNormParams(NamedTuple): # pylint: disable=missing-class-docstring
+    weight: ArrayLike
 
 
 @partial(jax.jit, static_argnames='config')

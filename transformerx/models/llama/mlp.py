@@ -8,18 +8,18 @@ from einops import einsum
 from transformerx.typing import Array, ArrayLike
 
 
-class MLPParams(NamedTuple): # pylint: disable=missing-class-docstring
-    g_proj: ArrayLike
-    u_proj: ArrayLike
-    d_proj: ArrayLike
+class MLPConfig(NamedTuple): # pylint: disable=missing-class-docstring
+    intermediate_size: int
 
 
 class MLPInputs(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_states: ArrayLike
 
 
-class MLPConfig(NamedTuple): # pylint: disable=missing-class-docstring
-    intermediate_size: int
+class MLPParams(NamedTuple): # pylint: disable=missing-class-docstring
+    g_proj: ArrayLike
+    u_proj: ArrayLike
+    d_proj: ArrayLike
 
 
 @partial(jax.jit, static_argnames='config')

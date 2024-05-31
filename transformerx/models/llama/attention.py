@@ -9,11 +9,12 @@ from einops import einsum, rearrange, repeat
 from transformerx.typing import Array, ArrayLike
 
 
-class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
-    q_proj: ArrayLike
-    k_proj: ArrayLike
-    v_proj: ArrayLike
-    o_proj: ArrayLike
+class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
+    hidden_size: int
+    num_attention_heads: int
+    num_key_value_heads: int
+    rope_theta: float
+    sliding_window: int
 
 
 class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
@@ -22,12 +23,11 @@ class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
     position_ids: ArrayLike
 
 
-class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
-    hidden_size: int
-    num_attention_heads: int
-    num_key_value_heads: int
-    rope_theta: float
-    sliding_window: int
+class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
+    q_proj: ArrayLike
+    k_proj: ArrayLike
+    v_proj: ArrayLike
+    o_proj: ArrayLike
 
 
 def make_rotary_embedding(
