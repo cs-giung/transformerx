@@ -18,7 +18,7 @@ from transformerx.models.vit.modeling import ViTInputs, forward_fn
 
 if __name__ == '__main__':
 
-    NAME = 'cs-giung/vit-base-patch16-imagenet21k'
+    NAME = 'cs-giung/vit-base-patch16-imagenet21k-augreg'
     CONFIG = AutoConfig.from_pretrained(NAME)
 
     # converters
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     with torch.no_grad():
         model_pt = ViTModel.from_pretrained(NAME)
         inputs_pt = jx2pt(input_pixels).permute(0, 3, 1, 2)
-        output_pt = model_pt(inputs_pt).pooler_output
+        output_pt = model_pt(inputs_pt).last_hidden_state[:, 0, :]
         print(output_pt)
 
     # transformerx
@@ -48,7 +48,8 @@ if __name__ == '__main__':
         del params_jx['head']
         config_jx = load_jx_config(NAME)
         inputs_jx = ViTInputs(input_pixels=input_pixels)
-        output_jx = forward_fn(params_jx, inputs_jx, config_jx).pre_logits
+        output_jx = forward_fn(
+            params_jx, inputs_jx, config_jx).last_hidden_states
         print(output_jx)
         abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
         print(f'- max: {abserr.max()}')
@@ -58,7 +59,8 @@ if __name__ == '__main__':
     params_jx = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O*'), params_jx)
     inputs_jx = ViTInputs(input_pixels=input_pixels)
-    output_jx = forward_fn(params_jx, inputs_jx, config_jx).pre_logits
+    output_jx = forward_fn(
+        params_jx, inputs_jx, config_jx).last_hidden_states
     print(output_jx)
     abserr = np.abs(pt2np(output_pt) - jx2np(output_jx))
     print(f'- max: {abserr.max()}')
