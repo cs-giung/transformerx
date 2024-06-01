@@ -140,6 +140,7 @@ def forward_fn(
 
     hidden_states = embedding_fn(
         params['embeddings'], inputs.input_pixels, config.patch_size)
+
     for i in range(config.num_hidden_layers):
         hidden_states = block_fn(
             params['layers'][f'{i}'], inputs, config, hidden=hidden_states)
