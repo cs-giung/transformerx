@@ -24,6 +24,14 @@ from transformerx.typing import Array, ArrayLike, PytreeLike
 class ViTConfig(NamedTuple):
     """
     Attributes:
+        hidden_size (int): a dimension of the hidden representations.
+        intermediate_size (int): an intermediate size in MLP modules.
+        layer_norm_eps (float): an epsilon value for layer normalization.
+        num_attention_heads (int): the number of attention heads.
+        num_hidden_layers (int): the number of hidden layers.
+        num_labels (int): the number of classes for classification.
+        patch_size (int): a size of each patch.
+        representation_size (int): a dimensionality of the pre-logit space.
     """
     hidden_size: int
     intermediate_size: int

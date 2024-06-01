@@ -17,6 +17,11 @@ from transformerx.typing import Array, ArrayLike, PytreeLike
 class ConvNextConfig(NamedTuple):
     """
     Attributes:
+        hidden_sizes (tuple of int): dimensionality at each stage.
+        layer_norm_eps (float): an epsilon value for layer normalization.
+        num_hidden_layers (tuple of int): the number of layers for each stage.
+        num_labels (int): the number of classes for classification.
+        patch_size (int): a size of each patch.
     """
     hidden_sizes: Tuple[int]
     layer_norm_eps: float

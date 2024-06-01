@@ -26,19 +26,19 @@ class CLIPTxTConfig(NamedTuple):
         hidden_act (str): an activation function in MLP modules.
         hidden_size (int): a dimension of the hidden representations.
         intermediate_size (int): an intermediate size in MLP modules.
+        layer_norm_eps (float): an epsilon value for layer normalization.
         num_attention_heads (int): the number of attention heads.
         num_hidden_layers (int): the number of hidden layers.
         projection_dim (int): a dimensionality of the shared embedding space.
-        layer_norm_eps (float): an epsilon value for layer normalization.
-        vocab_size (int):
+        vocab_size (int): vocabulary size of the text model.
     """
     hidden_act: str
     hidden_size: int
     intermediate_size: int
+    layer_norm_eps: float
     num_attention_heads: int
     num_hidden_layers: int
     projection_dim: int
-    layer_norm_eps: float
     vocab_size: int
 
 

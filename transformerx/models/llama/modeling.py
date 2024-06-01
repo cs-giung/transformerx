@@ -29,9 +29,10 @@ class LlamaConfig(NamedTuple):
             grouped-query attention. When it equals to `num_attention_heads`,
             multi-head attention is used. If it is set to one, multi-query
             attention is applied.
-        rope_theta (float):
         rms_norm_eps (float): an epsilon value for RMS normalization.
-        vocab_size (int):
+        rope_theta (float): a base period of RoPE embedding.
+        sliding_window (int): a window size for sliding window attention.
+        vocab_size (int): vocabulary size of the text model.
     """
     hidden_size: int
     intermediate_size: int

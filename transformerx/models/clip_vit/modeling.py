@@ -27,20 +27,20 @@ class CLIPViTConfig(NamedTuple):
         hidden_act (str): an activation function in MLP modules.
         hidden_size (int): a dimension of the hidden representations.
         intermediate_size (int): an intermediate size in MLP modules.
+        layer_norm_eps (float): an epsilon value for layer normalization.
         num_attention_heads (int): the number of attention heads.
         num_hidden_layers (int): the number of hidden layers.
         patch_size (int): a size of each patch.
         projection_dim (int): a dimensionality of the shared embedding space.
-        layer_norm_eps (float): an epsilon value for layer normalization.
     """
     hidden_act: str
     hidden_size: int
     intermediate_size: int
+    layer_norm_eps: float
     num_attention_heads: int
     num_hidden_layers: int
     patch_size: int
     projection_dim: int
-    layer_norm_eps: float
 
 
 class CLIPViTInputs(NamedTuple): # pylint: disable=missing-class-docstring
