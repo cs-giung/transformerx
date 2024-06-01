@@ -11,6 +11,34 @@ from transformerx.typing import Pytree
 
 
 PREDEFINED_CONFIGS = {
+    'cs-giung/convnext-v1-tiny-imagenet1k': ConvNextConfig(
+        hidden_sizes=(96, 192, 384, 768),
+        layer_norm_eps=1e-06,
+        num_hidden_layers=(3, 3, 9, 3),
+        num_labels=1000,
+        patch_size=4,
+    ),
+    'cs-giung/convnext-v1-small-imagenet1k': ConvNextConfig(
+        hidden_sizes=(96, 192, 384, 768),
+        layer_norm_eps=1e-06,
+        num_hidden_layers=(3, 3, 27, 3),
+        num_labels=1000,
+        patch_size=4,
+    ),
+    'cs-giung/convnext-v1-base-imagenet1k': ConvNextConfig(
+        hidden_sizes=(128, 256, 512, 1024),
+        layer_norm_eps=1e-06,
+        num_hidden_layers=(3, 3, 27, 3),
+        num_labels=1000,
+        patch_size=4,
+    ),
+    'cs-giung/convnext-v1-large-imagenet1k': ConvNextConfig(
+        hidden_sizes=(192, 384, 768, 1536),
+        layer_norm_eps=1e-06,
+        num_hidden_layers=(3, 3, 27, 3),
+        num_labels=1000,
+        patch_size=4,
+    ),
     'cs-giung/convnext-v1-tiny-imagenet21k': ConvNextConfig(
         hidden_sizes=(96, 192, 384, 768),
         layer_norm_eps=1e-06,
