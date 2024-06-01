@@ -74,6 +74,56 @@ def embedding_fn(
     return x
 
 
+def block_fn(
+        params: PytreeLike,
+        inputs: ViTInputs, # pylint: disable=unused-argument
+        config: ViTConfig,
+        hidden: ArrayLike,
+    ) -> Array:
+    """Forward function for each transformer block."""
+    residu = hidden
+    hidden = layer_norm_fn(
+        params=LayerNormParams(
+            weight=params['pre_layernorm']['weight'],
+            bias=params['pre_layernorm']['bias']),
+        inputs=LayerNormInputs(hidden_states=hidden),
+        config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
+    hidden = attention_fn(
+        params=AttentionParams(
+            q_proj_w=params['self_attn']['q_proj']['weight'],
+            k_proj_w=params['self_attn']['k_proj']['weight'],
+            v_proj_w=params['self_attn']['v_proj']['weight'],
+            o_proj_w=params['self_attn']['o_proj']['weight'],
+            q_proj_b=params['self_attn']['q_proj']['bias'],
+            k_proj_b=params['self_attn']['k_proj']['bias'],
+            v_proj_b=params['self_attn']['v_proj']['bias'],
+            o_proj_b=params['self_attn']['o_proj']['bias']),
+        inputs=AttentionInputs(hidden_states=hidden),
+        config=AttentionConfig(
+            hidden_size=config.hidden_size,
+            num_attention_heads=config.num_attention_heads))
+    hidden = hidden + residu
+
+    residu = hidden
+    hidden = layer_norm_fn(
+        params=LayerNormParams(
+            weight=params['post_layernorm']['weight'],
+            bias=params['post_layernorm']['bias']),
+        inputs=LayerNormInputs(hidden_states=hidden),
+        config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
+    hidden = mlp_fn(
+        params=MLPParams(
+            u_proj_w=params['mlp']['u_proj']['weight'],
+            u_proj_b=params['mlp']['u_proj']['bias'],
+            d_proj_w=params['mlp']['d_proj']['weight'],
+            d_proj_b=params['mlp']['d_proj']['bias']),
+        inputs=MLPInputs(hidden_states=hidden),
+        config=MLPConfig(intermediate_size=config.intermediate_size))
+    hidden = hidden + residu
+
+    return hidden
+
+
 @partial(jax.jit, static_argnames=('config', 'return_intermediates'))
 def forward_fn(
         params: PytreeLike,
@@ -90,57 +140,9 @@ def forward_fn(
 
     hidden_states = embedding_fn(
         params['embeddings'], inputs.input_pixels, config.patch_size)
-
     for i in range(config.num_hidden_layers):
-
-        residual = hidden_states
-        hidden_states = layer_norm_fn(
-            params=LayerNormParams(
-                weight=params['layers'][f'{i}']['pre_layernorm']['weight'],
-                bias=params['layers'][f'{i}']['pre_layernorm']['bias']),
-            inputs=LayerNormInputs(hidden_states=hidden_states),
-            config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
-        hidden_states = attention_fn(
-            params=AttentionParams(
-                q_proj_w=params[
-                    'layers'][f'{i}']['self_attn']['q_proj']['weight'],
-                k_proj_w=params[
-                    'layers'][f'{i}']['self_attn']['k_proj']['weight'],
-                v_proj_w=params[
-                    'layers'][f'{i}']['self_attn']['v_proj']['weight'],
-                o_proj_w=params[
-                    'layers'][f'{i}']['self_attn']['o_proj']['weight'],
-                q_proj_b=params[
-                    'layers'][f'{i}']['self_attn']['q_proj']['bias'],
-                k_proj_b=params[
-                    'layers'][f'{i}']['self_attn']['k_proj']['bias'],
-                v_proj_b=params[
-                    'layers'][f'{i}']['self_attn']['v_proj']['bias'],
-                o_proj_b=params[
-                    'layers'][f'{i}']['self_attn']['o_proj']['bias']),
-            inputs=AttentionInputs(hidden_states=hidden_states),
-            config=AttentionConfig(
-                hidden_size=config.hidden_size,
-                num_attention_heads=config.num_attention_heads))
-        hidden_states = hidden_states + residual
-
-        residual = hidden_states
-        hidden_states = layer_norm_fn(
-            params=LayerNormParams(
-                weight=params['layers'][f'{i}']['post_layernorm']['weight'],
-                bias=params['layers'][f'{i}']['post_layernorm']['bias']),
-            inputs=LayerNormInputs(hidden_states=hidden_states),
-            config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
-        hidden_states = mlp_fn(
-            params=MLPParams(
-                u_proj_w=params['layers'][f'{i}']['mlp']['u_proj']['weight'],
-                u_proj_b=params['layers'][f'{i}']['mlp']['u_proj']['bias'],
-                d_proj_w=params['layers'][f'{i}']['mlp']['d_proj']['weight'],
-                d_proj_b=params['layers'][f'{i}']['mlp']['d_proj']['bias']),
-            inputs=MLPInputs(hidden_states=hidden_states),
-            config=MLPConfig(intermediate_size=config.intermediate_size))
-        hidden_states = hidden_states + residual
-
+        hidden_states = block_fn(
+            params['layers'][f'{i}'], inputs, config, hidden=hidden_states)
         if intermediates is not None:
             intermediates = intermediates + (hidden_states,)
 
