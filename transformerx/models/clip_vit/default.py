@@ -70,29 +70,24 @@ def load_hf_params(model_name: str) -> OrderedDict:
         model_name, torch_dtype=torch.float32).state_dict()
 
 
-def load_jx_params(model_name: str) -> Pytree:
-    """Returns pre-trained parameters."""
-    return convert_hf_params_to_jx_params(load_hf_params(model_name))
-
-
 def load_jx_config(model_name: str) -> CLIPViTConfig:
     """Returns pre-defined configurations."""
     return PREDEFINED_CONFIGS[model_name]
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
+def load_jx_params(model_name: str) -> Pytree:
+    """Returns pre-trained parameters."""
+    return convert_hf_params_to_jx_params(
+        load_hf_params(model_name), load_jx_config(model_name))
+
+
+def convert_hf_params_to_jx_params(
+        hf_params: OrderedDict, jx_config: CLIPViTConfig) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
     def pt2jx(e):
         return jnp.asarray(e.cpu().numpy())
-
-    # given our use of pre-trained model, flexibility might not be crucial.
-    num_hidden_layers = 1 + max(
-        int(e.split('.')[3]) for e in hf_params.keys()
-        if e.startswith('vision_model.encoder.layers.'))
-    hidden_size = hf_params[
-        'vision_model.embeddings.class_embedding'].shape[0]
 
     device = jax.devices('cpu')[0]
     with jax.default_device(device):
@@ -103,7 +98,7 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
             'patch_embedding': {
                 'weight': pt2jx(hf_params[
                     'vision_model.embeddings.patch_embedding.weight'
-                ]).reshape(hidden_size, -1).T},
+                ]).reshape(jx_config.hidden_size, -1).T},
             'position_embedding': {
                 'weight': pt2jx(hf_params[
                     'vision_model.embeddings.position_embedding.weight'])}}
@@ -170,17 +165,18 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
                         'bias': pt2jx(hf_params[
                             f'vision_model.encoder.layers.{i}.'
                             f'self_attn.out_proj.bias'])}},
-            } for i in range(num_hidden_layers)}
+            } for i in range(jx_config.num_hidden_layers)}
         post_layernorm = {
             'weight': pt2jx(hf_params['vision_model.post_layernorm.weight']),
             'bias': pt2jx(hf_params['vision_model.post_layernorm.bias'])}
         projection = {
             'weight': pt2jx(hf_params['visual_projection.weight'].T)}
 
-    return {
-        'embeddings': embeddings,
-        'pre_layernorm': pre_layernorm,
-        'layers': layers,
-        'post_layernorm': post_layernorm,
-        'projection': projection,
-    }
+        params = {
+            'embeddings': embeddings,
+            'pre_layernorm': pre_layernorm,
+            'layers': layers,
+            'post_layernorm': post_layernorm,
+            'projection': projection}
+
+        return params

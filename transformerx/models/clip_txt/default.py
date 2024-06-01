@@ -72,14 +72,15 @@ def load_hf_params(model_name: str) -> OrderedDict:
         model_name, torch_dtype=torch.float32).state_dict()
 
 
-def load_jx_params(model_name: str) -> Pytree:
-    """Returns pre-trained parameters."""
-    return convert_hf_params_to_jx_params(load_hf_params(model_name))
-
-
 def load_jx_config(model_name: str) -> CLIPTxTConfig:
     """Returns pre-defined configurations."""
     return PREDEFINED_CONFIGS[model_name]
+
+
+def load_jx_params(model_name: str) -> Pytree:
+    """Returns pre-trained parameters."""
+    return convert_hf_params_to_jx_params(
+        load_hf_params(model_name), load_jx_config(model_name))
 
 
 def get_tokenize_fn(
@@ -134,17 +135,13 @@ def get_tokenize_fn(
     return tokenize_fn
 
 
-def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
+def convert_hf_params_to_jx_params(
+        hf_params: OrderedDict, jx_config: CLIPTxTConfig) -> Pytree:
     """Converts pytorch state_dict in the transformerx format."""
 
     @torch.no_grad
     def pt2jx(e):
         return jnp.asarray(e.cpu().numpy())
-
-    # given our use of pre-trained model, flexibility might not be crucial.
-    num_hidden_layers = 1 + max(
-        int(e.split('.')[3]) for e in hf_params.keys()
-        if e.startswith('text_model.encoder.layers.'))
 
     device = jax.devices('cpu')[0]
     with jax.default_device(device):
@@ -215,16 +212,17 @@ def convert_hf_params_to_jx_params(hf_params: OrderedDict) -> Pytree:
                         'bias': pt2jx(hf_params[
                             f'text_model.encoder.layers.{i}.'
                             f'self_attn.out_proj.bias'])}},
-            } for i in range(num_hidden_layers)}
+            } for i in range(jx_config.num_hidden_layers)}
         final_layer_norm = {
             'weight': pt2jx(hf_params['text_model.final_layer_norm.weight']),
             'bias': pt2jx(hf_params['text_model.final_layer_norm.bias'])}
         projection = {
             'weight': pt2jx(hf_params['text_projection.weight'].T)}
 
-    return {
-        'embeddings': embeddings,
-        'layers': layers,
-        'final_layer_norm': final_layer_norm,
-        'projection': projection,
-    }
+        params = {
+            'embeddings': embeddings,
+            'layers': layers,
+            'final_layer_norm': final_layer_norm,
+            'projection': projection}
+
+        return params

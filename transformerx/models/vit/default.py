@@ -75,15 +75,15 @@ def load_hf_params(model_name: str) -> OrderedDict:
     return d2
 
 
+def load_jx_config(model_name: str) -> ViTConfig:
+    """Returns pre-defined configurations."""
+    return PREDEFINED_CONFIGS[model_name]
+
+
 def load_jx_params(model_name: str) -> Pytree:
     """Returns pre-trained parameters."""
     return convert_hf_params_to_jx_params(
         load_hf_params(model_name), load_jx_config(model_name))
-
-
-def load_jx_config(model_name: str) -> ViTConfig:
-    """Returns pre-defined configurations."""
-    return PREDEFINED_CONFIGS[model_name]
 
 
 def convert_hf_params_to_jx_params(
@@ -94,12 +94,6 @@ def convert_hf_params_to_jx_params(
     def pt2jx(e):
         return jnp.asarray(e.cpu().numpy())
 
-    # given our use of pre-trained model, flexibility might not be crucial.
-    num_hidden_layers = 1 + max(
-        int(e.split('.')[3]) for e in hf_params.keys()
-        if e.startswith('vit.encoder.layer.'))
-    hidden_size = hf_params['vit.embeddings.cls_token'].shape[-1]
-
     device = jax.devices('cpu')[0]
     with jax.default_device(device):
         embeddings = {
@@ -108,7 +102,7 @@ def convert_hf_params_to_jx_params(
             'patch_embedding': {
                 'weight': pt2jx(hf_params[
                     'vit.embeddings.patch_embeddings.projection.weight'
-                    ]).reshape(hidden_size, -1).T,
+                    ]).reshape(jx_config.hidden_size, -1).T,
                 'bias': pt2jx(hf_params[
                     'vit.embeddings.patch_embeddings.projection.bias'])},
             'position_embedding': {
@@ -174,7 +168,7 @@ def convert_hf_params_to_jx_params(
                         'bias': pt2jx(hf_params[
                             f'vit.encoder.layer.{i}.'
                             f'attention.output.dense.bias'])}},
-            } for i in range(num_hidden_layers)}
+            } for i in range(jx_config.num_hidden_layers)}
         post_layernorm = {
             'weight': pt2jx(hf_params['vit.layernorm.weight']),
             'bias': pt2jx(hf_params['vit.layernorm.bias'])}
