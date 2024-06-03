@@ -53,7 +53,7 @@ PREDEFINED_CONFIGS = {
     ),
     'laion/CLIP-ViT-L-14-laion2B-s32B-b82K': CLIPViTConfig(
         hidden_act='gelu',
-        hidden_size=768,
+        hidden_size=1024,
         intermediate_size=4096,
         layer_norm_eps=1e-05,
         num_attention_heads=16,
