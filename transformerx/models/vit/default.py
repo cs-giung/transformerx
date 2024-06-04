@@ -61,6 +61,36 @@ PREDEFINED_CONFIGS = {
         patch_size=16,
         representation_size=None,
     ),
+    'facebook/vit-mae-base': ViTConfig(
+        hidden_size=768,
+        intermediate_size=3072,
+        layer_norm_eps=1e-06,
+        num_attention_heads=12,
+        num_hidden_layers=12,
+        num_labels=None,
+        patch_size=16,
+        representation_size=None,
+    ),
+    'facebook/vit-mae-large': ViTConfig(
+        hidden_size=1024,
+        intermediate_size=4096,
+        layer_norm_eps=1e-06,
+        num_attention_heads=16,
+        num_hidden_layers=24,
+        num_labels=None,
+        patch_size=16,
+        representation_size=None,
+    ),
+    'facebook/vit-mae-huge': ViTConfig(
+        hidden_size=1280,
+        intermediate_size=5120,
+        layer_norm_eps=1e-06,
+        num_attention_heads=16,
+        num_hidden_layers=32,
+        num_labels=None,
+        patch_size=14,
+        representation_size=None,
+    ),
 }
 
 
