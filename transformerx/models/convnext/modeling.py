@@ -1,6 +1,6 @@
 """
-Modeling ConvNext architecture.
-https://arxiv.org/abs/2201.03545
+Modeling ConvNext V1 and V2 architectures.
+https://arxiv.org/abs/2201.03545, https://arxiv.org/abs/2301.00808
 """
 from functools import partial
 from typing import NamedTuple, Tuple
@@ -8,6 +8,9 @@ from typing import NamedTuple, Tuple
 import jax
 import jax.numpy as jnp
 
+from transformerx.models.convnext.grn import \
+    GRNConfig, GRNInputs, GRNParams,\
+    forward_fn as grn_fn
 from transformerx.models.convnext.normalization import \
     LayerNormConfig, LayerNormInputs, LayerNormParams, \
     forward_fn as layer_norm_fn
@@ -17,17 +20,21 @@ from transformerx.typing import Array, ArrayLike, PytreeLike
 class ConvNextConfig(NamedTuple):
     """
     Attributes:
+        grn_eps (float): an epsilon value for global response normalization.
         hidden_sizes (tuple of int): dimensionality at each stage.
         layer_norm_eps (float): an epsilon value for layer normalization.
         num_hidden_layers (tuple of int): the number of layers for each stage.
         num_labels (int): the number of classes for classification.
         patch_size (int): a size of each patch.
+        post_layernorm (bool): an existence of penultimate layer normalization.
     """
+    grn_eps: float
     hidden_sizes: Tuple[int]
     layer_norm_eps: float
     num_hidden_layers: Tuple[int]
     num_labels: int
     patch_size: int
+    post_layernorm: bool
 
 
 class ConvNextInputs(NamedTuple): # pylint: disable=missing-class-docstring
@@ -105,10 +112,18 @@ def block_fn(
     hidden = hidden @ params['pwconv1']['weight']
     hidden = hidden + params['pwconv1']['bias'][None, None, None]
     hidden = jax.nn.gelu(hidden, approximate=False)
+    if 'grn' in params:
+        hidden = grn_fn(
+            params=GRNParams(
+                weight=params['grn']['weight'],
+                bias=params['grn']['bias']),
+            inputs=GRNInputs(hidden_states=hidden),
+            config=GRNConfig(grn_eps=config.grn_eps))
 
     hidden = hidden @ params['pwconv2']['weight']
     hidden = hidden + params['pwconv2']['bias'][None, None, None]
-    hidden = hidden * params['layerscale']['weight']
+    if 'layerscale' in params:
+        hidden = hidden * params['layerscale']['weight']
 
     hidden = hidden + residu
 
@@ -147,12 +162,13 @@ def forward_fn(
             intermediates = intermediates + (hidden_states,)
 
     hidden_states = jnp.mean(hidden_states, axis=(-3, -2), keepdims=True)
-    hidden_states = layer_norm_fn(
-        params=LayerNormParams(
-            weight=params['post_layernorm']['weight'],
-            bias=params['post_layernorm']['bias']),
-        inputs=LayerNormInputs(hidden_states=hidden_states),
-        config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
+    if 'post_layernorm' in params:
+        hidden_states = layer_norm_fn(
+            params=LayerNormParams(
+                weight=params['post_layernorm']['weight'],
+                bias=params['post_layernorm']['bias']),
+            inputs=LayerNormInputs(hidden_states=hidden_states),
+            config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
     hidden_states = hidden_states[:, 0, 0, :]
 
     logits = None
