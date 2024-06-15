@@ -142,7 +142,9 @@ def forward_fn(
         config=LayerNormConfig(layer_norm_eps=config.layer_norm_eps))
     hidden_states = hidden_states[:, 0, :]
 
-    proj_hidden_states = hidden_states @ params['projection']['weight']
+    proj_hidden_states = None
+    if 'projection' in params:
+        proj_hidden_states = hidden_states @ params['projection']['weight']
 
     return CLIPTxTOutput(
         intermediates=intermediates,
