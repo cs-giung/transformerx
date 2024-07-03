@@ -41,7 +41,7 @@ PREDEFINED_CONFIGS = {
         patch_size=14,
         projection_dim=768,
     ),
-    'laion/CLIP-ViT-B-32-laion2B-s34B-b79K': CLIPViTConfig(
+    'cs-giung/clip-vit-base-patch32-laion2b': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=768,
         intermediate_size=3072,
@@ -51,7 +51,17 @@ PREDEFINED_CONFIGS = {
         patch_size=32,
         projection_dim=512,
     ),
-    'laion/CLIP-ViT-L-14-laion2B-s32B-b82K': CLIPViTConfig(
+    'cs-giung/clip-vit-base-patch16-laion2b': CLIPViTConfig(
+        hidden_act='gelu',
+        hidden_size=768,
+        intermediate_size=3072,
+        layer_norm_eps=1e-05,
+        num_attention_heads=12,
+        num_hidden_layers=12,
+        patch_size=16,
+        projection_dim=512,
+    ),
+    'cs-giung/clip-vit-large-patch14-laion2b': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1024,
         intermediate_size=4096,
@@ -61,7 +71,7 @@ PREDEFINED_CONFIGS = {
         patch_size=14,
         projection_dim=768,
     ),
-    'laion/CLIP-ViT-H-14-laion2B-s32B-b79K': CLIPViTConfig(
+    'cs-giung/clip-vit-huge-patch14-laion2b': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1280,
         intermediate_size=5120,
@@ -71,7 +81,7 @@ PREDEFINED_CONFIGS = {
         patch_size=14,
         projection_dim=1024,
     ),
-    'laion/CLIP-ViT-g-14-laion2B-s12B-b42K': CLIPViTConfig(
+    'cs-giung/clip-vit-giant-patch14-laion2b': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1408,
         intermediate_size=6144,
@@ -81,7 +91,7 @@ PREDEFINED_CONFIGS = {
         patch_size=14,
         projection_dim=1024,
     ),
-    'laion/CLIP-ViT-bigG-14-laion2B-39B-b160k': CLIPViTConfig(
+    'cs-giung/clip-vit-gigantic-patch14-laion2b': CLIPViTConfig(
         hidden_act='gelu',
         hidden_size=1664,
         intermediate_size=8192,
