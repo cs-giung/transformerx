@@ -1,5 +1,8 @@
 # MMLU (5-shot)
 
+> [!NOTE]
+> Experiments are primarily conducted in TPU VM environments, with support from Cloud TPUs provided by Google's TPU Research Cloud (TRC).
+
 The example demonstrates MMLU evaluation.
 ```bash
 python examples/mmlu/run.py --model microsoft/Phi-3-mini-4k-instruct --shot 5

@@ -1,5 +1,8 @@
 # Perplexity
 
+> [!NOTE]
+> Experiments are primarily conducted in TPU VM environments, with support from Cloud TPUs provided by Google's TPU Research Cloud (TRC).
+
 The example demonstrates computing perplexity.
 ```bash
 python examples/perplexity/run.py --model meta-llama/Meta-Llama-3-8B
