@@ -30,7 +30,7 @@ class LlamaConfig(NamedTuple):
             multi-head attention is used. If it is set to one, multi-query
             attention is applied.
         rms_norm_eps (float): an epsilon value for RMS normalization.
-        rope_kwargs (dict): keyword arguments for RoPE embedding.
+        rope_base (float): default base value for making RoPE inputs.
         sliding_window (int): a window size for sliding window attention.
         vocab_size (int): vocabulary size of the text model.
     """
@@ -40,6 +40,7 @@ class LlamaConfig(NamedTuple):
     num_hidden_layers: int
     num_key_value_heads: int
     rms_norm_eps: float
+    rope_base: float
     sliding_window: int
     vocab_size: int
 
