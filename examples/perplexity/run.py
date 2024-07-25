@@ -78,7 +78,6 @@ if __name__ == '__main__':
         ):
         from transformerx.models.llama.default import \
             load_jx_config, load_jx_params
-        from transformerx.models.llama.rope import make_rope
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
 
@@ -138,11 +137,18 @@ if __name__ == '__main__':
     attention_mask = jnp.ones((1, args.seqlen))
     position_ids = jnp.arange(args.seqlen)[None, :]
 
-    if args.rope_type == 'default':
-        rope_cos, rope_sin = make_rope(
+    if args.rope_type == 'simple':
+        from transformerx.models.llama.rope import make_simple_rope
+        rope_cos, rope_sin = make_simple_rope(
             position_ids,
-            config.hidden_size // config.num_attention_heads,
-            {'base': config.rope_base})
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base)
+    if args.rope_type == 'llama3':
+        from transformerx.models.llama.rope import make_llama3_rope
+        rope_cos, rope_sin = make_llama3_rope(
+            position_ids,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base)
 
     nlls = []
     ppls = []
