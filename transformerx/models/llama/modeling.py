@@ -30,7 +30,7 @@ class LlamaConfig(NamedTuple):
             multi-head attention is used. If it is set to one, multi-query
             attention is applied.
         rms_norm_eps (float): an epsilon value for RMS normalization.
-        rope_theta (float): a base period of RoPE embedding.
+        rope_kwargs (dict): keyword arguments for RoPE embedding.
         sliding_window (int): a window size for sliding window attention.
         vocab_size (int): vocabulary size of the text model.
     """
@@ -40,7 +40,7 @@ class LlamaConfig(NamedTuple):
     num_hidden_layers: int
     num_key_value_heads: int
     rms_norm_eps: float
-    rope_theta: float
+    rope_kwargs: dict
     sliding_window: int
     vocab_size: int
 
@@ -84,7 +84,7 @@ def block_fn(
             hidden_size=config.hidden_size,
             num_attention_heads=config.num_attention_heads,
             num_key_value_heads=config.num_key_value_heads,
-            rope_theta=config.rope_theta,
+            rope_kwargs=config.rope_kwargs,
             sliding_window=config.sliding_window))
     hidden = hidden + residu
 
