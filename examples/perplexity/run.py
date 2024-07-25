@@ -77,7 +77,8 @@ if __name__ == '__main__':
             'microsoft/Phi-3-medium-4k-instruct',
         ):
         from transformerx.models.llama.default import \
-            load_jx_config, load_jx_params, make_rope
+            load_jx_config, load_jx_params
+        from transformerx.models.llama.rope import make_rope
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
 
