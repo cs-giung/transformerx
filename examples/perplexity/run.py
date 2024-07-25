@@ -142,7 +142,7 @@ if __name__ == '__main__':
         rope_cos, rope_sin = make_rope(
             position_ids,
             config.hidden_size // config.num_attention_heads,
-            {'base': config.rope_theta})
+            {'base': config.rope_base})
 
     nlls = []
     ppls = []
