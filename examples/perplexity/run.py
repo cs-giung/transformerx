@@ -64,6 +64,8 @@ if __name__ == '__main__':
             'meta-llama/Meta-Llama-3-8B-Instruct',
             'meta-llama/Meta-Llama-3-70B',
             'meta-llama/Meta-Llama-3-70B-Instruct',
+            'meta-llama/Meta-Llama-3.1-8B',
+            'meta-llama/Meta-Llama-3.1-8B-Instruct',
             'mistralai/Mistral-7B-v0.1',
             'mistralai/Mistral-7B-Instruct-v0.1',
             'mistral-community/Mistral-7B-v0.2',
