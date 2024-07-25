@@ -134,6 +134,17 @@ PREDEFINED_CONFIGS = {
         sliding_window=None,
         vocab_size=128256,
     ),
+    'meta-llama/Meta-Llama-3.1-8B': LlamaConfig(
+        hidden_size=4096,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_theta=500000.0, # TODO: RoPE scaling...
+        sliding_window=None,
+        vocab_size=128256,
+    ),
     'meta-llama/Meta-Llama-3-8B-Instruct': LlamaConfig(
         hidden_size=4096,
         intermediate_size=14336,
@@ -142,6 +153,17 @@ PREDEFINED_CONFIGS = {
         num_key_value_heads=8,
         rms_norm_eps=1e-05,
         rope_theta=500000.0,
+        sliding_window=None,
+        vocab_size=128256,
+    ),
+    'meta-llama/Meta-Llama-3.1-8B-Instruct': LlamaConfig(
+        hidden_size=4096,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_theta=500000.0, # TODO: RoPE scaling...
         sliding_window=None,
         vocab_size=128256,
     ),
