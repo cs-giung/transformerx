@@ -27,6 +27,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
 
     parser.add_argument('--model', required=True, type=str)
+    parser.add_argument('--rope_type', required=True, type=str)
 
     parser.add_argument(
         '--data', default='wikitext2', type=str,
@@ -76,7 +77,7 @@ if __name__ == '__main__':
             'microsoft/Phi-3-medium-4k-instruct',
         ):
         from transformerx.models.llama.default import \
-            load_jx_config, load_jx_params
+            load_jx_config, load_jx_params, make_rope
         from transformerx.models.llama.modeling import \
             forward_fn, LlamaInputs as Inputs
 
@@ -136,6 +137,12 @@ if __name__ == '__main__':
     attention_mask = jnp.ones((1, args.seqlen))
     position_ids = jnp.arange(args.seqlen)[None, :]
 
+    if args.rope_type == 'default':
+        rope_cos, rope_sin = make_rope(
+            position_ids,
+            config.hidden_size // config.num_attention_heads,
+            {'base': config.rope_theta})
+
     nlls = []
     ppls = []
     pbar = tqdm(tokens)
@@ -144,7 +151,9 @@ if __name__ == '__main__':
         inputs = Inputs(
             input_ids=input_ids[None],
             attention_mask=attention_mask,
-            position_ids=position_ids)
+            position_ids=position_ids,
+            rope_cos=rope_cos,
+            rope_sin=rope_sin)
         logits = forward_fn(params, inputs, config).logits
         lprobs = jnp.take_along_axis(
             jax.nn.log_softmax(logits[0, :-1, :]), input_ids[1:, None], axis=1)
