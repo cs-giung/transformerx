@@ -28,13 +28,15 @@ def make_llama3_rope(
         dim: int,
         base: float,
         factor: float = 8.,
-        low_freq_factor: float = 1.,
-        high_freq_factor: float = 4.,
-        original_max_position_embeddings: float = 8192,
+        l_freq_factor: float = 1.,
+        h_freq_factor: float = 4.,
+        old_context_len: float = 8192,
     ) -> Tuple[Array, Array]:
     """Make rotary embedding based on position indices."""
     inv_freq = 1. / (base ** (jnp.arange(0, dim, 2) / dim))
     new_freq = []
+    l_freq_wavelen = old_context_len / l_freq_factor
+    h_freq_wavelen = old_context_len / h_freq_factor
     for freq in inv_freq:
         wavelen = 2. * math.pi / freq
         if wavelen < h_freq_wavelen:
