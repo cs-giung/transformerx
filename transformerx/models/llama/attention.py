@@ -13,7 +13,6 @@ class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_size: int
     num_attention_heads: int
     num_key_value_heads: int
-    rope_kwargs: dict
     sliding_window: int
 
 
@@ -21,6 +20,8 @@ class AttentionInputs(NamedTuple): # pylint: disable=missing-class-docstring
     hidden_states: ArrayLike
     attention_mask: ArrayLike
     position_ids: ArrayLike
+    rope_cos: ArrayLike
+    rope_sin: ArrayLike
 
 
 class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
@@ -28,46 +29,6 @@ class AttentionParams(NamedTuple): # pylint: disable=missing-class-docstring
     k_proj: ArrayLike
     v_proj: ArrayLike
     o_proj: ArrayLike
-
-
-def make_rotary_embedding(
-        position_ids: ArrayLike,
-        d_k: int,
-        rope_kwargs: dict,
-    ) -> Tuple[Array, Array]:
-    """Make rotary embedding based on position indices."""
-    base = rope_kwargs['base']
-    inv_freq = 1. / (base ** (jnp.arange(0, d_k, 2) / d_k))
-    attn_factor = 1.
-
-    if not rope_kwargs:
-        factor = rope_kwargs['factor']
-        l_freq_factor = rope_kwargs['low_freq_factor']
-        h_freq_factor = rope_kwargs['high_freq_factor']
-        old_context_len = rope_kwargs['original_max_position_embeddings']
-        l_freq_wavelen = old_context_len / l_freq_factor
-        h_freq_wavelen = old_context_len / h_freq_factor
-        new_freq = []
-        for freq in inv_freq:
-            wavelen = 2 * math.pi / freq
-            if wavelen < h_freq_wavelen:
-                new_freq.append(freq)
-                continue
-            if wavelen > l_freq_wavelen:
-                new_freq.append(freq / factor)
-                continue
-            assert l_freq_wavelen != h_freq_wavelen
-            smooth = (old_context_len / wavelen - l_freq_factor)
-            smooth = smooth / (h_freq_factor - l_freq_factor)
-            new_freq.append((1. - smooth) * freq / factor + smooth * freq)
-        inv_freq = jnp.array(new_freq)
-
-    sinusoid = einsum(inv_freq, position_ids.astype(float), 'j, B L -> B L j')
-    cos = repeat(jnp.cos(sinusoid), 'B L j -> B L (i j)', i=2)
-    sin = repeat(jnp.sin(sinusoid), 'B L j -> B L (i j)', i=2)
-    cos = attention_factor * cos
-    sin = attention_factor * sin
-    return cos, sin
 
 
 def apply_rotary_embedding(
@@ -110,10 +71,8 @@ def forward_fn(
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
     v = einsum(x, v_proj, 'B D M, M   H V -> B   H D V')
 
-    cos, sin = make_rotary_embedding(
-        inputs.position_ids, K, config.rope_kwargs)
-    q = apply_rotary_embedding(q, cos, sin)
-    k = apply_rotary_embedding(k, cos, sin)
+    q = apply_rotary_embedding(q, inputs.rope_cos, inputs.rope_sin)
+    k = apply_rotary_embedding(k, inputs.rope_cos, inputs.rope_sin)
 
     qk_mask = inputs.attention_mask.astype(bool)
     qk_mask = jnp.tril(einsum(qk_mask, qk_mask, 'B i, B j -> B i j'))

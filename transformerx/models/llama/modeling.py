@@ -40,7 +40,6 @@ class LlamaConfig(NamedTuple):
     num_hidden_layers: int
     num_key_value_heads: int
     rms_norm_eps: float
-    rope_kwargs: dict
     sliding_window: int
     vocab_size: int
 
@@ -49,6 +48,8 @@ class LlamaInputs(NamedTuple): # pylint: disable=missing-class-docstring
     input_ids: ArrayLike
     attention_mask: ArrayLike
     position_ids: ArrayLike
+    rope_cos: ArrayLike
+    rope_sin: ArrayLike
 
 
 class LlamaOutput(NamedTuple): # pylint: disable=missing-class-docstring
@@ -79,12 +80,13 @@ def block_fn(
         inputs=AttentionInputs(
             hidden_states=hidden,
             attention_mask=inputs.attention_mask,
-            position_ids=inputs.position_ids),
+            position_ids=inputs.position_ids,
+            rope_cos=inputs.rope_cos,
+            rope_sin=inputs.rope_sin),
         config=AttentionConfig(
             hidden_size=config.hidden_size,
             num_attention_heads=config.num_attention_heads,
             num_key_value_heads=config.num_key_value_heads,
-            rope_kwargs=config.rope_kwargs,
             sliding_window=config.sliding_window))
     hidden = hidden + residu
 
