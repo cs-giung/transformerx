@@ -1,4 +1,5 @@
 """Utilities for making RoPE embeddings."""
+import math
 from typing import Tuple
 
 import jax.numpy as jnp
