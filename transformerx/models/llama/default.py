@@ -295,12 +295,10 @@ def get_tokenize_fn(
         return_tensors: str = 'np',
     ) -> Callable:
     """Returns customized tokenization function."""
-
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    tokenizer.pad_token = tokenizer.eos_token
-
     if padding_side not in ['right', 'left']:
         raise AssertionError('padding_side should be `right` or `left`.')
+    tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = padding_side
     tokenizer.truncation_side = padding_side
 
