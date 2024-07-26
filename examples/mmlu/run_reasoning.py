@@ -19,6 +19,9 @@ initialise_tracking()
 
 from examples.default import get_args
 from transformerx.experimental.quantization import SymmetricQuantizedArray
+from transformerx.models.llama import default, rope
+from transformerx.models.llama.modeling import forward_fn
+from transformerx.models.llama.modeling import LlamaInputs as Inputs
 from transformerx.tasks import \
     ARCEasy, ARCChallenge, CommonsenseQA, HellaSwag, PIQA
 
@@ -31,6 +34,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
 
     parser.add_argument('--model', required=True, type=str)
+    parser.add_argument('--rope_type', required=True, type=str)
     parser.add_argument('--tasks', required=True, type=lambda x: x.split(','))
 
     parser.add_argument(
@@ -52,43 +56,8 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     # Prepare models
     # ----------------------------------------------------------------------- #
-    if args.model in (
-            'huggyllama/llama-7b',
-            'huggyllama/llama-13b',
-            'huggyllama/llama-30b',
-            'huggyllama/llama-65b',
-            'meta-llama/Llama-2-7b-hf',
-            'meta-llama/Llama-2-7b-chat-hf',
-            'meta-llama/Llama-2-13b-hf',
-            'meta-llama/Llama-2-13b-chat-hf',
-            'meta-llama/Llama-2-70b-hf',
-            'meta-llama/Llama-2-70b-chat-hf',
-            'meta-llama/Meta-Llama-3-8B',
-            'meta-llama/Meta-Llama-3-8B-Instruct',
-            'meta-llama/Meta-Llama-3-70B',
-            'meta-llama/Meta-Llama-3-70B-Instruct',
-            'meta-llama/Meta-Llama-3.1-8B',
-            'meta-llama/Meta-Llama-3.1-8B-Instruct',
-            'mistralai/Mistral-7B-v0.1',
-            'mistralai/Mistral-7B-Instruct-v0.1',
-            'mistral-community/Mistral-7B-v0.2',
-            'mistralai/Mistral-7B-Instruct-v0.2',
-            'mistralai/Mistral-7B-v0.3',
-            'mistralai/Mistral-7B-Instruct-v0.3',
-            'microsoft/Phi-3-mini-4k-instruct',
-            'microsoft/Phi-3-medium-4k-instruct',
-        ):
-        from transformerx.models.llama.default import \
-            load_jx_config, load_jx_params, get_tokenize_fn
-        from transformerx.models.llama.modeling import \
-            forward_fn, LlamaInputs as Inputs
-
-    else:
-        raise NotImplementedError(
-            f'Unknown args.model={args.model}')
-
-    config = load_jx_config(args.model)
-    params = load_jx_params(args.model)
+    config = default.load_jx_config(args.model)
+    params = default.load_jx_params(args.model)
     tokenize_fn = get_tokenize_fn(
         args.model, max_length=args.maxlen, add_special_tokens=True,
         padding_side='left', return_tensors='np')
@@ -146,6 +115,17 @@ if __name__ == '__main__':
     params = jax.tree_util.tree_map(
         lambda e: einshard(e, '... O -> ... O*'), params)
 
+    if args.rope_type == 'simple':
+        make_rope = partial(
+            rope.make_simple_rope,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base)
+    if args.rope_type == 'llama3':
+        make_rope = partial(
+            rope.make_simple_rope,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base)
+
     data = []
     for taskname, task in zip(tasknames, tasks):
         kdocs = task.kshot_docs()[:args.shot] if args.shot > 0 else []
@@ -153,7 +133,9 @@ if __name__ == '__main__':
         num_doc = 0
         for doc in task.valid_docs():
             prompt = task.create_qa_prompt_choices_fewshot(kdocs, doc)
-            inputs = Inputs(**tokenize_fn([prompt]))
+            inputs = Inputs(
+                **tokenize_fn([prompt]),
+                rope_cos=rope_cos, rope_sin=rope_sin)
             answer = detokenize_fn([jnp.argmax(
                 forward_fn(params, inputs, config).logits[0, -1, :])])
             correct += int(answer.strip() == chr(65 + doc['gold']))
