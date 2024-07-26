@@ -1,6 +1,7 @@
 """Computing perplexity."""
 import sys
 from argparse import ArgumentParser
+from functools import partial
 sys.path.append('./') # pylint: disable=wrong-import-position
 
 import datasets
