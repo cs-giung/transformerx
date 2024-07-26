@@ -1,0 +1,26 @@
+[2024-07-26 17:37:54] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 17:37:54] Command line arguments:
+- args.model      : meta-llama/Meta-Llama-3-8B
+- args.rope_type  : simple
+- args.data       : ptb
+- args.seqlen     : 4096
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/ptb-4096/meta-llama/Meta-Llama-3-8B/
+- args.seed       : 54396323
+
+[2024-07-26 17:37:54] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 17:39:55] nlls=[9.856e+03, 9.938e+03, 9.288e+03, 9.077e+03, 8.829e+03, 9.318e+03, 9.702e+03, 9.242e+03, 9.660e+03, 9.357e+03, 9.984e+03, 9.845e+03, 9.728e+03, 9.575e+03, 9.744e+03, 1.034e+04, 1.054e+04, 1.013e+04, 9.768e+03, 1.065e+04, 8.681e+03, 9.206e+03, 9.485e+03]
+[2024-07-26 17:39:55] ppls=[1.109e+01, 1.120e+01, 1.066e+01, 1.027e+01, 9.918e+00, 9.886e+00, 9.996e+00, 9.939e+00, 1.001e+01, 9.988e+00, 1.011e+01, 1.019e+01, 1.023e+01, 1.024e+01, 1.028e+01, 1.040e+01, 1.054e+01, 1.061e+01, 1.063e+01, 1.075e+01, 1.062e+01, 1.057e+01, 1.055e+01]
+[2024-07-26 17:39:55] PPL: 1.055e+01
