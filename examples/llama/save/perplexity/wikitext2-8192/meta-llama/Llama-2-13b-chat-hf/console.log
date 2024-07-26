@@ -1,0 +1,26 @@
+[2024-07-26 21:55:51] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 21:55:51] Command line arguments:
+- args.model      : meta-llama/Llama-2-13b-chat-hf
+- args.rope_type  : simple
+- args.data       : wikitext2
+- args.seqlen     : 8192
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/wikitext2-8192/meta-llama/Llama-2-13b-chat-hf/
+- args.seed       : 52148635
+
+[2024-07-26 21:55:51] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 21:59:54] nlls=[4.282e+04, 4.042e+04, 4.576e+04, 4.335e+04, 4.286e+04, 4.242e+04, 4.417e+04, 4.579e+04, 4.569e+04, 4.473e+04, 3.861e+04, 4.054e+04, 4.601e+04, 4.222e+04, 4.284e+04, 4.546e+04, 4.331e+04, 4.751e+04, 4.342e+04, 4.118e+04, 4.624e+04, 4.142e+04, 4.422e+04, 4.183e+04, 4.313e+04, 4.501e+04, 4.406e+04, 4.425e+04, 4.305e+04, 4.391e+04, 4.389e+04, 4.284e+04, 4.308e+04, 4.250e+04, 4.497e+04, 4.063e+04, 4.146e+04, 4.102e+04, 4.262e+04, 4.195e+04, 4.457e+04]
+[2024-07-26 21:59:54] ppls=[1.862e+02, 1.608e+02, 1.904e+02, 1.924e+02, 1.913e+02, 1.889e+02, 1.930e+02, 2.011e+02, 2.073e+02, 2.099e+02, 1.982e+02, 1.926e+02, 1.980e+02, 1.961e+02, 1.954e+02, 1.988e+02, 1.987e+02, 2.044e+02, 2.042e+02, 2.012e+02, 2.045e+02, 2.021e+02, 2.029e+02, 2.011e+02, 2.008e+02, 2.023e+02, 2.028e+02, 2.035e+02, 2.030e+02, 2.034e+02, 2.036e+02, 2.031e+02, 2.027e+02, 2.020e+02, 2.031e+02, 2.011e+02, 1.998e+02, 1.982e+02, 1.978e+02, 1.970e+02, 1.977e+02]
+[2024-07-26 21:59:54] PPL: 1.977e+02

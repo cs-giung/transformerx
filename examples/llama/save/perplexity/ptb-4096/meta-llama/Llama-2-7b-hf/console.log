@@ -1,0 +1,26 @@
+[2024-07-26 21:44:48] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 21:44:48] Command line arguments:
+- args.model      : meta-llama/Llama-2-7b-hf
+- args.rope_type  : simple
+- args.data       : ptb
+- args.seqlen     : 4096
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/ptb-4096/meta-llama/Llama-2-7b-hf/
+- args.seed       : 49182395
+
+[2024-07-26 21:44:48] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 21:46:41] nlls=[1.329e+04, 1.279e+04, 1.427e+04, 1.266e+04, 1.385e+04, 1.318e+04, 1.878e+04, 1.733e+04, 1.441e+04, 1.659e+04, 1.551e+04, 1.723e+04, 1.534e+04, 1.306e+04, 1.411e+04, 1.215e+04, 1.628e+04, 1.729e+04, 1.608e+04, 1.438e+04, 1.739e+04, 1.591e+04, 1.632e+04, 1.405e+04, 1.300e+04, 1.556e+04]
+[2024-07-26 21:46:41] ppls=[2.568e+01, 2.413e+01, 2.668e+01, 2.542e+01, 2.618e+01, 2.597e+01, 3.140e+01, 3.464e+01, 3.453e+01, 3.633e+01, 3.698e+01, 3.886e+01, 3.911e+01, 3.780e+01, 3.733e+01, 3.584e+01, 3.668e+01, 3.797e+01, 3.855e+01, 3.828e+01, 3.939e+01, 3.977e+01, 4.029e+01, 3.985e+01, 3.904e+01, 3.925e+01]
+[2024-07-26 21:46:41] PPL: 3.925e+01

@@ -1,0 +1,26 @@
+[2024-07-26 21:48:03] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 21:48:03] Command line arguments:
+- args.model      : huggyllama/llama-7b
+- args.rope_type  : simple
+- args.data       : ptb
+- args.seqlen     : 8192
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/ptb-8192/huggyllama/llama-7b/
+- args.seed       : 4020044
+
+[2024-07-26 21:48:03] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 21:49:37] nlls=[6.459e+04, 6.665e+04, 6.917e+04, 7.028e+04, 6.525e+04, 6.848e+04, 6.510e+04, 6.672e+04, 6.840e+04, 6.547e+04, 6.742e+04]
+[2024-07-26 21:49:37] ppls=[2.655e+03, 3.012e+03, 3.479e+03, 3.868e+03, 3.646e+03, 3.743e+03, 3.596e+03, 3.577e+03, 3.644e+03, 3.568e+03, 3.585e+03]
+[2024-07-26 21:49:37] PPL: 3.585e+03
