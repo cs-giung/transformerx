@@ -112,9 +112,9 @@ if __name__ == '__main__':
             num_doc = 0
             for doc in task.valid_docs():
                 prompt = task.create_qa_prompt_choices_fewshot(kdocs, doc)
-                inputs = Inputs(
-                    **tokenize_fn([prompt]),
-                    rope_cos=rope_cos, rope_sin=rope_sin)
+                inputs = tokenize_fn([prompt])
+                rope_cos, rope_sin = make_rope(inputs['position_ids'])
+                inputs = Inputs(**inputs, rope_cos=rope_cos, rope_sin=rope_sin)
                 answer = detokenize_fn([jnp.argmax(
                     forward_fn(params, inputs, config).logits[0, -1, :])])
                 correct += int(answer.strip() == chr(65 + doc['gold']))
