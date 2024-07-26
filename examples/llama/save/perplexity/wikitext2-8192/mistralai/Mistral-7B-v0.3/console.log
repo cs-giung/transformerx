@@ -1,0 +1,26 @@
+[2024-07-26 18:53:21] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 18:53:21] Command line arguments:
+- args.model      : mistralai/Mistral-7B-v0.3
+- args.rope_type  : simple
+- args.data       : wikitext2
+- args.seqlen     : 8192
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/wikitext2-8192/mistralai/Mistral-7B-v0.3/
+- args.seed       : 22173454
+
+[2024-07-26 18:53:21] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 18:56:36] nlls=[1.425e+04, 1.034e+04, 1.295e+04, 1.382e+04, 1.448e+04, 1.256e+04, 1.417e+04, 1.517e+04, 1.131e+04, 1.253e+04, 8.823e+03, 1.219e+04, 1.569e+04, 1.335e+04, 1.231e+04, 1.010e+04, 1.127e+04, 1.492e+04, 1.074e+04, 1.052e+04, 1.358e+04, 1.285e+04, 1.356e+04, 1.142e+04, 1.200e+04, 1.594e+04, 1.577e+04, 1.433e+04, 1.264e+04, 1.393e+04, 1.206e+04, 1.223e+04, 1.326e+04, 1.293e+04, 1.157e+04, 1.223e+04, 1.204e+04, 1.296e+04, 1.062e+04, 1.413e+04]
+[2024-07-26 18:56:36] ppls=[5.692e+00, 4.485e+00, 4.606e+00, 4.793e+00, 4.989e+00, 4.927e+00, 5.024e+00, 5.175e+00, 5.026e+00, 4.983e+00, 4.749e+00, 4.721e+00, 4.855e+00, 4.872e+00, 4.846e+00, 4.743e+00, 4.693e+00, 4.765e+00, 4.702e+00, 4.641e+00, 4.668e+00, 4.674e+00, 4.697e+00, 4.667e+00, 4.653e+00, 4.727e+00, 4.792e+00, 4.824e+00, 4.819e+00, 4.839e+00, 4.823e+00, 4.811e+00, 4.818e+00, 4.819e+00, 4.797e+00, 4.787e+00, 4.774e+00, 4.777e+00, 4.744e+00, 4.764e+00]
+[2024-07-26 18:56:36] PPL: 4.764e+00

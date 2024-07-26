@@ -1,0 +1,26 @@
+[2024-07-26 18:53:22] Environments:
+------------  ------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.4 (main, Jun  8 2024, 18:29:57) [GCC 11.4.0]
+datasets      2.20.0 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.30 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.43.2 @/home/giung/bdlx/.venv/lib/python3.12/site-packages/transformers
+------------  ------------------------------------------------------------------------
+
+[2024-07-26 18:53:22] Command line arguments:
+- args.model      : mistralai/Mistral-7B-v0.3
+- args.rope_type  : simple
+- args.data       : wikitext2
+- args.seqlen     : 4096
+- args.bits       : 0
+- args.group_size : 128
+- args.save       : examples/llama/save/perplexity/wikitext2-4096/mistralai/Mistral-7B-v0.3/
+- args.seed       : 22868907
+
+[2024-07-26 18:53:22] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
+
+[2024-07-26 18:56:32] nlls=[6.638e+03, 7.978e+03, 6.017e+03, 4.610e+03, 6.318e+03, 6.967e+03, 6.817e+03, 7.234e+03, 7.754e+03, 7.341e+03, 5.481e+03, 7.257e+03, 7.120e+03, 7.447e+03, 7.701e+03, 7.646e+03, 6.362e+03, 5.359e+03, 6.335e+03, 6.392e+03, 4.568e+03, 4.488e+03, 4.742e+03, 7.639e+03, 8.532e+03, 7.436e+03, 7.210e+03, 6.748e+03, 6.698e+03, 5.912e+03, 5.451e+03, 5.042e+03, 5.280e+03, 6.243e+03, 7.625e+03, 7.992e+03, 5.273e+03, 5.814e+03, 5.843e+03, 5.063e+03, 7.040e+03, 6.941e+03, 6.697e+03, 6.680e+03, 6.910e+03, 7.080e+03, 5.724e+03, 6.154e+03, 5.586e+03, 6.843e+03, 7.268e+03, 9.119e+03, 8.138e+03, 8.084e+03, 7.263e+03, 7.360e+03, 6.092e+03, 6.824e+03, 7.023e+03, 7.140e+03, 6.270e+03, 6.078e+03, 5.908e+03, 6.671e+03, 7.003e+03, 6.808e+03, 6.314e+03, 6.935e+03, 5.783e+03, 6.126e+03, 6.459e+03, 6.204e+03, 5.872e+03, 6.531e+03, 6.517e+03, 6.848e+03, 5.425e+03, 5.642e+03, 7.962e+03, 6.419e+03, 6.741e+03]
+[2024-07-26 18:56:32] ppls=[5.056e+00, 5.954e+00, 5.361e+00, 4.668e+00, 4.670e+00, 4.796e+00, 4.862e+00, 4.976e+00, 5.138e+00, 5.218e+00, 5.071e+00, 5.134e+00, 5.175e+00, 5.240e+00, 5.319e+00, 5.384e+00, 5.343e+00, 5.235e+00, 5.205e+00, 5.182e+00, 5.053e+00, 4.934e+00, 4.841e+00, 4.899e+00, 4.997e+00, 5.037e+00, 5.063e+00, 5.068e+00, 5.070e+00, 5.040e+00, 4.994e+00, 4.935e+00, 4.889e+00, 4.880e+00, 4.919e+00, 4.968e+00, 4.926e+00, 4.903e+00, 4.883e+00, 4.840e+00, 4.857e+00, 4.870e+00, 4.876e+00, 4.881e+00, 4.892e+00, 4.907e+00, 4.887e+00, 4.879e+00, 4.857e+00, 4.865e+00, 4.884e+00, 4.944e+00, 4.981e+00, 5.015e+00, 5.029e+00, 5.046e+00, 5.034e+00, 5.038e+00, 5.047e+00, 5.057e+00, 5.050e+00, 5.039e+00, 5.025e+00, 5.026e+00, 5.033e+00, 5.037e+00, 5.031e+00, 5.037e+00, 5.022e+00, 5.013e+00, 5.011e+00, 5.004e+00, 4.992e+00, 4.991e+00, 4.990e+00, 4.994e+00, 4.976e+00, 4.962e+00, 4.983e+00, 4.981e+00, 4.983e+00]
+[2024-07-26 18:56:32] PPL: 4.983e+00
