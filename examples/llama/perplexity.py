@@ -80,12 +80,14 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     if args.data == 'wikitext2':
         tokens = datasets.load_dataset(
-            'wikitext', 'wikitext-2-raw-v1', split='test')
+            'wikitext', 'wikitext-2-raw-v1', split='test',
+            trust_remote_code=True)
         tokens = '\n\n'.join(tokens['text']) # pylint: disable=invalid-name
 
     elif args.data == 'ptb':
         tokens = datasets.load_dataset(
-            'ptb_text_only', 'penn_treebank', split='test')
+            'ptb_text_only', 'penn_treebank', split='test',
+            trust_remote_code=True)
         tokens = ' '.join(tokens['sentence']) # pylint: disable=invalid-name
 
     else:
