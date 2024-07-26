@@ -113,7 +113,7 @@ if __name__ == '__main__':
             base=config.rope_base)
     if args.rope_type == 'llama3':
         make_rope = partial(
-            rope.make_simple_rope,
+            rope.make_llama3_rope,
             dim=config.hidden_size//config.num_attention_heads,
             base=config.rope_base)
     rope_cos, rope_sin = make_rope(position_ids)
