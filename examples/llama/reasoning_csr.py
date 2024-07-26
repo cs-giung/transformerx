@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------------- #
     config = default.load_jx_config(args.model)
     params = default.load_jx_params(args.model)
-    tokenize_fn = get_tokenize_fn(
+    tokenize_fn = default.get_tokenize_fn(
         args.model, max_length=args.maxlen, add_special_tokens=True,
         padding_side='left', return_tensors='np')
     tokenizer = AutoTokenizer.from_pretrained(args.model)
