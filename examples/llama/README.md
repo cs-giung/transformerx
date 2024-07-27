@@ -55,20 +55,20 @@ Following table summarizes `total macro-average` / `total micro-average` for `ma
 python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct --rope_type simple --maxlen 2048 --shot 0
 ```
 
-| Model                                   | 1024            | 2048            | 4096            | 8192            |
-| :-                                      | :-              | :-              | :-              | :-              |
-| `huggyllama/llama-7b`                   | 0.3156 / 0.3005 | 0.3171 / 0.3037 | 0.3173 / 0.3063 | 0.3178 / 0.3063 |
-| `meta-llama/Llama-2-7b-hf`              | 0.3960 / 0.3717 | 0.3902 / 0.3677 | 0.3976 / 0.3703 | 0.3926 / 0.3697 |
-| `meta-llama/Llama-2-7b-chat-hf`         | 0.4699 / 0.4579 | 0.4688 / 0.4572 | 0.4699 / 0.4579 | 0.4721 / 0.4592 |
-| `meta-llama/Llama-2-13b-hf`             | 0.5127 / 0.5069 | 0.5095 / 0.5042 | 0.5094 / 0.5042 | 0.5098 / 0.5049 |
-| `meta-llama/Llama-2-13b-chat-hf`        | 0.5333 / 0.5160 | 0.5368 / 0.5186 | 0.5372 / 0.5199 | 0.5383 / 0.5199 |
-| `mistralai/Mistral-7B-v0.3`             | 0.5364 / 0.5245 | 0.5425 / 0.5304 | 0.5404 / 0.5291 | 0.5397 / 0.5284 |
-| `mistralai/Mistral-7B-Instruct-v0.3`    | 0.6169 / 0.5990 | 0.6175 / 0.5983 | 0.6202 / 0.6009 | 0.6154 / 0.5970 |
-| `meta-llama/Meta-Llama-3-8B`            | 0.6405 / 0.6133 | 0.6413 / 0.6120 | 0.6409 / 0.6120 | 0.6437 / 0.6140 |
-| `meta-llama/Meta-Llama-3-8B-Instruct`   | 0.6686 / 0.6388 | 0.6689 / 0.6395 | 0.6693 / 0.6408 | 0.6682 / 0.6381 |
-| `meta-llama/Meta-Llama-3.1-8B`          | 0.6564 / 0.6414 | 0.6557 / 0.6401 | 0.6560 / 0.6414 | 0.6558 / 0.6401 |
-| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 0.6701 / 0.6747 | 0.6734 / 0.6760 | 0.6710 / 0.6754 | 0.6723 / 0.6760 |
-| `microsoft/Phi-3-mini-4k-instruct`      | 0.6876 / 0.6871 | 0.6876 / 0.6871 | 0.6876 / 0.6871 | 0.6877 / 0.6871 |
+| Model                                   | 1024        | 2048        | 4096        | 8192        |
+| :-                                      | :-          | :-          | :-          | :-          |
+| `huggyllama/llama-7b`                   | 31.6 / 30.1 | 31.7 / 30.4 | 31.7 / 30.6 | 31.8 / 30.6 |
+| `meta-llama/Llama-2-7b-hf`              | 39.6 / 37.2 | 39.0 / 36.8 | 39.8 / 37.0 | 39.3 / 37.0 |
+| `meta-llama/Llama-2-7b-chat-hf`         | 47.0 / 45.8 | 46.9 / 45.7 | 47.0 / 45.8 | 47.2 / 45.9 |
+| `meta-llama/Llama-2-13b-hf`             | 51.3 / 50.7 | 51.0 / 50.4 | 50.9 / 50.4 | 51.0 / 50.5 |
+| `meta-llama/Llama-2-13b-chat-hf`        | 53.3 / 51.6 | 53.7 / 51.9 | 53.7 / 52.0 | 53.8 / 52.0 |
+| `mistralai/Mistral-7B-v0.3`             | 53.6 / 52.5 | 54.3 / 53.0 | 54.0 / 52.9 | 54.0 / 52.8 |
+| `mistralai/Mistral-7B-Instruct-v0.3`    | 61.7 / 59.9 | 61.8 / 59.8 | 62.0 / 60.1 | 61.5 / 59.7 |
+| `meta-llama/Meta-Llama-3-8B`            | 64.1 / 61.3 | 64.1 / 61.2 | 64.1 / 61.2 | 64.4 / 61.4 |
+| `meta-llama/Meta-Llama-3-8B-Instruct`   | 66.9 / 63.9 | 66.9 / 64.0 | 66.9 / 64.1 | 66.8 / 63.8 |
+| `meta-llama/Meta-Llama-3.1-8B`          | 65.6 / 64.1 | 65.6 / 64.0 | 65.6 / 64.1 | 65.6 / 64.0 |
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 67.0 / 67.5 | 67.3 / 67.6 | 67.1 / 67.5 | 67.2 / 67.6 |
+| `microsoft/Phi-3-mini-4k-instruct`      | 68.8 / 68.7 | 68.8 / 68.7 | 68.8 / 68.7 | 68.8 / 68.7 |
 
 ### MMLU (5-shot)
 
@@ -78,17 +78,32 @@ Following table summarizes `total macro-average` / `total micro-average` for `ma
 python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct --rope_type simple --maxlen 2048 --shot 5
 ```
 
-| Model                                   | 1024            | 2048            | 4096            | 8192            |
-| :-                                      | :-              | :-              | :-              | :-              |
-| `huggyllama/llama-7b`                   | 0.3246 / 0.3266 | 0.3307 / 0.3357 | 0.3187 / 0.3246 | 0.3185 / 0.3246 |
-| `meta-llama/Llama-2-7b-hf`              | 0.4702 / 0.4526 | 0.4668 / 0.4500 | 0.4705 / 0.4526 | 0.4678 / 0.4507 |
-| `meta-llama/Llama-2-7b-chat-hf`         | 0.4918 / 0.4716 | 0.4893 / 0.4709 | 0.4913 / 0.4729 | 0.4911 / 0.4716 |
-| `meta-llama/Llama-2-13b-hf`             | 0.5656 / 0.5591 | 0.5658 / 0.5611 | 0.5656 / 0.5591 | 0.5672 / 0.5617 |
-| `meta-llama/Llama-2-13b-chat-hf`        | 0.5465 / 0.5284 | 0.5474 / 0.5304 | 0.5486 / 0.5317 | 0.5485 / 0.5323 |
-| `mistralai/Mistral-7B-v0.3`             | 0.6094 / 0.5976 | 0.6105 / 0.6016 | 0.6081 / 0.5976 | 0.6105 / 0.6003 |
-| `mistralai/Mistral-7B-Instruct-v0.3`    | 0.6287 / 0.6238 | 0.6262 / 0.6166 | 0.6312 / 0.6212 | 0.6287 / 0.6179 |
-| `meta-llama/Meta-Llama-3-8B`            | 0.6372 / 0.6277 | 0.6428 / 0.6303 | 0.6405 / 0.6316 | 0.6431 / 0.6316 |
-| `meta-llama/Meta-Llama-3-8B-Instruct`   | 0.6530 / 0.6427 | 0.6537 / 0.6427 | 0.6522 / 0.6414 | 0.6538 / 0.6427 |
-| `meta-llama/Meta-Llama-3.1-8B`          | 0.6497 / 0.6421 | 0.6508 / 0.6421 | 0.6545 / 0.6453 | 0.6520 / 0.6440 |
-| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 0.6842 / 0.6715 | 0.6821 / 0.6728 | 0.6855 / 0.6741 | 0.6875 / 0.6741 |
-| `microsoft/Phi-3-mini-4k-instruct`      | 0.7244 / 0.7146 | 0.7252 / 0.7178 | 0.7261 / 0.7191 | 0.7251 / 0.7185 |
+| Model                                   | 1024        | 2048        | 4096        | 8192        |
+| :-                                      | :-          | :-          | :-          | :-          |
+| `huggyllama/llama-7b`                   | 32.5 / 32.7 | 33.1 / 33.6 | 31.9 / 32.5 | 31.9 / 32.5 |
+| `meta-llama/Llama-2-7b-hf`              | 47.0 / 45.3 | 46.7 / 45.0 | 47.1 / 45.3 | 46.8 / 45.1 |
+| `meta-llama/Llama-2-7b-chat-hf`         | 49.2 / 47.2 | 48.9 / 47.1 | 49.1 / 47.3 | 49.1 / 47.2 |
+| `meta-llama/Llama-2-13b-hf`             | 56.6 / 55.9 | 56.6 / 56.1 | 56.6 / 55.9 | 56.7 / 56.2 |
+| `meta-llama/Llama-2-13b-chat-hf`        | 54.7 / 52.8 | 54.7 / 53.0 | 54.9 / 53.2 | 54.9 / 53.2 |
+| `mistralai/Mistral-7B-v0.3`             | 60.9 / 59.8 | 61.1 / 60.2 | 60.8 / 59.8 | 61.1 / 60.0 |
+| `mistralai/Mistral-7B-Instruct-v0.3`    | 62.9 / 62.4 | 62.6 / 61.7 | 63.1 / 62.1 | 62.9 / 61.8 |
+| `meta-llama/Meta-Llama-3-8B`            | 63.7 / 62.8 | 64.3 / 63.0 | 64.1 / 63.2 | 64.3 / 63.2 |
+| `meta-llama/Meta-Llama-3-8B-Instruct`   | 65.3 / 64.3 | 65.4 / 64.3 | 65.2 / 64.1 | 65.4 / 64.3 |
+| `meta-llama/Meta-Llama-3.1-8B`          | 65.0 / 64.2 | 65.1 / 64.2 | 65.5 / 64.5 | 65.2 / 64.4 |
+| `meta-llama/Meta-Llama-3.1-8B-Instruct` | 68.4 / 67.2 | 68.2 / 67.3 | 68.6 / 67.4 | 68.8 / 67.4 |
+| `microsoft/Phi-3-mini-4k-instruct`      | 72.4 / 71.5 | 72.5 / 71.8 | 72.6 / 71.9 | 72.5 / 71.9 |
+
+### MMLU Related Results
+
+The table below presents results from various sources. Note that the setups vary, so comparisons should be made cautiously.
+
+| Model                 | 0-shot      | 5-shot      | Source |
+| :-                    | :-          | :-          | :-     |
+| Llama 2 7B            | - / -       | 45.7 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 7B Instruct   | - / -       | 34.1 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 13B           | - / -       | 53.8 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 13B Instruct  | - / -       | 47.8 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3 8B            | - / -       | 66.6 / 65.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3 8B Instruct   | - / -       | 68.4 / 67.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3.1 8B          | - / -       | 66.7 / 65.6 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.1 8B Instruct | - / -       | 69.4 / 69.4 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
