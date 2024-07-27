@@ -97,13 +97,25 @@ python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct
 
 The table below presents results from various sources. Note that the setups vary, so comparisons should be made cautiously.
 
-| Model                 | 0-shot      | 5-shot      | Source |
-| :-                    | :-          | :-          | :-     |
-| Llama 2 7B            | - / -       | 45.7 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 2 7B Instruct   | - / -       | 34.1 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 2 13B           | - / -       | 53.8 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 2 13B Instruct  | - / -       | 47.8 / -    | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 3 8B            | - / -       | 66.6 / 65.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 3 8B Instruct   | - / -       | 68.4 / 67.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
-| Llama 3.1 8B          | - / -       | 66.7 / 65.6 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
-| Llama 3.1 8B Instruct | - / -       | 69.4 / 69.4 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Model                 | 5-shot      | Source |
+| :-                    | :-          | :-     |
+| Llama 1 7B            | 35.1        | [Llama 2 Tech Report](https://arxiv.org/abs/2307.09288)
+| Llama 1 13B           | 46.9        | [Llama 2 Tech Report](https://arxiv.org/abs/2307.09288)
+| Llama 2 7B            | 45.3        | [Llama 2 Tech Report](https://arxiv.org/abs/2307.09288)
+| Llama 2 7B            | 44.4        | [Mistral 7B Tech Report](https://arxiv.org/abs/2310.06825)
+| Llama 2 7B            | 45.7        | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 7B Instruct   | 34.1        | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 13B           | 54.8        | [Llama 2 Tech Report](https://arxiv.org/abs/2307.09288)
+| Llama 2 13B           | 55.6        | [Mistral 7B Tech Report](https://arxiv.org/abs/2310.06825)
+| Llama 2 13B           | 53.8        | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 2 13B Instruct  | 47.8        | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3 8B            | 66.6 / 65.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3 8B Instruct   | 68.4 / 67.4 | [meta-llama/llama3](https://github.com/meta-llama/llama3)
+| Llama 3 8B Instruct   | 66.5        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
+| Llama 3.1 8B          | 66.7 / 65.6 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.1 8B Instruct | 69.4 / 69.4 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| phi-3-mini            | 68.8        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
+| phi-3-small           | 75.7        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
+| phi-3-medium          | 78.0        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
+| Mistral-7b-v0.1       | 60.1        | [Mistral 7B Tech Report](https://arxiv.org/abs/2310.06825)
+| Mistral-7b-v0.1       | 61.7        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
