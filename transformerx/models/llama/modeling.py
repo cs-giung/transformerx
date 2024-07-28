@@ -21,6 +21,7 @@ from transformerx.typing import Array, ArrayLike, PytreeLike
 class LlamaConfig(NamedTuple):
     """
     Attributes:
+        head_dim (int): an output dimension of each head.
         hidden_size (int): a dimension of the hidden representations.
         intermediate_size (int): an intermediate size in MLP modules.
         num_attention_heads (int): the number of attention heads.
@@ -34,6 +35,7 @@ class LlamaConfig(NamedTuple):
         sliding_window (int): a window size for sliding window attention.
         vocab_size (int): vocabulary size of the text model.
     """
+    head_dim: int
     hidden_size: int
     intermediate_size: int
     num_attention_heads: int
@@ -85,6 +87,7 @@ def block_fn(
             rope_cos=inputs.rope_cos,
             rope_sin=inputs.rope_sin),
         config=AttentionConfig(
+            head_dim=config.head_dim,
             hidden_size=config.hidden_size,
             num_attention_heads=config.num_attention_heads,
             num_key_value_heads=config.num_key_value_heads,

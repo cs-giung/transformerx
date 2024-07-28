@@ -14,6 +14,7 @@ from transformerx.typing import Pytree
 
 PREDEFINED_CONFIGS = {
     'huggyllama/llama-7b': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=11008,
         num_attention_heads=32,
@@ -25,6 +26,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'huggyllama/llama-13b': LlamaConfig(
+        head_dim=128,
         hidden_size=5120,
         intermediate_size=13824,
         num_attention_heads=40,
@@ -36,6 +38,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'huggyllama/llama-30b': LlamaConfig(
+        head_dim=128,
         hidden_size=6656,
         intermediate_size=17920,
         num_attention_heads=52,
@@ -47,6 +50,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'huggyllama/llama-65b': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=22016,
         num_attention_heads=64,
@@ -58,6 +62,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-7b-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=11008,
         num_attention_heads=32,
@@ -69,6 +74,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-7b-chat-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=11008,
         num_attention_heads=32,
@@ -80,6 +86,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-13b-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=5120,
         intermediate_size=13824,
         num_attention_heads=40,
@@ -91,6 +98,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-13b-chat-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=5120,
         intermediate_size=13824,
         num_attention_heads=40,
@@ -102,6 +110,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-70b-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -113,6 +122,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Llama-2-70b-chat-hf': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -124,6 +134,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'meta-llama/Meta-Llama-3-8B': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -135,6 +146,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-8B-Instruct': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -146,6 +158,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-70B': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -157,6 +170,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3-70B-Instruct': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -168,6 +182,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3.1-8B': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -179,6 +194,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3.1-8B-Instruct': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -190,6 +206,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3.1-70B': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -201,6 +218,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'meta-llama/Meta-Llama-3.1-70B-Instruct': LlamaConfig(
+        head_dim=128,
         hidden_size=8192,
         intermediate_size=28672,
         num_attention_heads=64,
@@ -212,6 +230,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=128256,
     ),
     'mistralai/Mistral-7B-v0.1': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -223,6 +242,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32768,
     ),
     'mistral-community/Mistral-7B-v0.2': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -234,6 +254,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'mistralai/Mistral-7B-v0.3': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -245,6 +266,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32768,
     ),
     'mistralai/Mistral-7B-Instruct-v0.1': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -256,6 +278,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32768,
     ),
     'mistralai/Mistral-7B-Instruct-v0.2': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -267,6 +290,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32000,
     ),
     'mistralai/Mistral-7B-Instruct-v0.3': LlamaConfig(
+        head_dim=128,
         hidden_size=4096,
         intermediate_size=14336,
         num_attention_heads=32,
@@ -277,7 +301,32 @@ PREDEFINED_CONFIGS = {
         sliding_window=None,
         vocab_size=32768,
     ),
+    'mistralai/Mistral-Nemo-Base-2407': LlamaConfig(
+        head_dim=128, # NOTE: != 5120 / 32
+        hidden_size=5120,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=40,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_base=1000000.0,
+        sliding_window=None,
+        vocab_size=131072,
+    ),
+    'mistralai/Mistral-Nemo-Instruct-2407': LlamaConfig(
+        head_dim=128, # NOTE: != 5120 / 32
+        hidden_size=5120,
+        intermediate_size=14336,
+        num_attention_heads=32,
+        num_hidden_layers=40,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_base=1000000.0,
+        sliding_window=None,
+        vocab_size=131072,
+    ),
     'microsoft/Phi-3-mini-4k-instruct': LlamaConfig(
+        head_dim=96,
         hidden_size=3072,
         intermediate_size=8192,
         num_attention_heads=32,
@@ -289,6 +338,7 @@ PREDEFINED_CONFIGS = {
         vocab_size=32064,
     ),
     'microsoft/Phi-3-medium-4k-instruct': LlamaConfig(
+        head_dim=128,
         hidden_size=5120,
         intermediate_size=17920,
         num_attention_heads=40,

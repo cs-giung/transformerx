@@ -10,6 +10,7 @@ from transformerx.typing import Array, ArrayLike
 
 
 class AttentionConfig(NamedTuple): # pylint: disable=missing-class-docstring
+    head_dim: int
     hidden_size: int
     num_attention_heads: int
     num_key_value_heads: int
@@ -59,13 +60,12 @@ def forward_fn(
     _, _, M = x.shape
     H = config.num_key_value_heads
     R = config.num_attention_heads // config.num_key_value_heads
-    K = config.hidden_size // config.num_attention_heads
-    V = config.hidden_size // config.num_attention_heads
+    O = config.head_dim
 
-    q_proj = params.q_proj.reshape(M, H, R, K).transpose(0, 2, 1, 3)
-    k_proj = params.k_proj.reshape(M, H, K)
-    v_proj = params.v_proj.reshape(M, H, V)
-    o_proj = params.o_proj.reshape(H, R, V, M).transpose(1, 0, 2, 3)
+    q_proj = params.q_proj.reshape(M, H, R, O).transpose(0, 2, 1, 3)
+    k_proj = params.k_proj.reshape(M, H, O)
+    v_proj = params.v_proj.reshape(M, H, O)
+    o_proj = params.o_proj.reshape(H, R, O, M).transpose(1, 0, 2, 3)
 
     q = einsum(x, q_proj, 'B S M, M R H K -> B R H S K')
     k = einsum(x, k_proj, 'B D M, M   H K -> B   H D K')
@@ -82,7 +82,7 @@ def forward_fn(
         ), k=0), k=-config.sliding_window))
     qk_mask = qk_mask[:, None, None]
 
-    qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(K)
+    qk = einsum(q, k, 'B R H S K, B H D K -> B R H S D') / math.sqrt(O)
     qk = jax.nn.softmax(qk, where=qk_mask, initial=0.)
 
     qkv = einsum(qk, v, 'B R H S D, B H D V -> B R H S V')
