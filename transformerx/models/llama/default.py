@@ -325,6 +325,18 @@ PREDEFINED_CONFIGS = {
         sliding_window=None,
         vocab_size=131072,
     ),
+    'mistralai/Mistral-Large-Instruct-2407': LlamaConfig(
+        head_dim=128,
+        hidden_size=12288,
+        intermediate_size=28672,
+        num_attention_heads=96,
+        num_hidden_layers=88,
+        num_key_value_heads=8,
+        rms_norm_eps=1e-05,
+        rope_base=1000000.0,
+        sliding_window=None,
+        vocab_size=32768,
+    ),
     'microsoft/Phi-3-mini-4k-instruct': LlamaConfig(
         head_dim=96,
         hidden_size=3072,
