@@ -94,9 +94,9 @@ python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct
 | `mistralai/Mistral-Nemo-Instruct-2407`   | -           | 68.4 / 68.1 | -           | -           |
 | `microsoft/Phi-3-mini-4k-instruct`       | 72.4 / 71.5 | 72.5 / 71.8 | 72.6 / 71.9 | 72.5 / 71.9 |
 | `microsoft/Phi-3-medium-4k-instruct`     | -           | 79.3 / 80.3 | -           | -           |
+| `meta-llama/Meta-Llama-3-70B-Instruct`   | -           | 80.1 / 79.9 | -           | -           |
 | `meta-llama/Meta-Llama-3.1-70B-Instruct` | -           | 81.7 / 81.5 | -           | -           |
 | `mistralai/Mistral-Large-Instruct-2407`  | -           | 83.4 / 84.2 | -           | -           |
-| `meta-llama/Meta-Llama-3-70B-Instruct`   | -           |             | -           | -           |
 
 ### MMLU Related Results
 
