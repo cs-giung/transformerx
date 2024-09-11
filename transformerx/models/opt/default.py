@@ -29,6 +29,30 @@ PREDEFINED_CONFIGS = {
         num_hidden_layers=24,
         vocab_size=50272,
     ),
+    'facebook/opt-2.7b': OPTConfig(
+        hidden_size=2560,
+        intermediate_size=10240,
+        layer_norm_eps=1e-05,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        vocab_size=50272,
+    ),
+    'facebook/opt-6.7b': OPTConfig(
+        hidden_size=4096,
+        intermediate_size=16384,
+        layer_norm_eps=1e-05,
+        num_attention_heads=32,
+        num_hidden_layers=32,
+        vocab_size=50272,
+    ),
+    'facebook/opt-13b': OPTConfig(
+        hidden_size=5120,
+        intermediate_size=20480,
+        layer_norm_eps=1e-05,
+        num_attention_heads=40,
+        num_hidden_layers=40,
+        vocab_size=50272,
+    ),
 }
 
 
