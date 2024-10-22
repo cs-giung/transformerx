@@ -68,6 +68,10 @@ python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct
 | `meta-llama/Meta-Llama-3-8B-Instruct`   | 66.9 / 63.9 | 66.9 / 64.0 | 66.9 / 64.1 | 66.8 / 63.8 |
 | `meta-llama/Meta-Llama-3.1-8B`          | 65.6 / 64.1 | 65.6 / 64.0 | 65.6 / 64.1 | 65.6 / 64.0 |
 | `meta-llama/Meta-Llama-3.1-8B-Instruct` | 67.0 / 67.5 | 67.3 / 67.6 | 67.1 / 67.5 | 67.2 / 67.6 |
+| `meta-llama/Llama-3.2-1B`               | -           | 35.8 / 36.1 | -           | -           |
+| `meta-llama/Llama-3.2-1B-Instruct`      | -           | 47.0 / 46.7 | -           | -           |
+| `meta-llama/Llama-3.2-3B`               | -           | 57.3 / 55.9 | -           | -           |
+| `meta-llama/Llama-3.2-3B-Instruct`      | -           | 61.8 / 60.8 | -           | -           |
 | `microsoft/Phi-3-mini-4k-instruct`      | 68.8 / 68.7 | 68.8 / 68.7 | 68.8 / 68.7 | 68.8 / 68.7 |
 
 ### MMLU (5-shot)
@@ -91,6 +95,10 @@ python examples/llama/reasoning_mmlu.py --model microsoft/Phi-3-mini-4k-instruct
 | `meta-llama/Meta-Llama-3-8B-Instruct`    | 65.3 / 64.3 | 65.4 / 64.3 | 65.2 / 64.1 | 65.4 / 64.3 |
 | `meta-llama/Meta-Llama-3.1-8B`           | 65.0 / 64.2 | 65.1 / 64.2 | 65.5 / 64.5 | 65.2 / 64.4 |
 | `meta-llama/Meta-Llama-3.1-8B-Instruct`  | 68.4 / 67.2 | 68.2 / 67.3 | 68.6 / 67.4 | 68.8 / 67.4 |
+| `meta-llama/Llama-3.2-1B`                | -           | 31.7 / 31.8 | -           | -           |
+| `meta-llama/Llama-3.2-1B-Instruct`       | -           | 46.7 / 45.1 | -           | -           |
+| `meta-llama/Llama-3.2-3B`                | -           | 57.5 / 56.0 | -           | -           |
+| `meta-llama/Llama-3.2-3B-Instruct`       | -           | 61.2 / 59.6 | -           | -           |
 | `mistralai/Mistral-Nemo-Instruct-2407`   | -           | 68.4 / 68.1 | -           | -           |
 | `microsoft/Phi-3-mini-4k-instruct`       | 72.4 / 71.5 | 72.5 / 71.8 | 72.6 / 71.9 | 72.5 / 71.9 |
 | `microsoft/Phi-3-medium-4k-instruct`     | -           | 79.3 / 80.3 | -           | -           |
@@ -123,6 +131,10 @@ The table below presents results from various sources. Note that the setups vary
 | Llama 3.1 8B Instruct  | 69.4 / 69.4 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
 | Llama 3.1 70B          | 79.3 / 79.0 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
 | Llama 3.1 70B Instruct | 83.6 / 84.0 | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.2 1B           | 32.2        | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.2 1B Instruct  | 49.3        | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.2 3B           | 58.0        | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
+| Llama 3.2 3B Instruct  | 63.4        | [meta-llama/llama-models](https://github.com/meta-llama/llama-models)
 | phi-3-mini             | 68.8        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
 | phi-3-small            | 75.7        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)
 | phi-3-medium           | 78.0        | [Phi-3 Tech Report](https://arxiv.org/abs/2404.14219)

@@ -1,0 +1,22 @@
+[2024-10-22 12:26:07] Environments:
+------------  --------------------------------------------------------------------------------
+sys.platform  linux
+python        3.12.7 (main, Oct  1 2024, 08:52:12) [GCC 11.4.0]
+datasets      3.0.1 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/datasets
+jax           0.4.34 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jax
+jaxlib        0.4.34 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/jaxlib
+transformers  4.45.2 @/home/giung/transformerx/.venv/lib/python3.12/site-packages/transformers
+------------  --------------------------------------------------------------------------------
+
+[2024-10-22 12:26:07] Command line arguments:
+- args.model     : meta-llama/Llama-3.2-3B
+- args.rope_type : llama3.2
+- args.shot      : 5
+- args.maxlen    : 2048
+- args.quant     : None
+- args.save      : examples/llama/save/reasoning_mmlu/5-2048
+- args.seed      : 7344797
+
+[2024-10-22 12:26:07] Local devices:
+[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)]
+
