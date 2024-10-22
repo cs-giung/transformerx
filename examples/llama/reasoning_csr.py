@@ -117,10 +117,21 @@ if __name__ == '__main__':
 
     if args.rope_type == 'simple':
         make_rope = partial(
-            rope.make_simple_rope, dim=config.head_dim, base=config.rope_base)
-    if args.rope_type == 'llama3':
+            rope.make_simple_rope,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base)
+    if args.rope_type == 'llama3.1':
         make_rope = partial(
-            rope.make_llama3_rope, dim=config.head_dim, base=config.rope_base)
+            rope.make_llama3_rope,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base,
+            factor=8.)
+    if args.rope_type == 'llama3.2':
+        make_rope = partial(
+            rope.make_llama3_rope,
+            dim=config.hidden_size//config.num_attention_heads,
+            base=config.rope_base,
+            factor=32.)
 
     data = []
     for taskname, task in zip(tasknames, tasks):

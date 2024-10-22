@@ -27,7 +27,7 @@ def make_llama3_rope(
         position_ids: ArrayLike,
         dim: int,
         base: float,
-        factor: float = 8.,
+        factor: float, # 8. for 3.1 and 32. for 3.2
         l_freq_factor: float = 1.,
         h_freq_factor: float = 4.,
         old_context_len: float = 8192,
